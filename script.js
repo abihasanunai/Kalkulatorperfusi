@@ -322,6 +322,16 @@ console.log(database);
 
   let tbody = "";
 
+database
+.sort((a,b)=>{
+
+  let tanggalA = new Date(a.tanggal || 0);
+  let tanggalB = new Date(b.tanggal || 0);
+
+  return tanggalB - tanggalA;
+
+})
+
   database.forEach((item,index)=>{
 
     let gabung = (
