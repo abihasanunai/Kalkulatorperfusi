@@ -374,35 +374,64 @@ LOGOUT BUTTON
 
 
 
+/* ========================================
+FIX TRIPLE INPUT ANDROID
+======================================== */
+
 @media screen and (max-width:768px){
 
   .dual-input{
     grid-template-columns:1fr 1fr;
+    gap:8px;
   }
 
   .triple-input{
-    grid-template-columns:1fr;
-    gap:10px;
+
+    display:flex !important;
+    flex-direction:row !important;
+
+    gap:8px;
+    width:100%;
+
+    align-items:flex-start;
+
   }
 
-  .triple-input input{
-    padding:8px;
+  .triple-input .form-group{
+
+    flex:1 1 0;
+    min-width:0;
+    width:33.33%;
+
+  }
+
+  .triple-input label{
+
     font-size:11px;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+
   }
 
-}
+  .triple-input input,
+  .triple-input select{
 
-input[type="date"]{
-  width:100%;
-  min-width:0;
-  appearance:none;
-  -webkit-appearance:none;
-}
+    width:100%;
+    min-width:0;
 
-.print-area{
-  display:flex;
-  justify-content:center;
-  margin:10px 0 16px;
+    padding:10px;
+
+    font-size:16px !important;
+
+    box-sizing:border-box;
+
+    -webkit-appearance:none;
+    appearance:none;
+
+  }
+
 }
 
 .pdf-button{
@@ -1051,5 +1080,33 @@ HEADER FLOW PEDIATRIK
       #2563eb,
       #1d4ed8
     );
+
+}
+
+/* ========================================
+ANDROID INPUT FIX
+======================================== */
+
+input,
+select,
+textarea{
+
+  transform:translateZ(0);
+
+  -webkit-tap-highlight-color:transparent;
+
+}
+
+/* mencegah zoom Android */
+
+@media screen and (max-width:768px){
+
+  input,
+  select,
+  textarea{
+
+    font-size:16px !important;
+
+  }
 
 }
