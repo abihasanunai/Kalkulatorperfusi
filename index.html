@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" type="image/png"
+      href="https://drive.google.com/thumbnail?id=1et8yuAKKDMLeKtAaI8mNyqfAiGHLPs_H&sz=w100">
+
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kalkulator Trainee Perfusionist</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div class="card" id="loginCard" style="max-width:420px;margin:40px auto;">
+
+  <div class="login-logo">🫀</div>
+
+  <div class="title">
+    Kalkulator Perfusionist
+  </div>
+
+  <div class="login-subtitle">
+    Trainee Perfusionist 2026
+  </div>
+
+  <div class="form-group">
+    <label>Username</label>
+    <input type="text" id="username" placeholder="Masukkan username">
+  </div>
+
+  <div class="form-group">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Masukkan password">
+  </div>
+
+  <div style="display:flex;gap:10px;">
+
+    <button
+      onclick="registerUser()"
+      style="
+      flex:1;
+      border:none;
+      background:#16a34a;
+      color:white;
+      padding:12px;
+      border-radius:12px;
+      font-weight:700;
+      cursor:pointer;
+      ">
+      Register
+    </button>
+
+    <button
+      onclick="loginUser()"
+      style="
+      flex:1;
+      border:none;
+      background:#2563eb;
+      color:white;
+      padding:12px;
+      border-radius:12px;
+      font-weight:700;
+      cursor:pointer;
+      ">
+      Login
+    </button>
+
+  </div>
+
+</div>
+
+<!-- HEADER -->
+
+<div class="header" id="headerApp" style="display:none;">
+
+  <button
+    class="logout-btn"
+    id="logoutBtn"
+    onclick="logoutUser()"
+    style="display:none;">
+    Logout
+  </button>
+
+  <h1>Kalkulator Perfusionist</h1>
+  <p>Traine Perfusionist 2026</p>
+
+</div>
+
+<div class="container" id="mainApp" style="display:none;">
+  <div class="card">
+    <div class="title">Data Pasien</div>
+
+    <div class="dual-input">
+      <div class="form-group">
+        <label>Kategori Pasien</label>
+        <select id="kategori" onchange="hitungSemua()">
+          <option value="Dewasa">Dewasa</option>
+          <option value="Pediatrik">Pediatrik</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Tanggal</label>
+        <input type="date" id="tanggal" placeholder="Masukkan tanggal">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Nama Pasien</label>
+      <input type="text" id="namaPasien" placeholder="Masukkan nama pasien">
+    </div>
+
+    <div class="form-group">
+      <label>MR Pasien</label>
+      <input type="text" id="mrPasien" placeholder="Masukkan MR pasien">
+    </div>
+
+    <div class="form-group">
+      <label>Diagnosa Pasien</label>
+      <input type="text" id="diagnosaPasien" placeholder="Masukkan diagnosa pasien">
+    </div>
+
+    <div class="form-group">
+      <label>Tindakan</label>
+      <input type="text" id="tindakan" placeholder="Masukkan prosedur tindakan">
+    </div>
+
+    <div class="triple-input">
+
+      <div class="form-group">
+        <label>Usia</label>
+        <input
+          type="text"
+          id="usia"
+          oninput="hitungSemua()"
+          placeholder="6 bulan / 5 tahun">
+      </div>
+
+      <div class="form-group">
+        <label>BB (kg)</label>
+        <input
+          type="number"
+          id="bb"
+          oninput="hitungSemua()"
+          placeholder="Masukkan BB">
+      </div>
+
+      <div class="form-group">
+        <label>TB (cm)</label>
+        <input
+          type="number"
+          id="tb"
+          oninput="hitungSemua()"
+          placeholder="Masukkan TB">
+      </div>
+
+    </div>
+
+    <div class="result-box">
+      <div class="result-item" id="hasilBSA">BSA : 0.00 m²</div>
+      <div class="result-item" id="hasilEBV">EBV : 0 mL</div>
+      <div class="result-item" id="hasilFaktor">Faktor EBV : 0 mL/kg</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="title">Flow, Kanul & Oksigenator</div>
+
+    <div class="table-wrapper">
+      <table class="flow-table">
+        <thead>
+          <tr>
+            <th>Kardiak Indeks</th>
+            <th>Flow</th>
+          </tr>
+        </thead>
+        <tbody id="flowTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <tbody id="flowReductionTable"></tbody>
+      </table>
+    </div>
+
+    <div class="sub-title">Kanul</div>
+    <div class="table-wrapper">
+      <table>
+        <tbody>
+          <tr><td><b>Aorta</b></td><td id="kanulAorta">-</td></tr>
+          <tr><td><b>Vena (SVC/IVC)</b></td><td id="kanulVena">-</td></tr>
+          <tr><td><b>Left Vent</b></td><td id="kanulLeftVent">-</td></tr>
+          <tr><td><b>CPG Antegrade</b></td><td id="kanulAntegrade">-</td></tr>
+          <tr><td><b>CPG Retrograde</b></td><td id="kanulRetrograde">-</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-title">Oksigenator</div>
+    <div class="table-wrapper">
+      <table>
+        <tbody>
+          <tr><td><b>Oksigenator</b></td><td id="oksigenator">-</td></tr>
+          <tr><td><b>Custom Pack</b></td><td id="customPack">-</td></tr>
+          <tr><td><b>Tubing</b></td><td id="tubingSize">-</td></tr>
+          <tr><td><b>Estimasi Priming</b></td><td id="estimasiPriming">-</td></tr>
+          <tr>
+            <td><b>Flow Maksimal</b></td>
+            <td id="flowMaksimal">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-title">Mean Normal Valve Ring</div>
+    <div class="table-wrapper">
+      <table>
+        <tbody>
+          <tr><td><b>Mitral</b></td><td id="mitral">-</td></tr>
+          <tr><td><b>Tricuspid</b></td><td id="tricuspid">-</td></tr>
+          <tr><td><b>Aortic</b></td><td id="aortic">-</td></tr>
+          <tr><td><b>Pulmonary</b></td><td id="pulmonary">-</td></tr>
+          <tr><td><b>Half Size</b></td><td id="halfSize">-</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <div class="title">Prediksi Hb, Priming & Kardioplegia</div>
+
+    <div class="form-group">
+      <label>Estimated Blood Volume (mL)</label>
+      <input type="number" id="ebvAuto" readonly>
+    </div>
+
+    <div class="dual-input">
+      <div class="form-group">
+        <label>Volume Priming (mL)</label>
+        <input type="number" id="priming" oninput="hitungHbPrediksi()" placeholder="Masukkan volume priming">
+      </div>
+
+      <div class="form-group">
+        <label>Hb Awal (g/dL)</label>
+        <input type="number" id="hbAwal" oninput="hitungHbPrediksi()" placeholder="Masukkan Hb awal pasien">
+      </div>
+    </div>
+
+    <div class="result-box">
+      <div class="result-item" id="hasilHbPrediksi">
+        Prediksi Hb : 0.0 g/dL
+      </div>
+
+      <div class="result-item" id="targetHbInfo">
+        Target Hb : -
+      </div>
+
+      <div class="result-item" id="rekomendasiHb">
+        Rekomendasi : -
+      </div>
+    </div>
+
+    <div class="sub-title">Strategi Priming</div>
+
+    <div class="form-group">
+      <label>Pilih Strategi</label>
+      <select id="jenisPriming" onchange="hitungPriming()">
+        <option value="Clear Priming">Clear Priming</option>
+        <option value="Blood Priming">Blood Priming</option>
+      </select>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <tbody id="primingTable"></tbody>
+      </table>
+    </div>
+
+    <div class="form-group" id="prcInputGroup" style="display:none;">
+      <label>Jumlah PRC (mL)</label>
+      <input type="number" id="jumlahPRC" oninput="hitungPriming()">
+    </div>
+
+    <div class="sub-title">Obat - obatan</div>
+    <div class="table-wrapper">
+      <table>
+        <tbody>
+          <tr><td><b>Asam Tranexamat</b></td><td id="tranex">-</td></tr>
+          <tr><td><b>Methylprednisolon</b></td><td id="methyl">-</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-title">
+      Kardioplegia
+    </div>
+
+    <div class="form-group">
+      <label>Pilih Kardioplegia</label>
+      <select id="jenisKardioplegia" onchange="hitungKardioplegia()">
+        <option value="Clear Cardioplegia">Clear Cardioplegia</option>
+        <option value="Blood Cardioplegia">Blood Cardioplegia</option>
+        <option value="HTK-Custadiol">HTK-Custadiol</option>
+        <option value="Del Nido">Del Nido</option>
+      </select>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <tbody>
+          <tr>
+            <td><b>Dosis Induksi</b></td>
+            <td id="dosisInduksiKardioplegia">-</td>
+          </tr>
+
+          <tr>
+            <td><b>Dosis Maintenance</b></td>
+            <td id="dosisMaintenanceKardioplegia">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-title">
+      Flow Pump Cardioplegia
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <tbody>
+          <tr>
+            <td><b>Flow CPG</b></td>
+            <td id="flowCPG">-</td>
+          </tr>
+
+          <tr>
+            <td><b>CPG Pressure</b></td>
+            <td>
+              Antegrade = 80 - 120 mmHg<br>
+              Retrograde = 30 - 50 mmHg
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="print-area">
+      <button class="pdf-button" onclick="simpanData()">
+        Simpan Data
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="databaseCard" style="margin:10px;display:none;">
+
+  <div class="title">Database Pasien</div>
+
+  <div class="form-group">
+    <input type="text" id="cariData" placeholder="Cari nama / MR pasien..."
+      onkeyup="renderTable()">
+  </div>
+
+  <div class="table-wrapper">
+    <table class="database-table">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Tanggal</th>
+          <th>Nama</th>
+          <th>MR</th>
+          <th>Usia</th>
+          <th>BB</th>
+          <th>TB</th>
+          <th>BSA</th>
+          <th>EBV</th>
+          <th>Volume Priming</th>
+          <th>Hb Awal</th>
+          <th>Prediksi Hb</th>
+          <th>Strategi Priming</th>
+          <th>Kardioplegia</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+
+      <tbody id="databaseBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
