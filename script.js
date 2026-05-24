@@ -510,16 +510,49 @@ function hitungSemua(){
 
   let tableBody = "";
 
-  flowIndex.forEach(function(index){
-    let flow = bsa * index;
+ flowIndex.forEach(function(index){
 
-    tableBody += `
-      <tr>
-        <td>${index}</td>
-        <td>${flow.toFixed(2)} L/min</td>
-      </tr>
-    `;
-  });
+  let flow = bsa * index;
+
+  // =========================
+  // HIGHLIGHT FLOW PENTING
+  // =========================
+
+  let highlightClass = "";
+
+  if(kategori == "Pediatrik"){
+
+    if(
+      index == 3.2 ||
+      index == 2.2 ||
+      index == 1.5
+    ){
+      highlightClass = "flow-highlight";
+    }
+
+  }
+  else{
+
+    if(
+      index == 3.0 ||
+      index == 2.0 ||
+      index == 1.5
+    ){
+      highlightClass = "flow-highlight";
+    }
+
+  }
+
+  tableBody += `
+    <tr class="${highlightClass}">
+      <td>${index}</td>
+      <td>${flow.toFixed(2)} L/min</td>
+    </tr>
+  `;
+
+});
+
+
 
   document.getElementById("flowTableBody").innerHTML =
     tableBody;
@@ -630,6 +663,56 @@ document.getElementById("flowReductionTable").innerHTML =
     bb <= 31 ? "18 Fr (Flow 1700 - 2500 ml/min)" :
     bb <= 41 ? "22 Fr (Flow 2500 - 3300 ml/min)" :
     "24 Fr (Flow > 3300 ml/min)";
+// ======================
+// AORTA FEMORAL
+// ======================
+
+let aortaFemoral = "-";
+
+if(bb < 5){
+
+  aortaFemoral = "8 Fr (Flow 0 - 400 ml/min)";
+
+}
+else if(bb <= 9){
+
+  aortaFemoral = "10 Fr (Flow 400 - 700 ml/min)";
+
+}
+else if(bb <= 15){
+
+  aortaFemoral = "12 (Flow 700 - 1200 ml/min)"+ "<br>" + 
+                  "14 Fr (Flow 1200 - 1700 ml/min)";
+
+}
+// else if(bb <= 21){
+
+//   aortaFemoral = "12 (Flow 700 - 1200 ml/min)"+ "<br>" + 
+//                   "14 Fr (Flow 1200 - 1700 ml/min)";
+
+// }
+else if(bb <= 31){
+
+  aortaFemoral = "14 Fr (Flow 1200 - 1700 ml/min)"+ "<br>" + 
+                  "15 Fr (Flow 1700 - 2000 ml/min)"+ "<br>" + 
+                  "17 Fr (Flow 2000 - 2500 ml/min)";
+
+}
+else if(bb <= 41){
+
+  aortaFemoral = "17 Fr (Flow 2000 - 2500 ml/min)"+ "<br>" +
+                  "19 Fr (Flow 2500 - 3500 ml/min)";
+
+}
+else{
+
+  aortaFemoral = "19 Fr (Flow 2500 - 3500 ml/min)" + "<br>" +
+                  "21 Fr (> 3500 ml/min)"
+  
+}
+
+document.getElementById("kanulAortaFemoral").innerHTML =
+  aortaFemoral;
 
   document.getElementById("kanulVena").innerHTML =
     bb < 5 ? "12/16 Fr (Flow < 650 ml/min)" :
@@ -639,6 +722,27 @@ document.getElementById("flowReductionTable").innerHTML =
     bb < 31 ? "20/24 Fr (Flow 2000 - 2250 ml/min)" :
     bb < 41 ? "24/28 Fr (Flow 3000 - 3200 ml/min)" :
     "28/31 Fr (Flow > 3200 ml/min)";
+
+    // ======================
+// Vena FEMORAL
+// ======================
+
+let venaFemoral = "-";
+ document.getElementById("kanulVenaFemoral").innerHTML =
+    bb < 5 ? "20 Fr (Flow < 450 ml/min)" :
+    bb < 12 ? "22 Fr (Flow 550 - 900 ml/min)"+ "<br>"+
+              " 24 Fr (Flow 700 - 900 ml/min) " :
+    bb < 21 ? "26 Fr (Flow 900 - 1100 ml/min)"+ "<br>"+
+              "28 Fr (Flow 1100 - 1300 ml/min)"+ "<br>"+
+              "30 Fr (Flow 1300 - 1500 ml/min)" :
+    bb < 26 ? "32 Fr (Flow 1500 - 2000 ml/min)"+ "<br>"+
+              "34 Fr (Flow 2000 - 2700 ml/min)" :
+    bb < 31 ? "34 Fr (Flow 2000 - 2700 ml/min)"+ "<br>"+
+              "36 Fr (Flow 2700 - 3500 ml/min)" :
+    bb < 41 ? "36 Fr (Flow 2700 - 3500 ml/min)" :
+              "38 Fr (Flow > 3500 ml/min)";
+
+
 
   document.getElementById("kanulAntegrade").innerHTML =
     bb < 30 ? "Abocath 14 GA" : "ATC 12 GA";
@@ -724,7 +828,7 @@ document.getElementById("flowMaksimal").innerHTML =
 // MEAN NORMAL VALVE RING
 // =========================
 
-if(bsa <= 0.2){
+if(bsa <= 0.25){
 
   mitral = "11.2 mm";
   tricuspid = "13.4 mm";
@@ -1062,7 +1166,7 @@ function hitungHbPrediksi(){
       bb;
 
     rekomendasi =
-      "Penambahan Hb / PRC : " +
+      "Penambahan PRC : " +
       kebutuhanLow.toFixed(0) +
       " - " +
       kebutuhanHigh.toFixed(0) +
@@ -1305,9 +1409,12 @@ window.addEventListener("load", function(){
 
   if(user){
 
-    // sembunyikan login
+    document.getElementById("loginCard")
+    .classList.remove("show-login");
+
+// sembunyikan login
     document.getElementById("loginCard").style.display =
-      "none";
+    "none";
 
     // tampilkan aplikasi
     document.getElementById("mainApp").style.display =
@@ -1419,16 +1526,40 @@ function lupaSandi(){
   })
 
   .catch(()=>{
-    alert("Gagal mengambil data password. Coba lagi nanti.");
-  });
+
+  btn.classList.remove("login-loading");
+
+  btn.innerHTML = "Login";
+
+  btn.disabled = false;
+
+  alert("Koneksi gagal");
+
+});
 
 }
 
+btn.innerHTML =
+'✓ Login Berhasil';
+
+setTimeout(()=>{
+   // kode tampilkan aplikasi
+},600);
 // =========================
 // LOGIN
 // =========================
 
 function loginUser(){
+
+let btn =
+  document.getElementById("loginBtn");
+
+btn.classList.add("login-loading");
+
+btn.innerHTML =
+  '<span class="loading-spinner"></span> Sedang Login...';
+
+btn.disabled = true;
 
   let username =
     document.getElementById("username").value;
@@ -1472,9 +1603,12 @@ SCRIPT_URL + "?login=1"
 
   setTimeout(function(){
 
-    // sembunyikan login
-    loginCard.style.display =
-      "none";
+  // hapus class show login
+  loginCard.classList.remove("show-login");
+
+  // sembunyikan login
+  loginCard.style.display =
+    "none";
 
     // tampilkan aplikasi
     document.getElementById("mainApp").style.display =
@@ -1515,6 +1649,11 @@ SCRIPT_URL + "?login=1"
 
 }
   else{
+    btn.classList.remove("login-loading");
+
+    btn.innerHTML = "Login";
+
+    btn.disabled = false;
 
     alert("Username atau password salah");
 
@@ -1530,46 +1669,97 @@ SCRIPT_URL + "?login=1"
 
 function logoutUser(){
 
-  localStorage.removeItem("loginUser");
+  let logoutBtn =
+    document.getElementById("logoutBtn");
 
-  // sembunyikan aplikasi
-  document.getElementById("mainApp").style.display =
-    "none";
+  // loading tombol logout
+  logoutBtn.innerHTML =
+    '<span class="loading-spinner"></span> Logout...';
 
-  document.getElementById("headerApp").style.display =
-    "none";
+  logoutBtn.disabled = true;
 
-  document.getElementById("databaseCard").style.display =
-    "none";
-
-  document.getElementById("logoutBtn").style.display =
-    "none";
-
-  // tampilkan login kembali
-  let loginCard =
-    document.getElementById("loginCard");
-
-  loginCard.style.display =
-    "block";
-
-  // reset animasi
-  loginCard.style.opacity =
+  // animasi fade aplikasi
+  document.getElementById("mainApp").style.opacity =
     "0";
 
-  loginCard.style.transform =
-    "scale(0.9) translateY(20px)";
+  document.getElementById("headerApp").style.opacity =
+    "0";
 
-  setTimeout(function(){
+  document.getElementById("databaseCard").style.opacity =
+    "0";
 
-    loginCard.style.transition =
-      "all 0.4s ease";
+  setTimeout(()=>{
 
-    loginCard.style.opacity =
+    // hapus session login
+    localStorage.removeItem("loginUser");
+
+    // sembunyikan app
+    document.getElementById("mainApp").style.display =
+      "none";
+
+    document.getElementById("headerApp").style.display =
+      "none";
+
+    document.getElementById("databaseCard").style.display =
+      "none";
+
+    // tampilkan login
+document.getElementById("loginCard")
+.classList.add("show-login");
+
+let loginCard =
+  document.getElementById("loginCard");
+
+// RESET ANIMASI LOGIN
+loginCard.style.transform =
+  "scale(1) translateY(0px)";
+
+loginCard.style.opacity =
+  "1";
+
+loginCard.style.transition =
+  "all 0.5s ease";
+    // =========================
+    // RESET TOMBOL LOGIN
+    // =========================
+
+    let loginBtn =
+      document.getElementById("loginBtn");
+
+    loginBtn.classList.remove("login-loading");
+
+    loginBtn.innerHTML = "Login";
+
+    loginBtn.disabled = false;
+    // reset opacity
+    document.getElementById("mainApp").style.opacity =
       "1";
 
-    loginCard.style.transform =
-      "scale(1) translateY(0px)";
+    document.getElementById("headerApp").style.opacity =
+      "1";
 
-  },50);
+    document.getElementById("databaseCard").style.opacity =
+      "1";
+
+    // reset tombol logout
+    logoutBtn.innerHTML = "Logout";
+
+    logoutBtn.disabled = false;
+
+    // animasi login muncul
+    document.getElementById("loginCard").style.opacity =
+      "0";
+
+    setTimeout(()=>{
+
+      document.getElementById("loginCard").style.transition =
+        "0.4s";
+
+      document.getElementById("loginCard").style.opacity =
+        "1";
+
+    },50);
+
+  },500);
 
 }
