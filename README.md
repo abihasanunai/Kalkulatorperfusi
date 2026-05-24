@@ -1,1 +1,3101 @@
-# perfusionistsumbar
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kalkulator Trainee Perfusionist</title>
+
+<style>
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+
+  background:
+
+  radial-gradient(
+    circle at 25% 25%,
+    rgba(255,255,255,0.12) 0,
+    transparent 18%
+  ),
+
+  radial-gradient(
+    circle at 75% 75%,
+    rgba(255,255,255,0.10) 0,
+    transparent 18%
+  );
+
+  pointer-events:none;
+  z-index:-1;
+}
+/* =========================
+HEADER LOGO
+========================= */
+
+.header{
+  position:relative;
+  overflow:hidden;
+}
+
+.header-logo{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:1;
+}
+
+.header-logo img{
+  width:52px;
+  height:52px;
+  object-fit:contain;
+  opacity:0.95;
+}
+
+.header-logo.left{
+  left:16px;
+}
+
+.header-logo.right{
+  right:70px;
+}
+
+.header h1,
+.header p{
+  position:relative;
+  z-index:2;
+}
+
+/* MOBILE */
+
+@media screen and (max-width:768px){
+
+  .header-logo img{
+    width:38px;
+    height:38px;
+  }
+
+  .header-logo.left{
+    left:10px;
+  }
+
+  .header-logo.right{
+    right:55px;
+  }
+
+}
+/* =========================
+LOGOUT BUTTON
+========================= */
+
+.header{
+  position:relative;
+}
+
+.logout-btn{
+  position:absolute;
+  top:14px;
+  right:16px;
+  border:none;
+  background:rgba(255,255,255,0.18);
+  color:white;
+  padding:8px 14px;
+  border-radius:10px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  backdrop-filter:blur(6px);
+  transition:0.2s;
+  z-index:999;
+}
+
+.logout-btn:hover{
+  background:rgba(255,255,255,0.28);
+  transform:scale(1.03);
+}
+
+@media screen and (max-width:768px){
+
+  .logout-btn{
+    top:10px;
+    right:10px;
+    padding:6px 10px;
+    font-size:11px;
+  }
+
+}
+/* Tombol aksi */
+
+.action-group{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:6px;
+  flex-wrap:nowrap;
+}
+
+.action-btn{
+  border:none;
+  color:white;
+  padding:6px 10px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
+  min-width:60px;
+  white-space:nowrap;
+}
+
+.action-btn:hover{
+  transform:scale(1.02);
+}
+
+.btn-edit{
+  background:#2563eb;
+}
+
+.btn-hapus{
+  background:#dc2626;
+}
+
+.database-table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  table-layout:auto;
+  min-width:700px;
+}
+
+.database-table thead th{
+  position:sticky;
+  top:0;
+  z-index:2;
+}
+
+.database-table th{
+  background:#2563eb;
+  color:white;
+  padding:12px 10px;
+  font-size:13px;
+  text-align:center;
+  white-space:nowrap;
+}
+
+.database-table td{
+  padding:10px;
+  font-size:12px;
+  vertical-align:middle;
+  border-bottom:1px solid #e2e8f0;
+  word-break:break-word;
+  overflow-wrap:break-word;
+  line-height:1.5;
+  background:white;
+}
+
+.database-table tr:nth-child(even) td{
+  background:#f8fafc;
+}
+
+.database-table tr:hover td{
+  background:#eff6ff;
+  transition:0.2s;
+}
+
+/* Ukuran kolom */
+
+.database-table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  table-layout:auto;
+  min-width:1000px;
+}
+
+.database-table th{
+  background:#2563eb;
+  color:white;
+  padding:10px 8px;
+  font-size:12px;
+  text-align:center;
+  white-space:nowrap;
+}
+
+.database-table td{
+  padding:8px;
+  font-size:12px;
+  border-bottom:1px solid #e2e8f0;
+  vertical-align:middle;
+  line-height:1.4;
+  background:white;
+  white-space:nowrap;
+}
+
+.database-table tr:nth-child(even) td{
+  background:#f8fafc;
+}
+
+.database-table tr:hover td{
+  background:#eff6ff;
+}
+
+/* NOMOR */
+
+.database-table th:nth-child(1),
+.database-table td:nth-child(1){
+  width:45px;
+  text-align:center;
+}
+
+/* TANGGAL */
+
+.database-table th:nth-child(2),
+.database-table td:nth-child(2){
+  width:90px;
+  text-align:center;
+}
+
+/* NAMA */
+
+.database-table th:nth-child(3),
+.database-table td:nth-child(3){
+  min-width:160px;
+  font-weight:600;
+}
+
+/* MR */
+
+.database-table th:nth-child(4),
+.database-table td:nth-child(4){
+  width:90px;
+  text-align:center;
+}
+
+/* BB */
+
+.database-table th:nth-child(5),
+.database-table td:nth-child(5){
+  width:60px;
+  text-align:center;
+}
+
+/* TB */
+
+.database-table th:nth-child(6),
+.database-table td:nth-child(6){
+  width:60px;
+  text-align:center;
+}
+
+/* BSA */
+
+.database-table th:nth-child(7),
+.database-table td:nth-child(7){
+  width:80px;
+  text-align:center;
+}
+
+/* EBV */
+
+.database-table th:nth-child(8),
+.database-table td:nth-child(8){
+  width:90px;
+  text-align:center;
+}
+
+/* PRIMING */
+
+.database-table th:nth-child(9),
+.database-table td:nth-child(9){
+  width:90px;
+  text-align:center;
+}
+
+/* HB */
+
+.database-table th:nth-child(10),
+.database-table td:nth-child(10){
+  width:70px;
+  text-align:center;
+}
+
+/* ESTIMASI */
+
+.database-table th:nth-child(11),
+.database-table td:nth-child(11){
+  min-width:130px;
+  text-align:center;
+}
+
+/* STRATEGI */
+
+.database-table th:nth-child(12),
+.database-table td:nth-child(12){
+  min-width:120px;
+  text-align:center;
+}
+
+/* KARDIOPLEGIA */
+
+.database-table th:nth-child(13),
+.database-table td:nth-child(13){
+  min-width:120px;
+  text-align:center;
+}
+
+/* AKSI */
+
+.database-table th:nth-child(14),
+.database-table td:nth-child(14){
+  width:90px;
+  text-align:center;
+}
+
+@media screen and (max-width:768px){
+
+.database-table{
+  min-width:900px;
+}
+
+.database-table th,
+.database-table td{
+  font-size:11px;
+  padding:6px;
+}
+
+.action-btn{
+  padding:5px 8px;
+  font-size:10px;
+}
+
+}
+
+/* Tombol aksi */
+
+.action-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.action-btn{
+  border:none;
+  color:white;
+  padding:7px 10px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.action-btn:hover{
+  transform:scale(1.02);
+}
+
+.btn-detail{
+  background:#16a34a;
+}
+
+.btn-edit{
+  background:#2563eb;
+}
+
+.btn-hapus{
+  background:#dc2626;
+}
+
+/* Mobile */
+
+@media screen and (max-width:768px){
+
+  .database-table{
+    min-width:600px;
+  }
+
+  .database-table th,
+  .database-table td{
+    font-size:11px;
+    padding:6px;
+  }
+
+  .database-table th:nth-child(7),
+  .database-table td:nth-child(7){
+    width:110px;
+    min-width:110px;
+  }
+
+  .action-group{
+    gap:4px;
+  }
+
+  .action-btn{
+    padding:5px 8px;
+    font-size:10px;
+    min-width:48px;
+  }
+
+}
+
+.dual-input{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.dual-input .form-group{
+  margin-bottom:12px;
+}
+
+.triple-input{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  align-items:end;
+}
+
+.triple-input .form-group{
+  margin-bottom:0;
+}
+
+.triple-input label{
+  min-height:auto;
+  margin-bottom:6px;
+}
+
+@media screen and (max-width:768px){
+
+  .dual-input{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .triple-input{
+    grid-template-columns:1fr 1fr 1fr;
+    gap:6px;
+  }
+
+  .triple-input input{
+    padding:8px;
+    font-size:11px;
+  }
+
+}
+
+input[type="date"]{
+  width:100%;
+  min-width:0;
+  appearance:none;
+  -webkit-appearance:none;
+}
+
+    .print-area{
+  display:flex;
+  justify-content:center;
+  margin:10px 0 16px;
+}
+
+.pdf-button{
+  border:none;
+  background:#dc2626;
+  color:white;
+  padding:12px 22px;
+  border-radius:12px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(220,38,38,0.25);
+}
+
+.pdf-button:hover{
+  background:#b91c1c;
+}
+
+@media print{
+
+*{
+  overflow:visible !important;
+}
+  
+  @page{
+    size:A4 portrait;
+    margin:8mm;
+  }
+
+  html,
+  body{
+    width:100%;
+    min-height:100%;
+    background:white !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:visible !important;
+  }
+
+  body{
+    zoom:1 !important;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+/* =========================
+ANIMATION
+========================= */
+
+#mainApp{
+  transition:all 0.5s ease;
+}
+
+#loginCard{
+  transition:all 0.5s ease;
+}
+
+  .header,
+  .print-area{
+    display:none !important;
+  }
+
+  .container{
+    display:block !important;
+    width:100% !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:visible !important;
+  }
+
+  .card{
+    display:block !important;
+    width:100% !important;
+    max-width:none !important;
+    margin:0 0 8px 0 !important;
+    padding:12px !important;
+    box-shadow:none !important;
+    border:1px solid #dbeafe !important;
+    page-break-inside:auto !important;
+    break-inside:auto !important;
+    overflow:visible !important;
+  }
+
+  .table-wrapper{
+    overflow:visible !important;
+  }
+
+  table{
+    width:100% !important;
+    table-layout:auto !important;
+  }
+
+  input,
+  select{
+    border:1px solid #cbd5e1 !important;
+  }
+}
+
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+body{
+  font-family:'Segoe UI',sans-serif;
+  color:#1e293b;
+  min-height:100vh;
+
+  background-color:#e0f2fe;
+
+  background-image:
+
+  repeating-linear-gradient(
+    45deg,
+    rgba(37,99,235,0.06) 0px,
+    rgba(37,99,235,0.06) 2px,
+    transparent 2px,
+    transparent 22px
+  ),
+
+  repeating-linear-gradient(
+    -45deg,
+    rgba(220,38,38,0.05) 0px,
+    rgba(220,38,38,0.05) 2px,
+    transparent 2px,
+    transparent 22px
+  ),
+
+  radial-gradient(
+    circle at center,
+    rgba(255,255,255,0.5) 1px,
+    transparent 1px
+  ),
+
+  linear-gradient(
+    135deg,
+    #dbeafe,
+    #e0f2fe,
+    #ede9fe
+  );
+
+  background-size:
+    48px 48px,
+    48px 48px,
+    24px 24px,
+    cover;
+}
+/* =========================
+LOGIN PAGE
+========================= */
+
+#loginCard{
+  padding:18px 28px 24px;
+}
+
+.login-logo{
+  text-align:center;
+  margin-bottom:4px;
+  position:relative;
+  z-index:3;
+}
+
+.login-logo img{
+  width:88px;
+  height:88px;
+  object-fit:contain;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,0.25));
+}
+
+#loginCard .title{
+  position:relative;
+  z-index:3;
+  font-size:22px;
+  font-weight:700;
+  color:white !important;
+  text-align:center;
+
+  margin-top:-2px;
+  margin-bottom:2px;
+
+  line-height:1.2;
+}
+
+#loginCard .form-group:first-of-type{
+  margin-top:18px;
+}
+
+#loginCard{
+  background:white;
+  border-radius:24px;
+  padding:20px 28px 28px;
+  box-shadow:
+    0 10px 30px rgba(37,99,235,0.15),
+    0 4px 12px rgba(0,0,0,0.06);
+  border:1px solid #dbeafe;
+  position:relative;
+  overflow:hidden;
+}
+
+#loginCard::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:146px;
+  background:linear-gradient(
+    135deg,
+    #0f172a,
+    #1d4ed8,
+    #dc2626
+  );
+  border-radius:24px 24px 28px 28px;
+}
+
+#loginCard label{
+  font-size:13px;
+  font-weight:700;
+  color:#334155;
+}
+
+#loginCard input{
+  background:#f8fafc;
+  border:1px solid #cbd5e1;
+  padding:12px;
+  border-radius:12px;
+  transition:0.2s;
+}
+
+#loginCard input:focus{
+  border-color:#2563eb;
+  background:white;
+  box-shadow:0 0 0 4px rgba(37,99,235,0.12);
+}
+
+#loginCard button{
+  transition:0.2s;
+}
+
+#loginCard button:hover{
+  transform:translateY(-1px);
+  opacity:0.95;
+}
+
+.login-logo img{
+  width:90px;
+  height:90px;
+  object-fit:contain;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,0.25));
+}
+
+@media screen and (max-width:768px){
+
+  .login-logo img{
+    width:72px;
+    height:72px;
+  }
+
+}
+
+#loginCard .title,
+.login-subtitle,
+.login-logo{
+  position:relative;
+  z-index:2;
+  color:white !important;
+}
+
+#loginCard .title{
+  margin-bottom:2px;
+  margin-top:-2px;
+  position:relative;
+  z-index:3;
+  font-size:22px;
+  font-weight:700;
+  color:white !important;
+}
+
+#loginCard .title,
+.login-logo{
+  position:relative;
+  z-index:3;
+}
+
+.login-subtitle{
+  opacity:0.92;
+}
+
+#loginCard .form-group:first-of-type{
+  margin-top:42px;
+}
+
+#loginCard{
+  padding-top:18px;
+}
+
+.login-subtitle{
+  text-align:center;
+  font-size:13px;
+  margin-top:-4px;
+  margin-bottom:18px;
+}
+
+#loginCard .form-group{
+  position:relative;
+  z-index:3;
+  margin-bottom:14px;
+}
+
+#loginCard input{
+  position:relative;
+  z-index:3;
+}
+
+#loginCard button{
+  position:relative;
+  z-index:3;
+}
+
+    .header{
+  background:linear-gradient(135deg,#0f172a,#1d4ed8,#dc2626);
+  color:white;
+  padding:14px 16px;
+  border-radius:0 0 14px 14px;
+  text-align:center;
+  box-shadow:0 3px 10px rgba(0,0,0,0.12);
+  margin-bottom:0;
+}
+
+.header h1{
+  font-size:22px;
+  margin-bottom:4px;
+}
+
+.header p{
+  font-size:12px;
+  opacity:0.9;
+}
+
+.container{
+      width:100%;
+      max-width:100vw;
+      margin:auto;
+      padding:10px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      align-items:start;
+    }
+
+    .card{
+      width:100%;
+      min-width:0;
+      background:white;
+      border-radius:18px;
+      padding:16px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.08);
+        backdrop-filter:blur(8px);
+    }
+
+    .title{
+      font-size:18px;
+      font-weight:700;
+      color:#1d4ed8;
+      margin-bottom:14px;
+      border-bottom:2px solid #dbeafe;
+      padding-bottom:8px;
+    }
+
+.sub-title{
+  margin-top:20px;
+  margin-bottom:10px;
+  padding:8px 10px;
+  font-size:15px;
+  font-weight:700;
+  color:white;
+  background:#dc2626;
+  border-radius:8px;
+}
+
+body.pediatrik-theme .sub-title{
+  color:#ffffff !important;
+  background:#ec4899;
+}
+
+.form-group{
+      margin-bottom:12px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:6px;
+      font-size:13px;
+      font-weight:600;
+      color:#334155;
+    }
+
+    input,
+    select{
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid #cbd5e1;
+      font-size:13px;
+    }
+
+    input:focus,
+    select:focus{
+      outline:none;
+      border-color:#2563eb;
+      box-shadow:0 0 0 3px rgba(37,99,235,0.15);
+    }
+
+    input[readonly]{
+      background:#f8fafc;
+    }
+
+    .result-box{
+      margin-top:12px;
+      background:linear-gradient(135deg,#dbeafe,#eff6ff);
+      border-left:5px solid #2563eb;
+      padding:12px;
+      border-radius:12px;
+    }
+
+    .result-item{
+      margin:8px 0;
+      font-size:13px;
+      font-weight:700;
+      color:#1e40af;
+    }
+
+    .table-wrapper{
+      overflow-x:auto;
+      margin-top:8px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      border-radius:12px;
+      overflow:hidden;
+    }
+
+    th{
+      background:#2563eb;
+      color:white;
+      padding:9px;
+      font-size:12px;
+      text-align:left;
+    }
+
+    td{
+      border:1px solid #e2e8f0;
+      padding:8px;
+      font-size:12px;
+      vertical-align:top;
+    }
+
+    tr:nth-child(even){
+      background:#f8fafc;
+    }
+
+    .flow-table th,
+    .flow-table td{
+      text-align:center;
+      vertical-align:middle;
+    }
+
+    /* =========================
+FLOW TABLE THEME
+========================= */
+
+.flow-table th{
+  background:#dc2626;
+  color:white;
+}
+
+body.pediatrik-theme .flow-table th{
+  background:#ec4899;
+}
+
+    @media screen and (max-width:1100px){
+      .container{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media screen and (max-width:768px){
+      .container{
+        grid-template-columns:1fr;
+      }
+
+      .header h1{
+        font-size:24px;
+      }
+    }
+
+body.pediatrik-theme{
+  background-color:#ffe4f1 !important;
+
+  background-image:
+
+  radial-gradient(
+    circle,
+    rgba(236,72,153,0.10) 2px,
+    transparent 2px
+  ),
+
+  repeating-linear-gradient(
+    45deg,
+    rgba(59,130,246,0.06) 0px,
+    rgba(59,130,246,0.06) 3px,
+    transparent 3px,
+    transparent 24px
+  ),
+
+  repeating-linear-gradient(
+    -45deg,
+    rgba(236,72,153,0.05) 0px,
+    rgba(236,72,153,0.05) 3px,
+    transparent 3px,
+    transparent 24px
+  ),
+
+  linear-gradient(
+    135deg,
+    #ffe4f1,
+    #fce7f3,
+    #dbeafe
+  );
+
+  background-size:
+    30px 30px,
+    50px 50px,
+    50px 50px,
+    cover;
+}
+
+body.pediatrik-theme::before{
+  content:"";
+  position:fixed;
+  inset:0;
+
+  background:
+
+  radial-gradient(
+    circle at 20% 20%,
+    rgba(255,255,255,0.18) 0,
+    transparent 16%
+  ),
+
+  radial-gradient(
+    circle at 80% 70%,
+    rgba(255,255,255,0.14) 0,
+    transparent 18%
+  );
+
+  pointer-events:none;
+  z-index:-1;
+}
+
+  body.pediatrik-theme .header{
+    background:linear-gradient(135deg,#2563eb,#ec4899,#dc2626);
+  }
+
+  body.pediatrik-theme .title{
+    color:#ec4899;
+    border-bottom:2px solid #fbcfe8;
+  }
+
+  body.pediatrik-theme .sub-title{
+  color:#ffffff !important;
+  background:#ec4899;
+}
+
+  body.pediatrik-theme th{
+    background:#ec4899;
+  }
+
+  body.pediatrik-theme .result-box{
+    background:linear-gradient(135deg,#dbeafe,#fce7f3);
+    border-left:5px solid #ec4899;
+  }
+
+  body.pediatrik-theme .result-item{
+    color:#1d4ed8;
+  }
+
+  body.pediatrik-theme input:focus,
+  body.pediatrik-theme select:focus{
+    border-color:#ec4899;
+    box-shadow:0 0 0 3px rgba(236,72,153,0.18);
+  }
+@media print and (max-width:768px){
+
+  @page{
+    size:A4 portrait;
+    margin:8mm;
+  }
+
+  html,
+  body{
+    width:100% !important;
+    height:auto !important;
+    min-height:100% !important;
+    margin:0 !important;
+    padding:0 !important;
+    background:white !important;
+    overflow:visible !important;
+  }
+
+  body{
+    zoom:1 !important;
+    transform:none !important;
+  }
+
+  .header,
+  .print-area{
+    display:none !important;
+  }
+
+  .container{
+    display:block !important;
+    width:100% !important;
+    max-width:none !important;
+    height:auto !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:visible !important;
+  }
+
+  .card{
+    display:block !important;
+    width:100% !important;
+    max-width:none !important;
+    height:auto !important;
+    min-height:0 !important;
+    margin:0 0 10px 0 !important;
+    padding:10px !important;
+    box-shadow:none !important;
+    border:1px solid #dbeafe !important;
+    border-radius:10px !important;
+    page-break-inside:auto !important;
+    break-inside:auto !important;
+    overflow:visible !important;
+  }
+
+  .table-wrapper{
+    overflow:visible !important;
+  }
+
+  table{
+    width:100% !important;
+    table-layout:auto !important;
+  }
+
+  input,
+  select{
+    width:100% !important;
+    max-width:100% !important;
+    border:1px solid #cbd5e1 !important;
+  }
+}
+
+
+  </style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div class="card" id="loginCard" style="max-width:420px;margin:40px auto;">
+
+ <div class="login-logo">
+  <img 
+    src="https://drive.google.com/thumbnail?id=1et8yuAKKDMLeKtAaI8mNyqfAiGHLPs_H&sz=w300"
+    alt="Logo">
+</div>
+
+  <div class="title">
+    Kalkulator Perfusionist
+  </div>
+
+   <div class="form-group">
+    <label>Username</label>
+    <input type="text" id="username" placeholder="Masukkan username">
+  </div>
+
+  <div class="form-group">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Masukkan password">
+  </div>
+
+  <div style="display:flex;gap:10px;">
+
+    <button
+      onclick="registerUser()"
+      style="
+      flex:1;
+      border:none;
+      background:#16a34a;
+      color:white;
+      padding:12px;
+      border-radius:12px;
+      font-weight:700;
+      cursor:pointer;
+      ">
+      Register
+    </button>
+
+    <button
+      onclick="loginUser()"
+      style="
+      flex:1;
+      border:none;
+      background:#2563eb;
+      color:white;
+      padding:12px;
+      border-radius:12px;
+      font-weight:700;
+      cursor:pointer;
+      ">
+      Login
+    </button>
+
+  </div>
+
+</div>
+
+<!-- HEADER -->
+
+<div class="header" id="headerApp" style="display:none;">
+
+<div class="header-logo left">
+  <img src="https://drive.google.com/thumbnail?id=1et8yuAKKDMLeKtAaI8mNyqfAiGHLPs_H&sz=w200" alt="logo kiri">
+</div>
+
+  <button
+    class="logout-btn"
+    id="logoutBtn"
+    onclick="logoutUser()"
+    style="display:none;">
+    Logout
+  </button>
+
+  <h1>Kalkulator Perfusionist</h1>
+  <p>Traine Perfusionist 2026</p>
+
+</div>
+
+  <div class="container" id="mainApp" style="display:none;">
+    <div class="card">
+    <div class="title">Data Pasien</div>
+
+<div class="dual-input">
+  <div class="form-group">
+    <label>Kategori Pasien</label>
+    <select id="kategori" onchange="hitungSemua()">
+      <option value="Dewasa">Dewasa</option>
+      <option value="Pediatrik">Pediatrik</option>        
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Tanggal</label>
+    <input type="date" id="tanggal" placeholder="Masukkan tanggal">
+  </div>
+</div>
+
+    <div class="form-group">
+      <label>Nama Pasien</label>
+      <input type="text" id="namaPasien" placeholder="Masukkan nama pasien">
+    </div>
+    
+    <div class="form-group">
+      <label>MR Pasien</label>
+      <input type="text" id="mrPasien" placeholder="Masukkan MR pasien">
+    </div>
+
+    <div class="form-group">
+      <label>Diagnosa Pasien</label>
+      <input type="text" id="diagnosaPasien" placeholder="Masukkan diagnosa pasien">
+    </div>
+
+    <div class="form-group">
+      <label>Tindakan</label>
+      <input type="text" id="tindakan" placeholder="Masukkan prosedur tindakan">
+    </div>
+
+<div class="triple-input">
+
+  <div class="form-group">
+    <label>Usia</label>
+    <input 
+      type="text"
+      id="usia"
+      oninput="hitungSemua()"
+      placeholder="6 bulan / 5 tahun">
+  </div>
+
+  <div class="form-group">
+    <label>BB (kg)</label>
+    <input
+      type="number"
+      id="bb"
+      oninput="hitungSemua()"
+      placeholder="Masukkan BB">
+  </div>
+
+  <div class="form-group">
+    <label>TB (cm)</label>
+    <input
+      type="number"
+      id="tb"
+      oninput="hitungSemua()"
+      placeholder="Masukkan TB">
+  </div>
+
+</div>
+
+    <div class="result-box">
+      <div class="result-item" id="hasilBSA">BSA : 0.00 m²</div>
+      <div class="result-item" id="hasilEBV">Estimated Blood Volume (EBV) : 0 mL</div>
+      <div class="result-item" id="hasilFaktor">Faktor EBV : 0 mL/kg</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="title">Flow, Kanul & Oksigenator</div>
+
+    <div class="table-wrapper">
+      <table class="flow-table">
+        <thead>
+          <tr>
+            <th>Kardiak Indeks</th>
+            <th>Flow</th>
+          </tr>
+        </thead>
+        <tbody id="flowTableBody"></tbody>
+      </table>
+    </div>
+
+      <div class="table-wrapper">
+      <table>
+        <tbody id="flowReductionTable"></tbody>
+      </table>
+    </div>
+
+    <div class="sub-title">Kanulasi</div>
+    <div class="table-wrapper">
+      <table>
+        <tbody>
+          <tr><td><b>Aorta</b></td><td id="kanulAorta">-</td></tr>
+          <tr><td><b>Vena (SVC/IVC)</b></td><td id="kanulVena">-</td></tr>
+          <tr><td><b>Left Vent</b></td><td id="kanulLeftVent">-</td></tr>
+          <tr><td><b>CPG Antegrade</b></td><td id="kanulAntegrade">-</td></tr>
+          <tr><td><b>CPG Retrograde</b></td><td id="kanulRetrograde">-</td></tr>          
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-title">Oksigenator</div>
+<div class="table-wrapper">
+  <table>
+    <tbody>
+      <tr><td><b>Oksigenator</b></td><td id="oksigenator">-</td></tr>
+      <tr><td><b>Custom Pack</b></td><td id="customPack">-</td></tr>
+      <tr><td><b>Tubing</b></td><td id="tubingSize">-</td></tr>
+      <tr><td><b>Estimasi Priming</b></td><td id="estimasiPriming">-</td></tr>
+
+      <tr>
+        <td><b>Flow Maksimal</b></td>
+        <td id="flowMaksimal">-</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+    <div class="sub-title">Mean Normal Valve Ring</div>
+    <div class="table-wrapper">
+      <table>
+        <tbody>
+          <tr><td><b>Mitral</b></td><td id="mitral">-</td></tr>
+          <tr><td><b>Tricuspid</b></td><td id="tricuspid">-</td></tr>
+          <tr><td><b>Aortic</b></td><td id="aortic">-</td></tr>
+          <tr><td><b>Pulmonary</b></td><td id="pulmonary">-</td></tr>
+          <tr><td><b>Half Size</b></td><td id="halfSize">-</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <div class="title">Prediksi Hb, Priming & Kardioplegia</div>
+
+    <div class="triple-input">
+
+  <div class="form-group">
+    <label>EBV (mL)</label>
+    <input
+      type="number"
+      id="ebvAuto"
+      readonly>
+  </div>
+
+  <div class="form-group">
+    <label>Vol. Priming (mL)</label>
+    <input
+      type="number"
+      id="priming"
+      oninput="hitungHbPrediksi()"
+      placeholder="Volume priming">
+  </div>
+
+  <div class="form-group">
+    <label>Hb Awal (g/dL)</label>
+    <input
+      type="number"
+      id="hbAwal"
+      oninput="hitungHbPrediksi()"
+      placeholder="Hb awal">
+  </div>
+
+</div>
+
+    <div class="result-box">
+  <div class="result-item" id="hasilHbPrediksi">
+    Prediksi Hb : 0.0 g/dL
+  </div>
+
+  <div class="result-item" id="targetHbInfo">
+    Target Hb : -
+  </div>
+
+  <div class="result-item" id="rekomendasiHb">
+    Rekomendasi : -
+  </div>
+</div>
+
+    <div class="sub-title">Strategi Priming</div>
+
+    <div class="form-group">
+      <label>Pilih Strategi</label>
+      <select id="jenisPriming" onchange="hitungPriming()">
+        <option value="Clear Priming">Clear Priming</option>
+        <option value="Blood Priming">Blood Priming</option>
+      </select>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <tbody id="primingTable"></tbody>
+      </table>
+    </div>
+
+    <div class="form-group" id="prcInputGroup" style="display:none;">
+      <label>Jumlah PRC (mL)</label>
+      <input type="number" id="jumlahPRC" oninput="hitungPriming()">
+    </div>
+
+    <div class="sub-title">Obat - obatan</div>
+    <div class="table-wrapper">
+      <table>
+        <tbody>
+          <tr><td><b>Asam Tranexamat</b></td><td id="tranex">-</td></tr>
+          <tr><td><b>Methylprednisolon</b></td><td id="methyl">-</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+<div class="sub-title">
+  Kardioplegia
+</div>
+
+  <div class="form-group">
+    <label>Pilih Kardioplegia</label>
+    <select id="jenisKardioplegia" onchange="hitungKardioplegia()">
+      <option value="Clear Cardioplegia">Clear Cardioplegia</option>
+      <option value="Blood Cardioplegia">Blood Cardioplegia</option>
+      <option value="HTK-Custadiol">HTK-Custadiol</option>
+      <option value="Del Nido">Del Nido</option>
+    </select>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <tbody>
+        <tr>
+          <td><b>Dosis Induksi</b></td>
+          <td id="dosisInduksiKardioplegia">-</td>
+        </tr>
+
+        <tr>
+          <td><b>Dosis Maintenance</b></td>
+          <td id="dosisMaintenanceKardioplegia">-</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+ <div class="sub-title">
+  Flow Pump Cardioplegia
+</div>
+
+<div class="table-wrapper">
+  <table>
+    <tbody>
+
+      <tr>
+        <td><b>Flow CPG</b></td>
+        <td id="flowCPG">-</td>
+      </tr>
+
+      <tr>
+        <td><b>CPG Pressure</b></td>
+        <td>
+          Antegrade = 80 - 120 mmHg<br>
+          Retrograde = 30 - 50 mmHg
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<div class="print-area">
+  <button class="pdf-button" onclick="simpanData()">
+    Simpan Data
+  </button>
+</div>
+  </div>
+
+</div>
+
+<script>
+
+
+let editIndex = -1;
+let editRow = null;
+
+function ambilDataForm(){
+
+  hitungSemua();
+
+  return {
+
+    // =====================
+    // DATA PASIEN
+    // =====================
+
+    tanggal:
+      document.getElementById("tanggal").value,
+
+    kategori:
+      document.getElementById("kategori").value,
+
+    nama:
+      document.getElementById("namaPasien").value,
+
+    mr:
+      document.getElementById("mrPasien").value,
+
+    diagnosa:
+      document.getElementById("diagnosaPasien").value,
+
+    tindakan:
+      document.getElementById("tindakan").value,
+
+    usia:
+      document.getElementById("usia").value,
+
+    tb:
+      document.getElementById("tb").value,
+
+    bb:
+      document.getElementById("bb").value,
+
+    bsa:
+      document.getElementById("hasilBSA").innerText,
+
+    ebv:
+      document.getElementById("hasilEBV").innerText,
+
+    faktorEbv:
+      document.getElementById("hasilFaktor").innerText,
+
+    // =====================
+    // FLOW
+    // =====================
+
+    flowTable:
+      document.getElementById("flowTableBody").innerHTML,
+
+    flowReduction:
+      document.getElementById("flowReductionTable").innerHTML,
+
+    // =====================
+    // KANUL
+    // =====================
+
+    kanulAorta:
+      document.getElementById("kanulAorta").innerText,
+
+    kanulVena:
+      document.getElementById("kanulVena").innerText,
+
+    kanulLeftVent:
+      document.getElementById("kanulLeftVent").innerText,
+
+    kanulAntegrade:
+      document.getElementById("kanulAntegrade").innerText,
+
+    kanulRetrograde:
+      document.getElementById("kanulRetrograde").innerText,
+
+    // =====================
+    // OKSIGENATOR
+    // =====================
+
+    oksigenator:
+      document.getElementById("oksigenator").innerText,
+
+    customPack:
+      document.getElementById("customPack").innerText,
+
+    tubingSize:
+      document.getElementById("tubingSize").innerText,
+
+    estimasiPriming:
+      document.getElementById("estimasiPriming").innerText,
+
+    // =====================
+    // HB
+    // =====================
+
+    ebvAuto:
+      document.getElementById("ebvAuto").value,
+
+    priming:
+      document.getElementById("priming").value,
+
+    hbAwal:
+      document.getElementById("hbAwal").value,
+
+    hbPrediksi:
+      document.getElementById("hasilHbPrediksi")
+      .innerText
+      .replace("Prediksi Hb : ",""),
+
+    // =====================
+    // STRATEGI PRIMING
+    // =====================
+
+    jenisPriming:
+      document.getElementById("jenisPriming").value,
+
+    jumlahPRC:
+      document.getElementById("jumlahPRC").value,
+
+    primingTable:
+      document.getElementById("primingTable").innerHTML,
+
+    // =====================
+    // OBAT
+    // =====================
+
+    tranex:
+      document.getElementById("tranex").innerText,
+
+    methyl:
+      document.getElementById("methyl").innerText,
+
+    // =====================
+    // KARDIOPLEGIA
+    // =====================
+
+    jenisKardioplegia:
+      document.getElementById("jenisKardioplegia").value,
+
+    dosisInduksi:
+      document.getElementById("dosisInduksiKardioplegia").innerText,
+
+    dosisMaintenance:
+      document.getElementById("dosisMaintenanceKardioplegia").innerText,
+
+    flowCPG:
+      document.getElementById("flowCPG").innerText
+
+  };
+
+}
+
+function isiForm(data){
+
+  // =====================
+  // DATA PASIEN
+  // =====================
+
+  document.getElementById("tanggal").value =
+      data.tanggal
+        ? String(data.tanggal).split("T")[0]
+        : "";
+
+  document.getElementById("kategori").value =
+    data.kategori || "Dewasa";
+
+  document.getElementById("namaPasien").value =
+    data.nama || "";
+
+  document.getElementById("mrPasien").value =
+    data.mr || "";
+
+  document.getElementById("diagnosaPasien").value =
+    data.diagnosa || "";
+
+  document.getElementById("tindakan").value =
+    data.tindakan || "";
+    
+  document.getElementById("usia").value =
+  data.usia || "";
+
+  document.getElementById("tb").value =
+    data.tb || "";
+
+  document.getElementById("bb").value =
+    data.bb || "";
+
+  // =====================
+  // HB
+  // =====================
+
+  document.getElementById("priming").value =
+    data.priming || "";
+
+  document.getElementById("hbAwal").value =
+    data.hbAwal || "";
+
+  // =====================
+  // STRATEGI PRIMING
+  // =====================
+
+  document.getElementById("jenisPriming").value =
+    data.jenisPriming || "Clear Priming";
+
+  document.getElementById("jumlahPRC").value =
+    data.jumlahPRC || "";
+
+  // =====================
+  // KARDIOPLEGIA
+  // =====================
+
+  document.getElementById("jenisKardioplegia").value =
+    data.jenisKardioplegia || "Clear Cardioplegia";
+
+  // =====================
+  // HITUNG ULANG
+  // =====================
+
+  hitungSemua();
+
+}
+
+function simpanData(){
+
+  let data = ambilDataForm();
+
+  if(data.nama == ""){
+    alert("Nama pasien belum diisi");
+    return;
+  }
+
+  // MODE UPDATE
+  if(editRow){
+
+    data.row = editRow;
+    data.mode = "update";
+
+  }
+  else{
+
+    data.mode = "tambah";
+
+  }
+
+fetch("https://script.google.com/macros/s/AKfycbxSAkIaNJxwx1lsid2q9PZkQ1uHRBrNpd16dp3L5OgG6FXYWWKXBEZC01A5b6T9DOWw/exec",{
+
+  method:"POST",
+
+  body:JSON.stringify(data)
+
+})
+
+.then(res=>res.text())
+
+.then(res=>{
+
+  alert(
+    editRow
+    ? "Data berhasil diupdate"
+    : "Data berhasil disimpan"
+  );
+
+  // reset mode edit
+  editRow = null;
+
+  document.querySelector(".pdf-button").innerText =
+    "Simpan Data";
+
+  renderTable();
+
+});
+
+}
+
+function doGet(){
+
+  const sheet =
+    SpreadsheetApp
+    .getActiveSpreadsheet()
+    .getSheetByName("Sheet1");
+
+  const data =
+    sheet.getDataRange().getValues();
+
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+
+}
+
+function formatTanggal(tanggal){
+
+  if(!tanggal) return "-";
+
+  let tgl = new Date(tanggal);
+
+  return tgl.toLocaleDateString("id-ID",{
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric"
+  });
+
+}
+
+function renderTable(){
+
+fetch("https://script.google.com/macros/s/AKfycbxSAkIaNJxwx1lsid2q9PZkQ1uHRBrNpd16dp3L5OgG6FXYWWKXBEZC01A5b6T9DOWw/exec")
+.then(res => res.json())
+.then(database => {
+
+console.log(database);
+
+  let keyword =
+    document.getElementById("cariData")
+    .value
+    .toLowerCase();
+
+  let tbody = "";
+
+ database
+.reverse()
+.forEach((item,index)=>{
+
+    let gabung = (
+      (item.nama || "") +
+      (item.mr || "") +
+      (item.diagnosa || "") +
+      (item.tindakan || "")
+    ).toLowerCase();
+
+    if(!gabung.includes(keyword)){
+      return;
+    }
+
+tbody += `
+    <tr>
+
+    <td>${index + 1}</td>
+
+   <td>${formatTanggal(item.tanggal)}</td>
+
+    <td>${item.nama || "-"}</td>
+
+    <td>${item.mr || "-"}</td>
+
+    <td>${item.usia || "-"}</td>
+
+    <td>${item.bb || "-"}</td>
+
+    <td>${item.tb || "-"}</td>
+
+    <td>${
+      (item.bsa || "-")
+      .replace("BSA : ","")
+      }</td>
+
+      <td>${
+      (item.ebv || "-")
+      .replace("EBV : ","")
+      }</td>
+
+    <td>${item.priming || "-"}</td>
+
+    <td>${item.hbAwal || "-"}</td>
+
+    <td>${
+      (item.hbPrediksi || "-")
+      .replace("Prediksi Hb : ","")
+      }</td>
+
+    <td>${item.jenisPriming || "-"}</td>
+
+    <td>${item.jenisKardioplegia || "-"}</td>
+
+    <td>
+
+    <div class="action-group">
+
+    <button
+    class="action-btn btn-edit"
+    onclick='editData(${JSON.stringify(item)})'>
+    Edit
+    </button>
+
+    </div>
+
+    </td>
+
+</tr>
+`;
+
+  });
+
+  document.getElementById("databaseBody").innerHTML =
+    tbody;
+
+});
+
+}
+
+function editData(data){
+
+  isiForm(data);
+
+  editRow = data.row;
+
+  document.querySelector(".pdf-button").innerText =
+    "Update Data";
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+function hapusData(index){
+
+  let konfirmasi = confirm("Yakin ingin menghapus data ini?");
+
+  if(!konfirmasi){
+    return;
+  }
+
+  let database =
+    JSON.parse(localStorage.getItem("databasePerfusionist")) || [];
+
+  database.splice(index,1);
+
+  renderTable();
+
+  alert("Data berhasil dihapus");
+
+}
+
+window.onload = function(){
+
+  renderTable();
+
+}
+
+function ubahTema(){
+  let kategori = document.getElementById("kategori").value;
+
+  if(kategori == "Pediatrik"){
+    document.body.classList.add("pediatrik-theme");
+  }
+  else{
+    document.body.classList.remove("pediatrik-theme");
+  }
+}
+
+function hitungSemua(){
+  let tb = parseFloat(document.getElementById("tb").value);
+  let bb = parseFloat(document.getElementById("bb").value);
+  let kategori = document.getElementById("kategori").value;
+    ubahTema();
+
+
+  if(isNaN(tb) || isNaN(bb)){
+    return;
+  }
+
+  // rumus BSA dubois
+  let bsa = 0.007184 * Math.pow(tb, 0.725) * Math.pow(bb, 0.425); 
+
+  document.getElementById("hasilBSA").innerHTML =
+    "BSA : " + bsa.toFixed(2) + " m²";
+
+  let faktorEBV = 0;
+
+  if(bb < 10){
+    faktorEBV = 80;
+  }
+  else if(bb < 21){
+    faktorEBV = 75;
+  }
+  else if(bb < 31){
+    faktorEBV = 70;
+  }
+  else if(bb < 41){
+    faktorEBV = 65;
+  }
+  else{
+    faktorEBV = 60;
+  }
+
+  let ebv = bb * faktorEBV;
+
+  document.getElementById("hasilEBV").innerHTML =
+    "EBV : " + ebv.toFixed(0) + " mL";
+
+  document.getElementById("hasilFaktor").innerHTML =
+    "Faktor EBV : " + faktorEBV + " mL/kg";
+
+  document.getElementById("ebvAuto").value =
+    ebv.toFixed(0);
+
+  let flowIndex = [];
+
+  if(kategori == "Pediatrik"){
+    flowIndex = [3.2,3.0,2.8,2.4,2.2,2.0,1.8,1.5];
+  }
+  else{
+    flowIndex = [3.0,2.8,2.4,2.2,2.0,1.8,1.5];
+  }
+
+  let tableBody = "";
+
+  flowIndex.forEach(function(index){
+    let flow = bsa * index;
+
+    tableBody += `
+      <tr>
+        <td>${index}</td>
+        <td>${flow.toFixed(2)} L/min</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("flowTableBody").innerHTML =
+    tableBody;
+
+// ======================
+// TARGET MAP
+// ======================
+
+let mapBB = "-";
+let mapUsia = "-";
+
+
+// ======================
+// TARGET MAP BERDASARKAN BB
+// ======================
+
+if(bb < 10){
+  mapBB = "40 - 50 mmHg";
+}
+else if(bb <= 20){
+  mapBB = "45 - 50 mmHg";
+}
+else if(bb <= 40){
+  mapBB = "50 - 60 mmHg";
+}
+else{
+  mapBB = "60 - 70 mmHg";
+}
+
+
+// ======================
+// TARGET MAP BERDASARKAN USIA
+// ======================
+
+let usiaText =
+  document.getElementById("usia")
+  .value
+  .toLowerCase();
+
+if(
+  usiaText.includes("bulan") ||
+  usiaText.includes("month")
+){
+
+  let angkaUsia = parseFloat(usiaText);
+
+  if(angkaUsia < 1){
+    mapUsia = "30 - 45 mmHg";
+  }
+  else{
+    mapUsia = "40 - 50 mmHg";
+  }
+
+}
+else if(
+  usiaText.includes("tahun") ||
+  usiaText.includes("year")
+){
+
+  let angkaUsia = parseFloat(usiaText);
+
+  if(angkaUsia <= 10){
+    mapUsia = "45 - 60 mmHg";
+  }
+  else if(angkaUsia <= 16){
+    mapUsia = "50 - 70 mmHg";
+  }
+  else{
+    mapUsia = "60 - 90 mmHg";
+  }
+
+}
+
+
+// ======================
+// TAMPILAN TARGET MAP
+// ======================
+
+document.getElementById("flowReductionTable").innerHTML =
+`
+<tr>
+  <td colspan="2"
+      style="
+      background:#eff6ff;
+      font-weight:700;
+      color:#1d4ed8;
+      text-align:center;
+      ">
+      TARGET MAP
+  </td>
+</tr>
+
+<tr>
+  <td><b>Sesuai Berat Badan</b></td>
+  <td>${mapBB}</td>
+</tr>
+
+<tr>
+  <td><b>Sesuai Usia</b></td>
+  <td>${mapUsia}</td>
+</tr>
+`;
+
+  document.getElementById("kanulAorta").innerHTML =
+    bb < 5 ? "10 Fr (Flow < 500 ml/min)" :
+    bb <= 9 ? "12 Fr (Flow 500 - 800 ml/min)" :
+    bb <= 15 ? "14 Fr (Flow 800 - 1150 ml/min)" :
+    bb <= 31 ? "18 Fr (Flow 1700 - 2500 ml/min)" :
+    bb <= 41 ? "22 Fr (Flow 2500 - 3300 ml/min)" :
+    "24 Fr (Flow > 3300 ml/min)";
+
+  document.getElementById("kanulVena").innerHTML =
+    bb < 5 ? "12/16 Fr (Flow < 650 ml/min)" :
+    bb < 12 ? "14/18 Fr (Flow 650 - 1000 ml/min)" :
+    bb < 21 ? "16/20 Fr (Flow 1000 - 1400 ml/min)" :
+    bb < 26 ? "18/22 Fr" :
+    bb < 31 ? "20/24 Fr (Flow 2000 - 2250 ml/min)" :
+    bb < 41 ? "24/28 Fr (Flow 3000 - 3200 ml/min)" :
+    "28/31 Fr (Flow > 3200 ml/min)";
+
+  document.getElementById("kanulAntegrade").innerHTML =
+    bb < 30 ? "Abocath 14 GA" : "ATC 12 GA";
+
+  document.getElementById("kanulRetrograde").innerHTML =
+    bb < 15 ? "RC 10 Fr" :
+    bb <= 35 ? "RC 13 Fr" :
+    "RC 14 Fr";
+
+  document.getElementById("kanulLeftVent").innerHTML =
+    bb < 15 ? "Left Vent Neonate 13 Fr" :
+    bb <= 35 ? "16 Fr" :
+    "20 Fr";
+
+  let oksigenator = "";
+  let customPack = "";
+  let tubingSize = "";
+  let estimasiPriming = "";
+
+  let mitral = "-";
+  let tricuspid = "-";
+  let aortic = "-";
+  let pulmonary = "-";
+  let halfSize = "-";
+
+  let flowMaksimal = "";
+
+if(bb >= 2 && bb < 10){
+    oksigenator = "Baby Rx/Fx / Pixie Neo (BB < 15 kg)";
+    customPack = "Neonate";
+    tubingSize = "Arteri 1/4, Vena 1/4, Pump Boot 1/4";
+    estimasiPriming = "400 - 500 ml";
+
+    flowMaksimal =
+      "Baby RX/FX : 1.5 L/min\n" +
+      "Pixie Neo : 2.0 L/min";
+}
+else if(bb < 21){
+    oksigenator = "Pixie Infant / Capiox Fx 15 RW 30 / Thrilly Euroset";
+    customPack = "Infant";
+    tubingSize = "Arteri 1/4, Vena 3/8, Pump Boot 3/8";
+    estimasiPriming = "600 - 800 ml";
+
+    flowMaksimal =
+      "Pixie Infant : 3.0 L/min\n" +
+      "Capiox FX15 RW30 : 3.0 L/min\n" +
+      "Thrilly Euroset : 3.5 L/min";
+}
+else if(bb < 41){
+    oksigenator = "Capiox Fx 15 RW 30 / Thrilly Euroset (BB < 35 kg)";
+    customPack = "Pediatric";
+    tubingSize = "Arteri 3/8, Vena 3/8, Pump Boot 3/8";
+    estimasiPriming = "800 - 1000 ml";
+
+    flowMaksimal =
+      "Capiox FX15 RW30 : 3.0 L/min\n" +
+      "Thrilly Euroset : 3.5 L/min";
+}
+else{
+    oksigenator = "Capiox Fx 15 RW 40 / Capiox Fx 25 / Fusion / Inspire 6F / Horizon / Affinity NT";
+    customPack = "Adult";
+    tubingSize = "Arteri 3/8, Vena 1/2, Pump Boot 1/2";
+    estimasiPriming = "1 - 1.5 L";
+
+    flowMaksimal =
+      "Capiox FX15 RW40 : 4.0 L/min\n" +
+      "Capiox FX25 : 7.0 L/min\n" +
+      "Fusion : 7.0 L/min\n" +
+      "Inspire 6F : 7.0 L/min\n" +
+      "Horizon : 7.0 L/min\n" +
+      "Affinity NT : 7.0 L/min";
+}
+
+  document.getElementById("oksigenator").innerHTML = oksigenator;
+document.getElementById("customPack").innerHTML = customPack;
+document.getElementById("tubingSize").innerHTML = tubingSize;
+document.getElementById("estimasiPriming").innerHTML = estimasiPriming;
+
+document.getElementById("flowMaksimal").innerHTML =
+  flowMaksimal.replace(/\n/g,"<br>");
+
+// =========================
+// MEAN NORMAL VALVE RING
+// =========================
+
+if(bsa <= 0.2){
+
+  mitral = "11.2 mm";
+  tricuspid = "13.4 mm";
+  aortic = "7.2 mm";
+  pulmonary = "8.4 mm";
+
+}
+else if(bsa <= 0.30){
+
+  mitral = "12.6 mm";
+  tricuspid = "14.9 mm";
+  aortic = "8.1 mm";
+  pulmonary = "9.3 mm";
+
+}
+else if(bsa <= 0.35){
+
+  mitral = "13.6 mm";
+  tricuspid = "16.2 mm";
+  aortic = "8.9 mm";
+  pulmonary = "10.1 mm";
+
+}
+else if(bsa <= 0.40){
+
+  mitral = "14.4 mm";
+  tricuspid = "17.3 mm";
+  aortic = "9.5 mm";
+  pulmonary = "10.7 mm";
+
+}
+else if(bsa <= 0.45){
+
+  mitral = "15.2 mm";
+  tricuspid = "18.2 mm";
+  aortic = "10.1 mm";
+  pulmonary = "11.3 mm";
+
+}
+else if(bsa <= 0.50){
+
+  mitral = "15.8 mm";
+  tricuspid = "19.2 mm";
+  aortic = "10.7 mm";
+  pulmonary = "11.9 mm";
+
+}
+else if(bsa <= 0.60){
+
+  mitral = "16.9 mm";
+  tricuspid = "20.7 mm";
+  aortic = "11.5 mm";
+  pulmonary = "12.8 mm";
+
+}
+else if(bsa <= 0.70){
+
+  mitral = "17.9 mm";
+  tricuspid = "21.9 mm";
+  aortic = "12.3 mm";
+  pulmonary = "13.5 mm";
+
+}
+else if(bsa <= 0.80){
+
+  mitral = "18.8 mm";
+  tricuspid = "23.0 mm";
+  aortic = "13.0 mm";
+  pulmonary = "14.2 mm";
+
+}
+else if(bsa <= 0.90){
+
+  mitral = "19.7 mm";
+  tricuspid = "24.0 mm";
+  aortic = "13.4 mm";
+  pulmonary = "14.8 mm";
+
+}
+else if(bsa <= 1.0){
+
+  mitral = "20.2 mm";
+  tricuspid = "24.9 mm";
+  aortic = "14.0 mm";
+  pulmonary = "15.3 mm";
+
+}
+else if(bsa <= 1.2){
+
+  mitral = "21.4 mm";
+  tricuspid = "26.2 mm";
+  aortic = "14.8 mm";
+  pulmonary = "16.2 mm";
+
+}
+else if(bsa <= 1.4){
+
+  mitral = "22.3 mm";
+  tricuspid = "27.7 mm";
+  aortic = "15.5 mm";
+  pulmonary = "17.0 mm";
+
+}
+else if(bsa <= 1.6){
+
+  mitral = "23.1 mm";
+  tricuspid = "28.9 mm";
+  aortic = "16.1 mm";
+  pulmonary = "17.6 mm";
+
+}
+else if(bsa <= 1.8){
+
+  mitral = "23.8 mm";
+  tricuspid = "29.1 mm";
+  aortic = "16.5 mm";
+  pulmonary = "18.2 mm";
+
+}
+else{
+
+  mitral = "24.2 mm";
+  tricuspid = "30.0 mm";
+  aortic = "17.2 mm";
+  pulmonary = "18.0 mm";
+
+}
+
+// =========================
+// HALF SIZE PULMONARY
+// =========================
+
+if(bb <= 3){
+
+  halfSize = "4";
+
+}
+else if(bb <= 4){
+
+  halfSize = "5";
+
+}
+else if(bb <= 5){
+
+  halfSize = "5.5";
+
+}
+else if(bb <= 6){
+
+  halfSize = "6";
+
+}
+else if(bb <= 8){
+
+  halfSize = "6.5";
+
+}
+else if(bb <= 9){
+
+  halfSize = "7";
+
+}
+else if(bb <= 10){
+
+  halfSize = "7.5";
+
+}
+else if(bb <= 12){
+
+  halfSize = "8.5";
+
+}
+else if(bb <= 14){
+
+  halfSize = "9";
+
+}
+else if(bb <= 16){
+
+  halfSize = "9.5";
+
+}
+else if(bb <= 18){
+
+  halfSize = "10";
+
+}
+else if(bb <= 20){
+
+  halfSize = "11";
+
+}
+else if(bb <= 25){
+
+  halfSize = "12";
+
+}
+else if(bb <= 30){
+
+  halfSize = "13";
+
+}
+else{
+
+  halfSize = "14";
+
+}
+
+document.getElementById("mitral").innerHTML = mitral;
+document.getElementById("tricuspid").innerHTML = tricuspid;
+document.getElementById("aortic").innerHTML = aortic;
+document.getElementById("pulmonary").innerHTML = pulmonary;
+document.getElementById("halfSize").innerHTML = halfSize;
+
+ 
+let tranex = 50 * bb;
+  let methylLow = 20 * bb;
+  let methylHigh = 30 * bb;
+
+// Konsentrasi obat
+// Asam tranexamat contoh umum: 500 mg / 5 mL = 100 mg/mL
+let konsentrasiTranex = 100;
+
+// Methylprednisolon contoh: 125 mg / 2 mL = 62.5 mg/mL
+// Sesuaikan dengan sediaan di tempat kamu
+let konsentrasiMethyl = 62.5;
+
+let tranexCc = tranex / konsentrasiTranex;
+let methylLowCc = methylLow / konsentrasiMethyl;
+let methylHighCc = methylHigh / konsentrasiMethyl;
+
+document.getElementById("tranex").innerHTML =
+  tranex.toFixed(0) + " mg / " +
+  tranexCc.toFixed(1) + " cc";
+
+document.getElementById("methyl").innerHTML =
+  methylLow.toFixed(0) + " - " +
+  methylHigh.toFixed(0) + " mg / " +
+  methylLowCc.toFixed(1) + " - " +
+  methylHighCc.toFixed(1) + " cc";
+
+  hitungPriming();
+  hitungHbPrediksi();
+  hitungKardioplegia();
+
+}
+
+function hitungHbPrediksi(){
+
+  let ebv = parseFloat(
+    document.getElementById("ebvAuto").value
+  );
+
+  let priming = parseFloat(
+    document.getElementById("priming").value
+  );
+
+  let hbAwal = parseFloat(
+    document.getElementById("hbAwal").value
+  );
+
+  let bb = parseFloat(
+    document.getElementById("bb").value
+  );
+
+  let kategori =
+    document.getElementById("kategori").value;
+
+  if(
+    isNaN(ebv) ||
+    isNaN(priming) ||
+    isNaN(hbAwal) ||
+    isNaN(bb)
+  ){
+    return;
+  }
+
+  // =========================
+  // HITUNG HB PREDIKSI
+  // =========================
+
+  let hbPrediksi =
+    (ebv * hbAwal) / (ebv + priming);
+
+  document.getElementById("hasilHbPrediksi").innerHTML =
+    "Prediksi Hb : " +
+    hbPrediksi.toFixed(1) +
+    " g/dL";
+
+  // =========================
+  // TARGET BERDASARKAN KATEGORI
+  // =========================
+
+  let targetLow = 0;
+  let targetHigh = 0;
+
+  if(kategori == "Dewasa"){
+
+    targetLow = 8;
+    targetHigh = 9;
+
+  }
+  else{
+
+    targetLow = 9;
+    targetHigh = 10;
+
+  }
+
+  document.getElementById("targetHbInfo").innerHTML =
+    "Target Hb : " +
+    targetLow + " - " +
+    targetHigh + " g/dL";
+
+  // =========================
+  // REKOMENDASI
+  // =========================
+
+  let rekomendasi = "-";
+
+  // =========================
+  // HB RENDAH
+  // =========================
+
+  if(hbPrediksi < targetLow){
+
+    let kebutuhanLow =
+      (targetLow - hbPrediksi) *
+      5 *
+      bb;
+
+    let kebutuhanHigh =
+      (targetHigh - hbPrediksi) *
+      5 *
+      bb;
+
+    rekomendasi =
+      "Penambahan PRC : " +
+      kebutuhanLow.toFixed(0) +
+      " - " +
+      kebutuhanHigh.toFixed(0) +
+      " mL";
+
+  }
+
+  // =========================
+  // HB TINGGI
+  // =========================
+
+  else if(hbPrediksi > targetHigh){
+
+    let penguranganLow =
+      (hbPrediksi - targetHigh) *
+      5 *
+      bb;
+
+    let penguranganHigh =
+      (hbPrediksi - targetLow) *
+      5 *
+      bb;
+
+    rekomendasi =
+      "Hemodilusi / Phlebotomi : " +
+      penguranganLow.toFixed(0) +
+      " - " +
+      penguranganHigh.toFixed(0) +
+      " mL";
+
+  }
+
+  // =========================
+  // DALAM TARGET
+  // =========================
+
+  else{
+
+    rekomendasi =
+      "Hb dalam target ideal";
+
+  }
+
+  document.getElementById("rekomendasiHb").innerHTML =
+    "Rekomendasi : " + rekomendasi;
+
+}
+
+function hitungPriming(){
+  let bb = parseFloat(document.getElementById("bb").value);
+  let jenisPriming = document.getElementById("jenisPriming").value;
+  let prc = parseFloat(document.getElementById("jumlahPRC").value);
+
+  if(isNaN(bb)){
+    return;
+  }
+
+  let manitol = (2.5 * bb).toFixed(0);
+  let primingTable = "";
+
+  if(jenisPriming == "Clear Priming"){
+  document.getElementById("prcInputGroup").style.display = "none";
+
+  if(bb < 10){
+    primingTable = `
+      <tr><td><b>Jenis</b></td><td>Clear Priming &lt;10 kg</td></tr>
+      <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
+      <tr><td><b>Koloid</b></td><td>Gelofusin / Albumin</td></tr>
+      <tr><td><b>Bicnat</b></td><td>5 - 10 meq</td></tr>
+      <tr><td><b>Manitol</b></td><td>${manitol} ml</td></tr>
+      <tr><td><b>Heparin</b></td><td>3500 - 4000 IU / ${heparinKeCc(3500)} - ${heparinKeCc(4000)} cc</td></tr>
+    `;
+  }
+
+  else if(bb <= 20){
+    primingTable = `
+      <tr><td><b>Jenis</b></td><td>Clear Priming 10 - 20 kg</td></tr>
+      <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
+      <tr><td><b>Koloid</b></td><td>Gelofusin / Albumin</td></tr>
+      <tr><td><b>Bicnat</b></td><td>20 meq</td></tr>
+      <tr><td><b>Manitol</b></td><td>${manitol} ml</td></tr>
+      <tr><td><b>Heparin</b></td><td>4000 - 5000 IU / ${heparinKeCc(4000)} - ${heparinKeCc(5000)} cc</td></tr>
+    `;
+  }
+
+  else{
+    primingTable = `
+      <tr><td><b>Jenis</b></td><td>Clear Priming &gt;20 kg</td></tr>
+      <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
+      <tr><td><b>Koloid</b></td><td>Gelofusin / Albumin</td></tr>
+      <tr><td><b>Bicnat</b></td><td>30 meq</td></tr>
+      <tr><td><b>Manitol</b></td><td>${manitol} ml</td></tr>
+      <tr><td><b>Heparin</b></td><td>5000 - 10000 IU / ${heparinKeCc(5000)} - ${heparinKeCc(10000)} cc</td></tr>
+    `;
+  }
+}
+  else{
+    document.getElementById("prcInputGroup").style.display = "block";
+
+    if(bb < 10){
+      primingTable = `
+        <tr><td><b>Jenis</b></td><td>Blood Priming &lt;10 kg</td></tr>
+        <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
+        <tr><td><b>Koloid</b></td><td>Albumin 20% 50-100 ml</td></tr>
+        <tr><td><b>Bicnat</b></td><td>5-10 meq</td></tr>
+        <tr><td><b>Heparin</b></td><td>3500 - 4000 IU / ${heparinKeCc(3500)} - ${heparinKeCc(4000)} cc</td></tr>
+        <tr><td><b>Manitol</b></td><td>${manitol} ml</td></tr>
+        <tr><td><b>PRC</b></td><td>${isNaN(prc) ? 0 : prc} ml</td></tr>
+        <tr><td><b>Kalsium</b></td><td>${isNaN(prc) ? 0 : prc} mg</td></tr>
+      `;
+    }
+    else if(bb <= 20){
+      primingTable = `
+        <tr><td><b>Jenis</b></td><td>Blood Priming 10-20 kg</td></tr>
+        <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
+        <tr><td><b>Koloid</b></td><td>Albumin 20% 100 ml</td></tr>
+        <tr><td><b>Bicnat</b></td><td>20 meq</td></tr>
+        <tr><td><b>Heparin</b></td><td>4000 - 5000 IU / ${heparinKeCc(4000)} - ${heparinKeCc(5000)} cc</td></tr>
+        <tr><td><b>Manitol</b></td><td>${manitol} ml</td></tr>
+        <tr><td><b>PRC</b></td><td>${isNaN(prc) ? 0 : prc} ml</td></tr>
+        <tr><td><b>Kalsium</b></td><td>${isNaN(prc) ? 0 : prc} mg</td></tr>
+      `;
+    }
+    else{
+      primingTable = `
+        <tr><td><b>Jenis</b></td><td>Blood Priming &gt;20 kg</td></tr>
+        <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
+        <tr><td><b>Koloid</b></td><td>Gelofusin / Albumin 20 - 25% 100 ml</td></tr>
+        <tr><td><b>Bicnat</b></td><td>30 meq</td></tr>
+        <tr><td><b>Manitol</b></td><td>${manitol} ml</td></tr>
+        <tr><td><b>Heparin</b></td><td>5000 - 10000 IU / ${heparinKeCc(5000)} - ${heparinKeCc(10000)} cc</td></tr>
+        <tr><td><b>PRC</b></td><td>${isNaN(prc) ? 0 : prc} ml</td></tr>
+        <tr><td><b>Kalsium</b></td><td>${isNaN(prc) ? 0 : prc} mg</td></tr>
+      `;
+    }
+  }
+
+  document.getElementById("primingTable").innerHTML = primingTable;
+  }
+  function hitungKardioplegia(){
+  let tb = parseFloat(document.getElementById("tb").value);
+  let bb = parseFloat(document.getElementById("bb").value);
+  let kategori = document.getElementById("kategori").value;
+  let jenisKardioplegia = document.getElementById("jenisKardioplegia").value;
+
+  if(isNaN(tb) || isNaN(bb)){
+    return;
+  }
+
+  let dosisInduksi = "-";
+  let dosisMaintenance = "-";
+
+  if(jenisKardioplegia == "Clear Cardioplegia"){
+    dosisInduksi =
+      (20 * bb).toFixed(0) + " - " +
+      (30 * bb).toFixed(0) + " mL";
+
+    dosisMaintenance =
+      (10 * bb).toFixed(0) + " - " +
+      (20 * bb).toFixed(0) + " mL";
+  }
+
+  else if(jenisKardioplegia == "Blood Cardioplegia"){
+    dosisInduksi =
+      (20 * bb).toFixed(0) + " - " +
+      (30 * bb).toFixed(0) + " mL";
+
+    dosisMaintenance =
+      (10 * bb).toFixed(0) + " - " +
+      (20 * bb).toFixed(0) + " mL";
+  }
+
+  else if(jenisKardioplegia == "HTK-Custadiol"){
+    let induksiLow = 30 * bb;
+    let induksiHigh = 50 * bb;
+
+    let maintenanceLow = induksiLow * 0.30;
+    let maintenanceHigh = induksiHigh * 0.50;
+
+    dosisInduksi =
+      induksiLow.toFixed(0) + " - " +
+      induksiHigh.toFixed(0) + " mL";
+
+    dosisMaintenance =
+      maintenanceLow.toFixed(0) + " - " +
+      maintenanceHigh.toFixed(0) + " mL";
+  }
+
+  else if(jenisKardioplegia == "Del Nido"){
+    dosisInduksi =
+      (20 * bb).toFixed(0) + " - " +
+      (30 * bb).toFixed(0) + " mL";
+
+    dosisMaintenance =
+      (10 * bb).toFixed(0) + " - " +
+      (20 * bb).toFixed(0) + " mL";
+  }
+
+  document.getElementById("dosisInduksiKardioplegia").innerHTML =
+    dosisInduksi;
+
+  document.getElementById("dosisMaintenanceKardioplegia").innerHTML =
+    dosisMaintenance;
+
+  let flowCPG = "-";
+
+if(kategori == "Dewasa"){
+  flowCPG = "250 - 350 cc/menit";
+}
+else{
+  let bsa = 0.007184 * Math.pow(tb, 0.725) * Math.pow(bb, 0.425);
+  let flowIndex32 = bsa * 3.2;
+
+  let flowLow = flowIndex32 * 5 / 100;
+  let flowHigh = flowIndex32 * 8 / 100;
+
+  flowCPG =
+    flowLow.toFixed(2) + " - " +
+    flowHigh.toFixed(2) + " L/menit";
+}
+
+document.getElementById("flowCPG").innerHTML =
+  flowCPG;
+
+}
+// Konsentrasi Priming
+// Heparin 1 cc = 5000 IU
+
+function heparinKeCc(iu){
+  return (iu / 5000).toFixed(1);
+}
+// =========================
+// AUTO LOGIN
+// =========================
+
+window.addEventListener("load", function(){
+
+  let user =
+    localStorage.getItem("loginUser");
+
+  if(user){
+
+    // sembunyikan login
+    document.getElementById("loginCard").style.display =
+      "none";
+
+    // tampilkan aplikasi
+    document.getElementById("mainApp").style.display =
+      "grid";
+
+    // tampilkan header
+    document.getElementById("headerApp").style.display =
+      "block";
+
+    // tampilkan database
+    document.getElementById("databaseCard").style.display =
+      "block";
+
+    // tampilkan tombol logout
+    document.getElementById("logoutBtn").style.display =
+      "block";
+
+    // load data database
+    renderTable();
+
+  }
+
+});
+
+// =========================
+// REGISTER
+// =========================
+
+function registerUser(){
+
+  let username =
+    document.getElementById("username").value;
+
+  let password =
+    document.getElementById("password").value;
+
+  if(username == "" || password == ""){
+    alert("Username dan password wajib diisi");
+    return;
+  }
+
+fetch(
+"https://script.google.com/macros/s/AKfycbxSAkIaNJxwx1lsid2q9PZkQ1uHRBrNpd16dp3L5OgG6FXYWWKXBEZC01A5b6T9DOWw/exec",
+{
+  method:"POST",
+
+  body:JSON.stringify({
+    mode:"register",
+    username:username,
+    password:password
+  })
+})
+
+.then(res=>res.text())
+
+.then(res=>{
+
+  alert("Register berhasil");
+
+});
+
+}
+
+// =========================
+// LOGIN
+// =========================
+
+function loginUser(){
+
+  let username =
+    document.getElementById("username").value;
+
+  let password =
+    document.getElementById("password").value;
+
+fetch(
+"https://script.google.com/macros/s/AKfycbxSAkIaNJxwx1lsid2q9PZkQ1uHRBrNpd16dp3L5OgG6FXYWWKXBEZC01A5b6T9DOWw/exec?login=1"
+)
+
+.then(res=>res.json())
+
+.then(data=>{
+
+  let ditemukan = data.find(
+    x =>
+    x.username == username &&
+    x.password == password
+  );
+
+  if(ditemukan){
+
+  localStorage.setItem(
+    "loginUser",
+    username
+  );
+
+  // animasi login card hilang
+  let loginCard =
+    document.getElementById("loginCard");
+
+  loginCard.style.transition =
+    "all 0.5s ease";
+
+  loginCard.style.opacity =
+    "0";
+
+  loginCard.style.transform =
+    "scale(0.9) translateY(20px)";
+
+  setTimeout(function(){
+
+    // sembunyikan login
+    loginCard.style.display =
+      "none";
+
+    // tampilkan aplikasi
+    document.getElementById("mainApp").style.display =
+      "grid";
+
+    document.getElementById("headerApp").style.display =
+      "block";
+
+    document.getElementById("databaseCard").style.display =
+      "block";
+
+    document.getElementById("logoutBtn").style.display =
+      "block";
+
+    // animasi muncul aplikasi
+    document.getElementById("mainApp").style.opacity =
+      "0";
+
+    document.getElementById("mainApp").style.transform =
+      "translateY(20px)";
+
+    setTimeout(function(){
+
+      document.getElementById("mainApp").style.transition =
+        "all 0.5s ease";
+
+      document.getElementById("mainApp").style.opacity =
+        "1";
+
+      document.getElementById("mainApp").style.transform =
+        "translateY(0px)";
+
+    },50);
+
+    renderTable();
+
+  },500);
+
+}
+  else{
+
+    alert("Username atau password salah");
+
+  }
+
+});
+
+}
+
+// =========================
+// LOGOUT
+// =========================
+
+function logoutUser(){
+
+  localStorage.removeItem("loginUser");
+
+  // sembunyikan aplikasi
+  document.getElementById("mainApp").style.display =
+    "none";
+
+  document.getElementById("headerApp").style.display =
+    "none";
+
+  document.getElementById("databaseCard").style.display =
+    "none";
+
+  document.getElementById("logoutBtn").style.display =
+    "none";
+
+  // tampilkan login kembali
+  let loginCard =
+    document.getElementById("loginCard");
+
+  loginCard.style.display =
+    "block";
+
+  // reset animasi
+  loginCard.style.opacity =
+    "0";
+
+  loginCard.style.transform =
+    "scale(0.9) translateY(20px)";
+
+  setTimeout(function(){
+
+    loginCard.style.transition =
+      "all 0.4s ease";
+
+    loginCard.style.opacity =
+      "1";
+
+    loginCard.style.transform =
+      "scale(1) translateY(0px)";
+
+  },50);
+
+}
+</script>
+<div class="card" id="databaseCard" style="margin:10px;display:none;">
+  
+  <div class="title">Database Pasien</div>
+
+  <div class="form-group">
+    <input type="text" id="cariData" placeholder="Cari nama / MR pasien..."
+      onkeyup="renderTable()">
+  </div>
+
+  <div class="table-wrapper">
+    <table class="database-table">
+      <thead>
+      <tr>
+
+      <th>No</th>
+      <th>Tanggal</th>
+      <th>Nama</th>
+      <th>MR</th>
+      <th>Usia</th>
+      <th>BB</th>
+      <th>TB</th>
+      <th>BSA</th>
+      <th>EBV</th>
+      <th>Volume Priming</th>
+      <th>Hb Awal</th>
+      <th>Prediksi Hb</th>
+      <th>Strategi Priming</th>
+      <th>Kardioplegia</th>
+      <th>Aksi</th>
+
+      </tr>
+      </thead>
+
+      <tbody id="databaseBody"></tbody>
+
+    </table>
+  </div>
+</div>
+</body>
+</html>
