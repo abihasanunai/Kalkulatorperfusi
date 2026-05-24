@@ -1372,6 +1372,59 @@ SCRIPT_URL,
 }
 
 // =========================
+// LUPA SANDI
+// =========================
+
+function lupaSandi(){
+
+  let username =
+    document.getElementById("username").value.trim();
+
+  if(username == ""){
+    username = prompt("Masukkan username yang terdaftar:");
+  }
+
+  if(!username){
+    return;
+  }
+
+  fetch(SCRIPT_URL + "?login=1")
+
+  .then(res=>res.json())
+
+  .then(data=>{
+
+    let ditemukan = data.find(
+      x => x.username == username
+    );
+
+    if(!ditemukan){
+      alert("Username tidak ditemukan");
+      return;
+    }
+
+    document.getElementById("username").value =
+      ditemukan.username;
+
+    document.getElementById("password").value =
+      ditemukan.password;
+
+    alert(
+      "Password untuk username " +
+      ditemukan.username +
+      " adalah: " +
+      ditemukan.password
+    );
+
+  })
+
+  .catch(()=>{
+    alert("Gagal mengambil data password. Coba lagi nanti.");
+  });
+
+}
+
+// =========================
 // LOGIN
 // =========================
 
