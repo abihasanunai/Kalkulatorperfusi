@@ -579,6 +579,24 @@ LOGIN PAGE
   opacity:0.95;
 }
 
+.forgot-password-btn{
+  width:100%;
+  margin-top:12px;
+  border:none;
+  background:transparent;
+  color:#2563eb;
+  padding:8px;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.forgot-password-btn:hover{
+  color:#1d4ed8;
+  text-decoration:underline;
+  transform:none !important;
+}
+
 .login-logo{
   text-align:center;
   font-size:54px;
