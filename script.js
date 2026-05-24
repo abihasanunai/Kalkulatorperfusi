@@ -477,8 +477,16 @@ function hitungSemua(){
   // rumus BSA dubois
   let bsa = 0.007184 * Math.pow(tb, 0.725) * Math.pow(bb, 0.425);
 
-  document.getElementById("hasilBSA").innerHTML =
-    "BSA : " + bsa.toFixed(2) + " m²";
+  document.getElementById("hasilBSA").innerHTML = `
+  BSA : ${bsa.toFixed(2)} m²
+    <small style="
+    color:rgba(79, 72, 72, 0.5);
+    font-style:italic;
+    letter-spacing:0.5px;
+  ">
+    (Dubois Formula)
+  </small>
+`;
 
   let faktorEBV = 0;
 
@@ -1349,21 +1357,24 @@ function hitungPriming(){
       (20 * bb).toFixed(0) + " mL";
   }
 
-  else if(jenisKardioplegia == "HTK-Custadiol"){
-    let induksiLow = 30 * bb;
-    let induksiHigh = 50 * bb;
+ else if(jenisKardioplegia == "HTK-Custadiol"){
 
-    let maintenanceLow = induksiLow * 0.30;
-    let maintenanceHigh = induksiHigh * 0.50;
+  // Dosis induksi
+  let induksiLow = 30 * bb;
+  let induksiHigh = 50 * bb;
 
-    dosisInduksi =
-      induksiLow.toFixed(0) + " - " +
-      induksiHigh.toFixed(0) + " mL";
+  // Maintenance = 30 - 50% dari dosis induksi
+  let maintenanceLow = induksiLow * 0.30;
+  let maintenanceHigh = induksiHigh * 0.50;
 
-    dosisMaintenance =
-      maintenanceLow.toFixed(0) + " - " +
-      maintenanceHigh.toFixed(0) + " mL";
-  }
+  dosisInduksi =
+    induksiLow.toFixed(0) + " - " +
+    induksiHigh.toFixed(0) + " mL";
+
+  dosisMaintenance =
+    maintenanceLow.toFixed(0) + " - " +
+    maintenanceHigh.toFixed(0) + " mL";
+}
 
   else if(jenisKardioplegia == "Del Nido"){
     dosisInduksi =
