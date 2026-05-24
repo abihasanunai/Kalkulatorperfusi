@@ -1175,3 +1175,42 @@ FIX DATABASE CARD MOBILE
   }
 
 }
+
+/* ========================================
+SAMAKAN TINGGI INPUT DATE & SELECT ANDROID
+======================================== */
+
+input[type="date"],
+select{
+
+  height:42px;
+
+  padding:10px 12px;
+
+  line-height:1.2;
+
+  border-radius:10px;
+
+  box-sizing:border-box;
+
+}
+
+/* KHUSUS MOBILE */
+
+@media screen and (max-width:768px){
+
+  input[type="date"],
+  select{
+
+    height:44px !important;
+
+    padding:10px 12px !important;
+
+    font-size:16px !important;
+
+    -webkit-appearance:none;
+    appearance:none;
+
+  }
+
+}
