@@ -434,6 +434,20 @@ FIX TRIPLE INPUT ANDROID
 
 }
 
+.print-area{
+
+  width:100%;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  margin:10px 0 16px;
+
+}
+
 .pdf-button{
   border:none;
   background:#dc2626;
