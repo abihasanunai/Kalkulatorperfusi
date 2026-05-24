@@ -1110,3 +1110,54 @@ textarea{
   }
 
 }
+
+/* ========================================
+FIX DATABASE CARD MOBILE
+======================================== */
+
+#databaseCard{
+
+  width:100%;
+  max-width:100%;
+
+  margin:10px auto !important;
+
+  box-sizing:border-box;
+  overflow:hidden;
+
+}
+
+/* MOBILE */
+
+@media screen and (max-width:768px){
+
+  #databaseCard{
+
+    width:calc(100% - 20px) !important;
+
+    margin:10px !important;
+
+    padding:16px;
+
+    border-radius:18px;
+
+  }
+
+  #databaseCard .table-wrapper{
+
+    width:100%;
+    overflow-x:auto;
+
+    -webkit-overflow-scrolling:touch;
+
+    border-radius:12px;
+
+  }
+
+  #databaseCard table{
+
+    min-width:900px;
+
+  }
+
+}
