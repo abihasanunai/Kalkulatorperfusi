@@ -333,28 +333,32 @@ function renderTable(){
       return tanggalB - tanggalA;
     });
 
-    database.forEach((row, index) => {
-      // Pastikan struktur row[...] di bawah ini sesuai dengan urutan Kolom A sampai R di Google Sheets Anda
+   database.forEach((row, index) => {
+      
+      // ===================================================================
+      // SILAKAN SESUAIKAN ANGKA INDEKS DI BAWAH INI DENGAN KOLOM GOOGLE SHEETS
+      // (Kolom A = 0, Kolom B = 1, Kolom C = 2, Kolom D = 3, dst...)
+      // ===================================================================
       let item = {
-        row: index + 2,          // Menjaga penomoran baris asli Google Sheets untuk fitur UPDATE
-        tanggalInput: row[0],    // Kolom A
-        tanggal: row[1],         // Kolom B
-        kategori: row[2],        // Kolom C
-        nama: row[3],            // Kolom D
-        mr: row[4],              // Kolom E
-        diagnosa: row[5],        // Kolom F
-        tindakan: row[6],        // Kolom G
-        usia: row[7],            // Kolom H
-        tb: row[8],              // Kolom I
-        bb: row[9],              // Kolom J
-        bsa: row[10],            // Kolom K
-        ebv: row[11],            // Kolom L
-        priming: row[12],        // Kolom M
-        hbAwal: row[13],         // Kolom N
-        hbPrediksi: row[14],     // Kolom O
-        jenisPriming: row[15],   // Kolom P
-        estimasiPriming: row[16],// Kolom Q
-        jenisKardioplegia: row[17] // Kolom R
+        row: index + 2,             // Biarkan ini untuk mendeteksi baris update
+        tanggalInput: row[0],       // Kolom A (Waktu input sistem)
+        tanggal: row[1],            // Kolom B (Tanggal dari form)
+        kategori: row[2],           // Kolom C
+        nama: row[3],               // Kolom D
+        mr: row[4],                 // Kolom E
+        diagnosa: row[5],           // Kolom F
+        tindakan: row[6],           // Kolom G
+        usia: row[7],               // Kolom H
+        tb: row[8],                 // Kolom I
+        bb: row[9],                 // Kolom J
+        bsa: row[10],               // Kolom K
+        ebv: row[11],               // Kolom L
+        priming: row[12],           // Kolom M
+        hbAwal: row[13],            // Kolom N
+        hbPrediksi: row[14],        // Kolom O
+        jenisPriming: row[15],      // Kolom P
+        estimasiPriming: row[16],   // Kolom Q
+        jenisKardioplegia: row[17]  // Kolom R
       };
 
       // Filter Pencarian Pasien
