@@ -1571,10 +1571,10 @@ function loginUser(){
       localStorage.setItem("loginUser", usernameInput);
 
       setTimeout(() => {
-        document.getElementById("loginCard").style.display = "none";
-        document.getElementById("mainApp").style.display = "grid";
-        document.getElementById("headerApp").style.display = "block";
-        document.getElementById("databaseCard").style.display = "block";
+      document.getElementById("loginCard").style.display = "none";
+      document.getElementById("headerApp").style.display = "block"; // Menampilkan header sekaligus tombol logout di dalamnya
+      document.getElementById("mainApp").style.display = "grid";
+      document.getElementById("databaseCard").style.display = "block";
         
         // Panggil fungsi muat data pasien setelah login sukses
         renderTable();
@@ -1600,99 +1600,18 @@ function resetTombolLogin(btn) {
 // LOGOUT
 // =========================
 
-function logoutUser(){
+function logoutUser(){function logoutUser() {
+  localStorage.removeItem("loginUser");
 
-  let logoutBtn =
-    document.getElementById("logoutBtn");
+  // Sembunyikan semua modul aplikasi utama
+  document.getElementById("loginCard").style.display = "block";
+  document.getElementById("headerApp").style.display = "none"; 
+  document.getElementById("mainApp").style.display = "none";
+  document.getElementById("databaseCard").style.display = "none";
 
-  // loading tombol logout
-  logoutBtn.innerHTML =
-    '<span class="loading-spinner"></span> Logout...';
-
-  logoutBtn.disabled = true;
-
-  // animasi fade aplikasi
-  document.getElementById("mainApp").style.opacity =
-    "0";
-
-  document.getElementById("headerApp").style.opacity =
-    "0";
-
-  document.getElementById("databaseCard").style.opacity =
-    "0";
-
-  setTimeout(()=>{
-
-    // hapus session login
-    localStorage.removeItem("loginUser");
-
-    // sembunyikan app
-    document.getElementById("mainApp").style.display =
-      "none";
-
-    document.getElementById("headerApp").style.display =
-      "none";
-
-    document.getElementById("databaseCard").style.display =
-      "none";
-
-    // tampilkan login
-document.getElementById("loginCard")
-.classList.add("show-login");
-
-let loginCard =
-  document.getElementById("loginCard");
-
-// RESET ANIMASI LOGIN
-loginCard.style.transform =
-  "scale(1) translateY(0px)";
-
-loginCard.style.opacity =
-  "1";
-
-loginCard.style.transition =
-  "all 0.5s ease";
-    // =========================
-    // RESET TOMBOL LOGIN
-    // =========================
-
-    let loginBtn =
-      document.getElementById("loginBtn");
-
-    loginBtn.classList.remove("login-loading");
-
-    loginBtn.innerHTML = "Login";
-
-    loginBtn.disabled = false;
-    // reset opacity
-    document.getElementById("mainApp").style.opacity =
-      "1";
-
-    document.getElementById("headerApp").style.opacity =
-      "1";
-
-    document.getElementById("databaseCard").style.opacity =
-      "1";
-
-    // reset tombol logout
-    logoutBtn.innerHTML = "Logout";
-
-    logoutBtn.disabled = false;
-
-    // animasi login muncul
-    document.getElementById("loginCard").style.opacity =
-      "0";
-
-    setTimeout(()=>{
-
-      document.getElementById("loginCard").style.transition =
-        "0.4s";
-
-      document.getElementById("loginCard").style.opacity =
-        "1";
-
-    },50);
-
-  },500);
-
+  // Bersihkan form input login
+  if(document.getElementById("username")) document.getElementById("username").value = "";
+  if(document.getElementById("password")) document.getElementById("password").value = "";
+  
+  alert("Anda telah berhasil logout.");
 }
