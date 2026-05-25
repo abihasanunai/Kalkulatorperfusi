@@ -1571,7 +1571,7 @@ function loginUser(){
       localStorage.setItem("loginUser", usernameInput);
 
       setTimeout(() => {
-      document.getElementById("loginCard").style.display = "none";
+      document.getElementById("loginCard").style.display = "block";
       document.getElementById("headerApp").style.display = "block"; // Menampilkan header sekaligus tombol logout di dalamnya
       document.getElementById("mainApp").style.display = "grid";
       document.getElementById("databaseCard").style.display = "block";
