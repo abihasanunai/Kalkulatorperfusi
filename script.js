@@ -1,7 +1,7 @@
 let editIndex = -1;
 let editRow = null;
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyaQ1Kybr6mcqNORHJo0qdnTfpy8uYzlOVynoEeBt1Fy1MqWwxLvtdOXU8JqVdiKqo/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwbG6Zx5PnkS_EwSZ0Qo882bRJdiIQhCTdj6-WHVzwZe7uNQZ9WABfqZsrYmJsJ_8on/exec";
 
 function ambilDataForm(){
 
@@ -234,64 +234,63 @@ function simpanData(){
     return;
   }
 
-  // MODE UPDATE
-  if(editRow){
+  // =========================
+  // TAMBAHKAN USER LOGIN
+  // =========================
 
+  let userLogin = localStorage.getItem("loginUser");
+
+  data.user = userLogin; // 👈 INI KUNCINYA
+
+  // MODE UPDATE / TAMBAH
+  if(editRow){
     data.row = editRow;
     data.mode = "update";
-
   }
   else{
-
     data.mode = "tambah";
-
   }
 
-fetch(SCRIPT_URL,{
-
-  method:"POST",
-
-  body:JSON.stringify(data)
-
+ fetch(SCRIPT_URL, {
+  method: "POST",
+  body: JSON.stringify(data)
 })
 
-.then(res=>res.text())
+  .then(res=>res.text())
+  .then(res=>{
 
-.then(res=>{
+    alert(
+      editRow
+      ? "Data berhasil diupdate"
+      : "Data berhasil disimpan"
+    );
 
-  alert(
-    editRow
-    ? "Data berhasil diupdate"
-    : "Data berhasil disimpan"
-  );
+    editRow = null;
 
-  // reset mode edit
-  editRow = null;
+    document.querySelector(".pdf-button").innerText =
+      "Simpan Data";
 
-  document.querySelector(".pdf-button").innerText =
-    "Simpan Data";
+    renderTable();
 
-  renderTable();
-
-});
+  });
 
 }
 
-function doGet(){
+// function doGet(){
 
-  const sheet =
-    SpreadsheetApp
-    .getActiveSpreadsheet()
-    .getSheetByName("Sheet1");
+//   const sheet =
+//     SpreadsheetApp
+//     .getActiveSpreadsheet()
+//     .getSheetByName("Sheet1");
 
-  const data =
-    sheet.getDataRange().getValues();
+//   const data =
+//     sheet.getDataRange().getValues();
 
-  return ContentService
-    .createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON);
+//   return ContentService
+//     .createTextOutput(JSON.stringify(data))
+//     .setMimeType(ContentService.MimeType.JSON);
 
-}
+// }
 
 function formatTanggal(tanggal){
 
@@ -306,113 +305,133 @@ function formatTanggal(tanggal){
   });
 
 }
+function doGet() {
+  const ss = SpreadsheetApp.openById("1K6mD8ikdoFUTK9qCimcx00UoWWyG0jknut6k-Z1dKvA");
+  const sheet = ss.getSheetByName("Sheet1");
+
+  const values = sheet.getDataRange().getValues();
+  const header = values[0];
+
+  let data = [];
+
+  for (let i = 1; i < values.length; i++) {
+    let row = values[i];
+    let obj = {};
+
+    header.forEach((key, index) => {
+      obj[key] = row[index];
+    });
+
+    data.push(obj);
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
 
 function renderTable(){
-  fetch(SCRIPT_URL)
-  .then(res => res.json())
-  .then(database => {
-    
-    console.log("Data dari Sheets:", database); // Untuk memantau data di inspect console
 
-    // PENGAMAN 1: Jika database kosong atau hanya berisi baris header saja
-    if (!database || database.length <= 1) {
-      document.getElementById("databaseBody").innerHTML = `<tr><td colspan="15" style="text-align:center;">Belum ada data pasien di database.</td></tr>`;
+fetch(SCRIPT_URL)
+.then(res => res.json())
+.then(database => {
+
+console.log(database);
+
+  let keyword =
+    document.getElementById("cariData")
+    .value
+    .toLowerCase();
+
+  let tbody = "";
+
+database
+.sort((a,b)=>{
+
+  let tanggalA = new Date(a.tanggal || 0);
+  let tanggalB = new Date(b.tanggal || 0);
+
+  return tanggalB - tanggalA;
+
+})
+
+  database.forEach((item,index)=>{
+
+    let gabung = (
+      (item.nama || "") +
+      (item.mr || "") +
+      (item.diagnosa || "") +
+      (item.tindakan || "")
+    ).toLowerCase();
+
+    if(!gabung.includes(keyword)){
       return;
     }
 
-    // PENGAMAN 2: Potong baris pertama (Header) secara paksa demi keamanan data
-    database.shift(); 
+tbody += `
+    <tr>
 
-    let keyword = document.getElementById("cariData").value.toLowerCase();
-    let tbody = "";
+    <td>${index + 1}</td>
 
-    // Sorting berdasarkan tanggal terbaru (Kolom B / indeks 1)
-    database.sort((a, b) => {
-      let tanggalA = new Date(a[1] || 0);
-      let tanggalB = new Date(b[1] || 0);
-      return tanggalB - tanggalA;
-    });
+   <td>${formatTanggal(item.tanggal)}</td>
 
-   database.forEach((row, index) => {
-      
-      // ===================================================================
-      // SILAKAN SESUAIKAN ANGKA INDEKS DI BAWAH INI DENGAN KOLOM GOOGLE SHEETS
-      // (Kolom A = 0, Kolom B = 1, Kolom C = 2, Kolom D = 3, dst...)
-      // ===================================================================
-      let item = {
-        row: index + 2,             // Biarkan ini untuk mendeteksi baris update
-        tanggalInput: row[0],       // Kolom A (Waktu input sistem)
-        tanggal: row[1],            // Kolom B (Tanggal dari form)
-        kategori: row[2],           // Kolom C
-        nama: row[3],               // Kolom D
-        mr: row[4],                 // Kolom E
-        diagnosa: row[5],           // Kolom F
-        tindakan: row[6],           // Kolom G
-        usia: row[7],               // Kolom H
-        tb: row[8],                 // Kolom I
-        bb: row[9],                 // Kolom J
-        bsa: row[10],               // Kolom K
-        ebv: row[11],               // Kolom L
-        priming: row[12],           // Kolom M
-        hbAwal: row[13],            // Kolom N
-        hbPrediksi: row[14],        // Kolom O
-        jenisPriming: row[15],      // Kolom P
-        estimasiPriming: row[16],   // Kolom Q
-        jenisKardioplegia: row[17]  // Kolom R
-      };
+    <td>${item.nama || "-"}</td>
 
-      // Filter Pencarian Pasien
-      let gabung = ((item.nama || "") + (item.mr || "") + (item.diagnosa || "") + (item.tindakan || "")).toLowerCase();
-      if(!gabung.includes(keyword)){
-        return;
-      }
+    <td>${item.mr || "-"}</td>
 
-      // Format Tampilan Berat Badan
-      let tampilanBB = item.bb || "-";
-      if (tampilanBB !== "-" && !isNaN(tampilanBB)) {
-        tampilanBB = `${tampilanBB} KG`;
-      }
+    <td>${item.usia || "-"}</td>
 
-      // Format Tampilan Hb Awal
-      let tampilanHbAwal = item.hbAwal || "-";
-      if (tampilanHbAwal !== "-" && !isNaN(tampilanHbAwal)) {
-        tampilanHbAwal = `${tampilanHbAwal} g/dL`;
-      }
+    <td>${item.bb || "-"}</td>
 
-      // Format Tampilan BSA Bersih
-      let tampilanBSA = (item.bsa || "-").toString().replace("BSA : ", "").replace("(Dubois Formula)", "").trim();
+    <td>${item.tb || "-"}</td>
 
-      tbody += `
-        <tr>
-          <td>${index + 1}</td>
-          <td>${formatTanggal(item.tanggal)}</td>
-          <td>${item.nama || "-"}</td>
-          <td>${item.mr || "-"}</td>
-          <td>${item.usia || "-"}</td>
-          <td>${tampilanBB}</td>
-          <td>${item.tb || "-"}</td>
-          <td>${tampilanBSA}</td>
-          <td>${(item.ebv || "-").toString().replace("EBV : ","")}</td>
-          <td>${item.priming || "-"}</td>
-          <td>${tampilanHbAwal}</td>
-          <td>${(item.hbPrediksi || "-").toString().replace("Prediksi Hb : ","")}</td>
-          <td>${item.jenisPriming || "-"}</td>
-          <td>${item.jenisKardioplegia || "-"}</td>
-          <td>
-            <div class="action-group">
-              <button class="action-btn btn-edit" onclick='editData(${JSON.stringify(item)})'>Edit</button>
-            </div>
-          </td>
-        </tr>
-      `;
-    });
+    <td>${
+      (item.bsa || "-")
+      .replace("BSA : ","")
+      }</td>
 
-    document.getElementById("databaseBody").innerHTML = tbody;
-  })
-  .catch(error => {
-    console.error("Gagal memuat database:", error);
-    document.getElementById("databaseBody").innerHTML = `<tr><td colspan="15" style="text-align:center; color:red;">Gagal memuat data dari server. Cek Inspect Console.</td></tr>`;
+      <td>${
+      (item.ebv || "-")
+      .replace("EBV : ","")
+      }</td>
+
+    <td>${item.priming || "-"}</td>
+
+    <td>${item.hbAwal || "-"}</td>
+
+    <td>${
+      (item.hbPrediksi || "-")
+      .replace("Prediksi Hb : ","")
+      }</td>
+
+    <td>${item.jenisPriming || "-"}</td>
+
+    <td>${item.jenisKardioplegia || "-"}</td>
+
+    <td>
+
+    <div class="action-group">
+
+    <button
+    class="action-btn btn-edit"
+    onclick='editData(${JSON.stringify(item)})'>
+    Edit
+    </button>
+
+    </div>
+
+    </td>
+
+</tr>
+`;
+
   });
+
+  document.getElementById("databaseBody").innerHTML =
+    tbody;
+
+});
+
 }
 
 function editData(data){
@@ -1428,14 +1447,40 @@ function heparinKeCc(iu){
 // =========================
 
 window.addEventListener("load", function(){
-  let user = localStorage.getItem("loginUser");
+
+  let user =
+    localStorage.getItem("loginUser");
+
   if(user){
-    document.getElementById("loginCard").style.display = "none";
-    document.getElementById("mainApp").style.display = "grid";
-    document.getElementById("headerApp").style.display = "block";
-    document.getElementById("databaseCard").style.display = "block";
+
+    document.getElementById("loginCard")
+    .classList.remove("show-login");
+
+// sembunyikan login
+    document.getElementById("loginCard").style.display =
+    "none";
+
+    // tampilkan aplikasi
+    document.getElementById("mainApp").style.display =
+      "grid";
+
+    // tampilkan header
+    document.getElementById("headerApp").style.display =
+      "block";
+
+    // tampilkan database
+    document.getElementById("databaseCard").style.display =
+      "block";
+
+    // tampilkan tombol logout
+    document.getElementById("logoutBtn").style.display =
+      "block";
+
+    // load data database
     renderTable();
+
   }
+
 });
 
 // =========================
@@ -1482,118 +1527,178 @@ SCRIPT_URL,
 // =========================
 
 function lupaSandi(){
-  let usernameInput = document.getElementById("username").value.trim();
-  if(usernameInput == "") usernameInput = prompt("Masukkan username yang terdaftar:");
-  if(!usernameInput) return;
+
+  let username =
+    document.getElementById("username").value.trim();
+
+  if(username == ""){
+    username = prompt("Masukkan username yang terdaftar:");
+  }
+
+  if(!username){
+    return;
+  }
 
   fetch(SCRIPT_URL + "?login=1")
-  .then(res => res.json())
-  .then(data => {
-    if(data.length > 0 && (data[0][1] === "username" || data[0][1] === "Username")) {
-      data.shift();
-    }
 
-    let ditemukan = data.find(x => {
-      if (Array.isArray(x)) {
-        return x[1] == usernameInput;
-      }
-      return x.username == usernameInput;
-    });
+  .then(res=>res.json())
+
+  .then(data=>{
+
+    let ditemukan = data.find(
+      x => x.username == username
+    );
 
     if(!ditemukan){
-      alert("Username tidak ditemukan di sistem.");
+      alert("Username tidak ditemukan");
       return;
     }
 
-    let uName = Array.isArray(ditemukan) ? ditemukan[1] : ditemukan.username;
-    let pWord = Array.isArray(ditemukan) ? ditemukan[2] : ditemukan.password;
+    document.getElementById("username").value =
+      ditemukan.username;
 
-    document.getElementById("username").value = uName;
-    document.getElementById("password").value = pWord;
+    document.getElementById("password").value =
+      ditemukan.password;
 
-    alert("Username: " + uName + "\nPassword Anda adalah: " + pWord);
+    alert(
+      "Password untuk username " +
+      ditemukan.username +
+      " adalah: " +
+      ditemukan.password
+    );
+
   })
-  .catch(() => {
-    alert("Gagal memproses data lupa sandi. Periksa koneksi Anda.");
-  });
+
+  .catch(()=>{
+
+  btn.classList.remove("login-loading");
+
+  btn.innerHTML = "Login";
+
+  btn.disabled = false;
+
+  alert("Koneksi gagal");
+
+});
+
 }
 
 // =========================
 // LOGIN
 // =========================
+
 function loginUser(){
-  let btn = document.getElementById("loginBtn");
-  if (!btn) return;
 
-  // Animasi loading tombol
-  btn.innerHTML = 'Sedang Login...';
-  btn.disabled = true;
+let btn =
+  document.getElementById("loginBtn");
 
-  let usernameInput = document.getElementById("username").value.trim();
-  let passwordInput = document.getElementById("password").value.trim();
+btn.classList.add("login-loading");
 
-  if(usernameInput == "" || passwordInput == ""){
-    alert("Username dan password wajib diisi!");
-    resetTombolLogin(btn);
-    return;
+btn.innerHTML =
+  '<span class="loading-spinner"></span> Sedang Login...';
+
+btn.disabled = true;
+
+  let username =
+    document.getElementById("username").value;
+
+  let password =
+    document.getElementById("password").value;
+
+fetch(
+SCRIPT_URL + "?login=1"
+)
+
+.then(res=>res.json())
+
+.then(data=>{
+
+  let ditemukan = data.find(
+    x =>
+    x.username == username &&
+    x.password == password
+  );
+
+  if(ditemukan){
+
+  localStorage.setItem(
+    "loginUser",
+    username
+  );
+
+  // animasi login card hilang
+  let loginCard =
+    document.getElementById("loginCard");
+
+  loginCard.style.transition =
+    "all 0.5s ease";
+
+  loginCard.style.opacity =
+    "0";
+
+  loginCard.style.transform =
+    "scale(0.9) translateY(20px)";
+
+  setTimeout(function(){
+
+  // hapus class show login
+  loginCard.classList.remove("show-login");
+
+  // sembunyikan login
+  loginCard.style.display =
+    "none";
+
+    // tampilkan aplikasi
+    document.getElementById("mainApp").style.display =
+      "grid";
+
+    document.getElementById("headerApp").style.display =
+      "block";
+
+    document.getElementById("databaseCard").style.display =
+      "block";
+
+    document.getElementById("logoutBtn").style.display =
+      "block";
+
+    // animasi muncul aplikasi
+    document.getElementById("mainApp").style.opacity =
+      "0";
+
+    document.getElementById("mainApp").style.transform =
+      "translateY(20px)";
+
+    setTimeout(function(){
+
+      document.getElementById("mainApp").style.transition =
+        "all 0.5s ease";
+
+      document.getElementById("mainApp").style.opacity =
+        "1";
+
+      document.getElementById("mainApp").style.transform =
+        "translateY(0px)";
+
+    },50);
+
+    renderTable();
+
+  },500);
+
+}
+  else{
+    btn.classList.remove("login-loading");
+
+    btn.innerHTML = "Login";
+
+    btn.disabled = false;
+
+    alert("Username atau password salah");
+
   }
 
-  // Mengambil data dari Sheet2 via doGet dengan parameter ?login=1
-  fetch(SCRIPT_URL + "?login=1")
-  .then(res => res.json())
-  .then(data => {
-    console.log("Data mentah dari Sheet2:", data);
+});
 
-    if (!data || data.length === 0) {
-      alert("Database pengguna kosong. Silakan register terlebih dahulu.");
-      resetTombolLogin(btn);
-      return;
-    }
-
-    let loginSukses = false;
-
-    // LAKUKAN LOOPING MULAI DARI INDEKS 1 (Melewati baris indeks 0 yang berisi Header)
-    // Cara ini aman karena data user Anda di baris ke-2 (indeks 1) TIDAK AKAN TERPOTONG
-    for (let i = 1; i < data.length; i++) {
-      let row = data[i];
-      
-      if (Array.isArray(row)) {
-        // row[1] adalah kolom username, row[2] adalah kolom password
-        if (row[1] == usernameInput && row[2] == passwordInput) {
-          loginSukses = true;
-          break;
-        }
-      }
-    }
-
-    if(loginSukses){
-      btn.innerHTML = '✓ Login Berhasil';
-      localStorage.setItem("loginUser", usernameInput);
-
-      setTimeout(() => {
-        document.getElementById("loginCard").style.display = "none";
-        document.getElementById("mainApp").style.display = "grid";
-        document.getElementById("headerApp").style.display = "block";
-        document.getElementById("databaseCard").style.display = "block";
-        
-        // Panggil fungsi muat data pasien setelah login sukses
-        renderTable();
-      }, 600);
-    } else {
-      alert("Username atau password salah!");
-      resetTombolLogin(btn);
-    }
-  })
-  .catch((err) => {
-    console.error("Error Login:", err);
-    alert("Koneksi gagal atau SCRIPT_URL salah.");
-    resetTombolLogin(btn);
-  });
-}
-
-function resetTombolLogin(btn) {
-  btn.innerHTML = "Login";
-  btn.disabled = false;
 }
 
 // =========================
