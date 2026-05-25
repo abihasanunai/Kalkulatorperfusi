@@ -3,189 +3,230 @@ let editRow = null;
 
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyaQ1Kybr6mcqNORHJo0qdnTfpy8uYzlOVynoEeBt1Fy1MqWwxLvtdOXU8JqVdiKqo/exec";
 
-// =========================================================================
-// A. MEKANISME LOGIN, LOGOUT & CEK SESI (Mencegah Login Card Tampil Dobel)
-// =========================================================================
-
-function loginUser() {
-  const userIn = document.getElementById("username").value.trim();
-  const passIn = document.getElementById("password").value.trim();
-  const btn = document.getElementById("loginBtn");
-
-  if (!userIn || !passIn) {
-    alert("Username dan Password tidak boleh kosong!");
-    return;
-  }
-
-  btn.innerHTML = "🔄 Menghubungkan...";
-  btn.disabled = true;
-
-  // Mengambil data kredensial dari Sheet2 melalui parameter ?login=1
-  fetch(`${SCRIPT_URL}?login=1`)
-    .then(res => res.json())
-    .then(userData => {
-      if (!userData || userData.length <= 1) {
-        alert("Database pengguna kosong. Silakan daftarkan akun baru.");
-        btn.innerHTML = "Login";
-        btn.disabled = false;
-        return;
-      }
-
-      // Potong baris header ["Timestamp", "username", "password"]
-      userData.shift();
-
-      // Cari kecocokan username dan password
-      const cocok = userData.find(row => String(row[1]).trim() === userIn && String(row[2]).trim() === passIn);
-
-      if (cocok) {
-        // Simpan status login ke browser lokal
-        localStorage.setItem("loginUser", userIn);
-        
-        // Tampilkan halaman utama aplikasi, Sembunyikan form login
-        bukaAplikasiUtama();
-        alert("Login Berhasil! Selamat Datang.");
-      } else {
-        alert("Username atau Password salah!");
-        btn.innerHTML = "Login";
-        btn.disabled = false;
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Gagal terhubung ke server login. Cek koneksi Anda.");
-      btn.innerHTML = "Login";
-      btn.disabled = false;
-    });
-}
-
-function logoutUser() {
-  // Hapus tanda pengenal login dari penyimpanan lokal
-  localStorage.removeItem("loginUser");
-
-  // Putar balik visual halaman ke tampilan login awal
-  document.getElementById("loginCard").style.display = "block";
-  document.getElementById("headerApp").style.display = "none";
-  document.getElementById("mainApp").style.display = "none";
-  document.getElementById("databaseCard").style.display = "none";
-
-  // Kosongkan form isian login sebelumnya
-  if (document.getElementById("username")) document.getElementById("username").value = "";
-  if (document.getElementById("password")) document.getElementById("password").value = "";
-  
-  let btn = document.getElementById("loginBtn");
-  if (btn) {
-    btn.innerHTML = "Login";
-    btn.disabled = false;
-  }
-
-  alert("Anda telah berhasil logout.");
-}
-
-function registerUser() {
-  alert("Fitur Registrasi Mandiri Hubungi Admin Utama Perfusionist.");
-}
-
-function lupaSandi() {
-  alert("Silakan hubungi tim IT atau Admin Database untuk menyetel ulang kata sandi Anda.");
-}
-
-// Fungsi pembantu untuk membersihkan tampilan antarmuka pasca-login
-function bukaAplikasiUtama() {
-  document.getElementById("loginCard").style.display = "none"; // Ini mengunci kartu login agar hilang total ke belakang
-  document.getElementById("headerApp").style.display = "block";
-  document.getElementById("mainApp").style.display = "block";
-  document.getElementById("databaseCard").style.display = "block";
-  
-  // Ambil database pasien dari server begitu aplikasi terbuka
-  renderTable();
-}
-
-
-// =========================================================================
-// B. ENGINE PEMROSES DATA FORMULIR PASIEN
-// =========================================================================
-
 function ambilDataForm(){
+
   hitungSemua();
 
   return {
+
+    // =====================
     // DATA PASIEN
-    tanggal: document.getElementById("tanggal").value,
-    kategori: document.getElementById("kategori").value,
-    nama: document.getElementById("namaPasien").value,
-    mr: document.getElementById("mrPasien").value,
-    diagnosa: document.getElementById("diagnosaPasien").value,
-    tindakan: document.getElementById("tindakan").value,
-    usia: document.getElementById("usia").value,
-    tb: document.getElementById("tb").value,
-    bb: document.getElementById("bb").value,
-    bsa: document.getElementById("hasilBSA").innerText,
-    ebv: document.getElementById("hasilEBV").innerText,
-    faktorEbv: document.getElementById("hasilFaktor").innerText,
+    // =====================
 
+    tanggal:
+      document.getElementById("tanggal").value,
+
+    kategori:
+      document.getElementById("kategori").value,
+
+    nama:
+      document.getElementById("namaPasien").value,
+
+    mr:
+      document.getElementById("mrPasien").value,
+
+    diagnosa:
+      document.getElementById("diagnosaPasien").value,
+
+    tindakan:
+      document.getElementById("tindakan").value,
+
+    usia:
+      document.getElementById("usia").value,
+
+    tb:
+      document.getElementById("tb").value,
+
+    bb:
+      document.getElementById("bb").value,
+
+    bsa:
+      document.getElementById("hasilBSA").innerText,
+
+    ebv:
+      document.getElementById("hasilEBV").innerText,
+
+    faktorEbv:
+      document.getElementById("hasilFaktor").innerText,
+
+    // =====================
     // FLOW
-    flowTable: document.getElementById("flowTableBody").innerHTML,
-    flowReduction: document.getElementById("flowReductionTable").innerHTML,
+    // =====================
 
+    flowTable:
+      document.getElementById("flowTableBody").innerHTML,
+
+    flowReduction:
+      document.getElementById("flowReductionTable").innerHTML,
+
+    // =====================
     // KANUL
-    kanulAorta: document.getElementById("kanulAorta").innerText,
-    kanulVena: document.getElementById("kanulVena").innerText,
-    kanulLeftVent: document.getElementById("kanulLeftVent").innerText,
-    kanulAntegrade: document.getElementById("kanulAntegrade").innerText,
-    kanulRetrograde: document.getElementById("kanulRetrograde").innerText,
+    // =====================
 
+    kanulAorta:
+      document.getElementById("kanulAorta").innerText,
+
+    kanulVena:
+      document.getElementById("kanulVena").innerText,
+
+    kanulLeftVent:
+      document.getElementById("kanulLeftVent").innerText,
+
+    kanulAntegrade:
+      document.getElementById("kanulAntegrade").innerText,
+
+    kanulRetrograde:
+      document.getElementById("kanulRetrograde").innerText,
+
+    // =====================
     // OKSIGENATOR
-    oksigenator: document.getElementById("oksigenator").innerText,
-    customPack: document.getElementById("customPack").innerText,
-    tubingSize: document.getElementById("tubingSize").innerText,
-    estimasiPriming: document.getElementById("estimasiPriming").innerText,
+    // =====================
 
+    oksigenator:
+      document.getElementById("oksigenator").innerText,
+
+    customPack:
+      document.getElementById("customPack").innerText,
+
+    tubingSize:
+      document.getElementById("tubingSize").innerText,
+
+    estimasiPriming:
+      document.getElementById("estimasiPriming").innerText,
+
+    // =====================
     // HB
-    ebvAuto: document.getElementById("ebvAuto").value,
-    priming: document.getElementById("priming").value,
-    hbAwal: document.getElementById("hbAwal").value,
-    hbPrediksi: document.getElementById("hasilHbPrediksi").innerText.replace("Prediksi Hb : ",""),
+    // =====================
 
+    ebvAuto:
+      document.getElementById("ebvAuto").value,
+
+    priming:
+      document.getElementById("priming").value,
+
+    hbAwal:
+      document.getElementById("hbAwal").value,
+
+    hbPrediksi:
+      document.getElementById("hasilHbPrediksi")
+      .innerText
+      .replace("Prediksi Hb : ",""),
+
+    // =====================
     // STRATEGI PRIMING
-    jenisPriming: document.getElementById("jenisPriming").value,
-    jumlahPRC: document.getElementById("jumlahPRC").value,
-    primingTable: document.getElementById("primingTable").innerHTML,
+    // =====================
 
+    jenisPriming:
+      document.getElementById("jenisPriming").value,
+
+    jumlahPRC:
+      document.getElementById("jumlahPRC").value,
+
+    primingTable:
+      document.getElementById("primingTable").innerHTML,
+
+    // =====================
     // OBAT
-    tranex: document.getElementById("tranex").innerText,
-    methyl: document.getElementById("methyl").innerText,
+    // =====================
 
+    tranex:
+      document.getElementById("tranex").innerText,
+
+    methyl:
+      document.getElementById("methyl").innerText,
+
+    // =====================
     // KARDIOPLEGIA
-    jenisKardioplegia: document.getElementById("jenisKardioplegia").value,
-    dosisInduksi: document.getElementById("dosisInduksiKardioplegia").innerText,
-    dosisMaintenance: document.getElementById("dosisMaintenanceKardioplegia").innerText,
-    flowCPG: document.getElementById("flowCPG").innerText
+    // =====================
+
+    jenisKardioplegia:
+      document.getElementById("jenisKardioplegia").value,
+
+    dosisInduksi:
+      document.getElementById("dosisInduksiKardioplegia").innerText,
+
+    dosisMaintenance:
+      document.getElementById("dosisMaintenanceKardioplegia").innerText,
+
+    flowCPG:
+      document.getElementById("flowCPG").innerText
+
   };
+
 }
 
 function isiForm(data){
-  document.getElementById("tanggal").value = data.tanggal ? String(data.tanggal).split("T")[0] : "";
-  document.getElementById("kategori").value = data.kategori || "Dewasa";
-  document.getElementById("namaPasien").value = data.nama || "";
-  document.getElementById("mrPasien").value = data.mr || "";
-  document.getElementById("diagnosaPasien").value = data.diagnosa || "";
-  document.getElementById("tindakan").value = data.tindakan || "";
-  document.getElementById("usia").value = data.usia || "";
-  document.getElementById("tb").value = data.tb || "";
-  document.getElementById("bb").value = data.bb || "";
 
-  document.getElementById("priming").value = data.priming || "";
-  document.getElementById("hbAwal").value = data.hbAwal || "";
+  // =====================
+  // DATA PASIEN
+  // =====================
 
-  document.getElementById("jenisPriming").value = data.jenisPriming || "Clear Priming";
-  document.getElementById("jumlahPRC").value = data.jumlahPRC || "";
+  document.getElementById("tanggal").value =
+      data.tanggal
+        ? String(data.tanggal).split("T")[0]
+        : "";
 
-  document.getElementById("jenisKardioplegia").value = data.jenisKardioplegia || "Clear Cardioplegia";
+  document.getElementById("kategori").value =
+    data.kategori || "Dewasa";
+
+  document.getElementById("namaPasien").value =
+    data.nama || "";
+
+  document.getElementById("mrPasien").value =
+    data.mr || "";
+
+  document.getElementById("diagnosaPasien").value =
+    data.diagnosa || "";
+
+  document.getElementById("tindakan").value =
+    data.tindakan || "";
+
+  document.getElementById("usia").value =
+  data.usia || "";
+
+  document.getElementById("tb").value =
+    data.tb || "";
+
+  document.getElementById("bb").value =
+    data.bb || "";
+
+  // =====================
+  // HB
+  // =====================
+
+  document.getElementById("priming").value =
+    data.priming || "";
+
+  document.getElementById("hbAwal").value =
+    data.hbAwal || "";
+
+  // =====================
+  // STRATEGI PRIMING
+  // =====================
+
+  document.getElementById("jenisPriming").value =
+    data.jenisPriming || "Clear Priming";
+
+  document.getElementById("jumlahPRC").value =
+    data.jumlahPRC || "";
+
+  // =====================
+  // KARDIOPLEGIA
+  // =====================
+
+  document.getElementById("jenisKardioplegia").value =
+    data.jenisKardioplegia || "Clear Cardioplegia";
+
+  // =====================
+  // HITUNG ULANG
+  // =====================
 
   hitungSemua();
+
 }
 
 function simpanData(){
+
   let data = ambilDataForm();
 
   if(data.nama == ""){
@@ -193,96 +234,152 @@ function simpanData(){
     return;
   }
 
+  // MODE UPDATE
   if(editRow){
+
     data.row = editRow;
     data.mode = "update";
-  } else {
+
+  }
+  else{
+
     data.mode = "tambah";
+
   }
 
-  fetch(SCRIPT_URL, {
-    method: "POST",
-    body: JSON.stringify(data)
-  })
-  .then(res => res.text())
-  .then(res => {
-    alert(editRow ? "Data berhasil diupdate" : "Data berhasil disimpan");
-    editRow = null;
-    document.querySelector(".pdf-button").innerText = "Simpan Data";
-    renderTable();
-  });
+fetch(SCRIPT_URL,{
+
+  method:"POST",
+
+  body:JSON.stringify(data)
+
+})
+
+.then(res=>res.text())
+
+.then(res=>{
+
+  alert(
+    editRow
+    ? "Data berhasil diupdate"
+    : "Data berhasil disimpan"
+  );
+
+  // reset mode edit
+  editRow = null;
+
+  document.querySelector(".pdf-button").innerText =
+    "Simpan Data";
+
+  renderTable();
+
+});
+
+}
+
+function doGet(){
+
+  const sheet =
+    SpreadsheetApp
+    .getActiveSpreadsheet()
+    .getSheetByName("Sheet1");
+
+  const data =
+    sheet.getDataRange().getValues();
+
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+
 }
 
 function formatTanggal(tanggal){
+
   if(!tanggal) return "-";
+
   let tgl = new Date(tanggal);
-  return tgl.toLocaleDateString("id-ID", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric"
+
+  return tgl.toLocaleDateString("id-ID",{
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric"
   });
+
 }
 
 function renderTable(){
   fetch(SCRIPT_URL)
   .then(res => res.json())
   .then(database => {
-    console.log("Data dari Sheets:", database);
+    
+    console.log("Data dari Sheets:", database); // Untuk memantau data di inspect console
 
+    // PENGAMAN 1: Jika database kosong atau hanya berisi baris header saja
     if (!database || database.length <= 1) {
       document.getElementById("databaseBody").innerHTML = `<tr><td colspan="15" style="text-align:center;">Belum ada data pasien di database.</td></tr>`;
       return;
     }
 
+    // PENGAMAN 2: Potong baris pertama (Header) secara paksa demi keamanan data
     database.shift(); 
 
     let keyword = document.getElementById("cariData").value.toLowerCase();
     let tbody = "";
 
+    // Sorting berdasarkan tanggal terbaru (Kolom B / indeks 1)
     database.sort((a, b) => {
       let tanggalA = new Date(a[1] || 0);
       let tanggalB = new Date(b[1] || 0);
       return tanggalB - tanggalA;
     });
 
-    database.forEach((row, index) => {
+   database.forEach((row, index) => {
+      
+      // ===================================================================
+      // SILAKAN SESUAIKAN ANGKA INDEKS DI BAWAH INI DENGAN KOLOM GOOGLE SHEETS
+      // (Kolom A = 0, Kolom B = 1, Kolom C = 2, Kolom D = 3, dst...)
+      // ===================================================================
       let item = {
-        row: index + 2,
-        tanggalInput: row[0],
-        tanggal: row[1],
-        kategori: row[2],
-        nama: row[3],
-        mr: row[4],
-        diagnosa: row[5],
-        tindakan: row[6],
-        usia: row[7],
-        tb: row[8],
-        bb: row[9],
-        bsa: row[10],
-        ebv: row[11],
-        priming: row[12],
-        hbAwal: row[13],
-        hbPrediksi: row[14],
-        jenisPriming: row[15],
-        estimasiPriming: row[16],
-        jenisKardioplegia: row[17]
+        row: index + 2,             // Biarkan ini untuk mendeteksi baris update
+        tanggalInput: row[0],       // Kolom A (Waktu input sistem)
+        tanggal: row[1],            // Kolom B (Tanggal dari form)
+        kategori: row[2],           // Kolom C
+        nama: row[3],               // Kolom D
+        mr: row[4],                 // Kolom E
+        diagnosa: row[5],           // Kolom F
+        tindakan: row[6],           // Kolom G
+        usia: row[7],               // Kolom H
+        tb: row[8],                 // Kolom I
+        bb: row[9],                 // Kolom J
+        bsa: row[10],               // Kolom K
+        ebv: row[11],               // Kolom L
+        priming: row[12],           // Kolom M
+        hbAwal: row[13],            // Kolom N
+        hbPrediksi: row[14],        // Kolom O
+        jenisPriming: row[15],      // Kolom P
+        estimasiPriming: row[16],   // Kolom Q
+        jenisKardioplegia: row[17]  // Kolom R
       };
 
+      // Filter Pencarian Pasien
       let gabung = ((item.nama || "") + (item.mr || "") + (item.diagnosa || "") + (item.tindakan || "")).toLowerCase();
       if(!gabung.includes(keyword)){
         return;
       }
 
+      // Format Tampilan Berat Badan
       let tampilanBB = item.bb || "-";
       if (tampilanBB !== "-" && !isNaN(tampilanBB)) {
         tampilanBB = `${tampilanBB} KG`;
       }
 
+      // Format Tampilan Hb Awal
       let tampilanHbAwal = item.hbAwal || "-";
       if (tampilanHbAwal !== "-" && !isNaN(tampilanHbAwal)) {
         tampilanHbAwal = `${tampilanHbAwal} g/dL`;
       }
 
+      // Format Tampilan BSA Bersih
       let tampilanBSA = (item.bsa || "-").toString().replace("BSA : ", "").replace("(Dubois Formula)", "").trim();
 
       tbody += `
@@ -319,122 +416,267 @@ function renderTable(){
 }
 
 function editData(data){
+
   isiForm(data);
+
   editRow = data.row;
-  document.querySelector(".pdf-button").innerText = "Update Data";
+
+  document.querySelector(".pdf-button").innerText =
+    "Update Data";
+
   window.scrollTo({
-    top: 0,
-    behavior: "smooth"
+    top:0,
+    behavior:"smooth"
   });
+
 }
 
 function hapusData(index){
-  let konfirmasi = confirm("Yakin ingin menghapus data ini?");
-  if(!konfirmasi) return;
 
-  let database = JSON.parse(localStorage.getItem("databasePerfusionist")) || [];
-  database.splice(index, 1);
+  let konfirmasi = confirm("Yakin ingin menghapus data ini?");
+
+  if(!konfirmasi){
+    return;
+  }
+
+  let database =
+    JSON.parse(localStorage.getItem("databasePerfusionist")) || [];
+
+  database.splice(index,1);
+
   renderTable();
+
   alert("Data berhasil dihapus");
+
+}
+
+window.onload = function(){
+
+  renderTable();
+
 }
 
 function ubahTema(){
   let kategori = document.getElementById("kategori").value;
+
   if(kategori == "Pediatrik"){
     document.body.classList.add("pediatrik-theme");
-  } else {
+  }
+  else{
     document.body.classList.remove("pediatrik-theme");
   }
 }
-
-
-// =========================================================================
-// C. ENGINE KALKULATOR UTAMA PERFUSIONIST
-// =========================================================================
 
 function hitungSemua(){
   let tb = parseFloat(document.getElementById("tb").value);
   let bb = parseFloat(document.getElementById("bb").value);
   let kategori = document.getElementById("kategori").value;
-  ubahTema();
+    ubahTema();
+
 
   if(isNaN(tb) || isNaN(bb)){
     return;
   }
 
+  // rumus BSA dubois
   let bsa = 0.007184 * Math.pow(tb, 0.725) * Math.pow(bb, 0.425);
 
   document.getElementById("hasilBSA").innerHTML = `
-    BSA : ${bsa.toFixed(2)} m²
-    <small style="color:rgba(79, 72, 72, 0.5); font-style:italic; letter-spacing:0.5px;">(Dubois Formula)</small>
-  `;
+  BSA : ${bsa.toFixed(2)} m²
+    <small style="
+    color:rgba(79, 72, 72, 0.5);
+    font-style:italic;
+    letter-spacing:0.5px;
+  ">
+    (Dubois Formula)
+  </small>
+`;
 
   let faktorEBV = 0;
-  if(bb < 10)       faktorEBV = 80;
-  else if(bb < 21)  faktorEBV = 75;
-  else if(bb < 31)  faktorEBV = 70;
-  else if(bb < 41)  faktorEBV = 65;
-  else              faktorEBV = 60;
+
+  if(bb < 10){
+    faktorEBV = 80;
+  }
+  else if(bb < 21){
+    faktorEBV = 75;
+  }
+  else if(bb < 31){
+    faktorEBV = 70;
+  }
+  else if(bb < 41){
+    faktorEBV = 65;
+  }
+  else{
+    faktorEBV = 60;
+  }
 
   let ebv = bb * faktorEBV;
 
-  document.getElementById("hasilEBV").innerHTML = "EBV : " + ebv.toFixed(0) + " mL";
-  document.getElementById("hasilFaktor").innerHTML = "Faktor EBV : " + faktorEBV + " mL/kg";
-  document.getElementById("ebvAuto").value = ebv.toFixed(0);
+  document.getElementById("hasilEBV").innerHTML =
+    "EBV : " + ebv.toFixed(0) + " mL";
+
+  document.getElementById("hasilFaktor").innerHTML =
+    "Faktor EBV : " + faktorEBV + " mL/kg";
+
+  document.getElementById("ebvAuto").value =
+    ebv.toFixed(0);
 
   let flowIndex = [];
+
   if(kategori == "Pediatrik"){
-    flowIndex = [3.2, 3.0, 2.8, 2.4, 2.2, 2.0, 1.8, 1.5];
-  } else {
-    flowIndex = [3.0, 2.8, 2.4, 2.2, 2.0, 1.8, 1.5];
+    flowIndex = [3.2,3.0,2.8,2.4,2.2,2.0,1.8,1.5];
+  }
+  else{
+    flowIndex = [3.0,2.8,2.4,2.2,2.0,1.8,1.5];
   }
 
   let tableBody = "";
-  flowIndex.forEach(function(index){
-    let flow = bsa * index;
-    let highlightClass = "";
 
-    if(kategori == "Pediatrik"){
-      if(index == 3.2 || index == 2.2 || index == 1.5) highlightClass = "flow-highlight";
-    } else {
-      if(index == 3.0 || index == 2.0 || index == 1.5) highlightClass = "flow-highlight";
+ flowIndex.forEach(function(index){
+
+  let flow = bsa * index;
+
+  // =========================
+  // HIGHLIGHT FLOW PENTING
+  // =========================
+
+  let highlightClass = "";
+
+  if(kategori == "Pediatrik"){
+
+    if(
+      index == 3.2 ||
+      index == 2.2 ||
+      index == 1.5
+    ){
+      highlightClass = "flow-highlight";
     }
 
-    tableBody += `
-      <tr class="${highlightClass}">
-        <td>${index}</td>
-        <td>${flow.toFixed(2)} L/min</td>
-      </tr>
-    `;
-  });
+  }
+  else{
 
-  document.getElementById("flowTableBody").innerHTML = tableBody;
+    if(
+      index == 3.0 ||
+      index == 2.0 ||
+      index == 1.5
+    ){
+      highlightClass = "flow-highlight";
+    }
 
-  // TARGET MAP
-  let mapBB = "-";
-  let mapUsia = "-";
-
-  if(bb < 10)       mapBB = "40 - 50 mmHg";
-  else if(bb <= 20) mapBB = "45 - 50 mmHg";
-  else if(bb <= 40) mapBB = "50 - 60 mmHg";
-  else              mapBB = "60 - 70 mmHg";
-
-  let usiaText = document.getElementById("usia").value.toLowerCase();
-  if(usiaText.includes("bulan") || usiaText.includes("month")){
-    let angkaUsia = parseFloat(usiaText);
-    mapUsia = (angkaUsia < 1) ? "30 - 45 mmHg" : "40 - 50 mmHg";
-  } else if(usiaText.includes("tahun") || usiaText.includes("year")){
-    let angkaUsia = parseFloat(usiaText);
-    if(angkaUsia <= 10)      mapUsia = "45 - 60 mmHg";
-    else if(angkaUsia <= 16) mapUsia = "50 - 70 mmHg";
-    else                     mapUsia = "60 - 90 mmHg";
   }
 
-  document.getElementById("flowReductionTable").innerHTML = `
-    <tr><td colspan="2" style="background:#eff6ff; font-weight:700; color:#1d4ed8; text-align:center;">TARGET MAP</td></tr>
-    <tr><td><b>Sesuai Berat Badan</b></td><td>${mapBB}</td></tr>
-    <tr><td><b>Sesuai Usia</b></td><td>${mapUsia}</td></tr>
+  tableBody += `
+    <tr class="${highlightClass}">
+      <td>${index}</td>
+      <td>${flow.toFixed(2)} L/min</td>
+    </tr>
   `;
+
+});
+
+
+
+  document.getElementById("flowTableBody").innerHTML =
+    tableBody;
+
+// ======================
+// TARGET MAP
+// ======================
+
+let mapBB = "-";
+let mapUsia = "-";
+
+
+// ======================
+// TARGET MAP BERDASARKAN BB
+// ======================
+
+if(bb < 10){
+  mapBB = "40 - 50 mmHg";
+}
+else if(bb <= 20){
+  mapBB = "45 - 50 mmHg";
+}
+else if(bb <= 40){
+  mapBB = "50 - 60 mmHg";
+}
+else{
+  mapBB = "60 - 70 mmHg";
+}
+
+
+// ======================
+// TARGET MAP BERDASARKAN USIA
+// ======================
+
+let usiaText =
+  document.getElementById("usia")
+  .value
+  .toLowerCase();
+
+if(
+  usiaText.includes("bulan") ||
+  usiaText.includes("month")
+){
+
+  let angkaUsia = parseFloat(usiaText);
+
+  if(angkaUsia < 1){
+    mapUsia = "30 - 45 mmHg";
+  }
+  else{
+    mapUsia = "40 - 50 mmHg";
+  }
+
+}
+else if(
+  usiaText.includes("tahun") ||
+  usiaText.includes("year")
+){
+
+  let angkaUsia = parseFloat(usiaText);
+
+  if(angkaUsia <= 10){
+    mapUsia = "45 - 60 mmHg";
+  }
+  else if(angkaUsia <= 16){
+    mapUsia = "50 - 70 mmHg";
+  }
+  else{
+    mapUsia = "60 - 90 mmHg";
+  }
+
+}
+
+
+// ======================
+// TAMPILAN TARGET MAP
+// ======================
+
+document.getElementById("flowReductionTable").innerHTML =
+`
+<tr>
+  <td colspan="2"
+      style="
+      background:#eff6ff;
+      font-weight:700;
+      color:#1d4ed8;
+      text-align:center;
+      ">
+      TARGET MAP
+  </td>
+</tr>
+
+<tr>
+  <td><b>Sesuai Berat Badan</b></td>
+  <td>${mapBB}</td>
+</tr>
+
+<tr>
+  <td><b>Sesuai Usia</b></td>
+  <td>${mapUsia}</td>
+</tr>
+`;
 
   document.getElementById("kanulAorta").innerHTML =
     bb < 5 ? "10 Fr (Flow < 500 ml/min)" :
@@ -443,16 +685,56 @@ function hitungSemua(){
     bb <= 31 ? "18 Fr (Flow 1700 - 2500 ml/min)" :
     bb <= 41 ? "22 Fr (Flow 2500 - 3300 ml/min)" :
     "24 Fr (Flow > 3300 ml/min)";
+// ======================
+// AORTA FEMORAL
+// ======================
 
-  let aortaFemoral = "-";
-  if(bb < 5)         aortaFemoral = "8 Fr (Flow 0 - 400 ml/min)";
-  else if(bb <= 9)   aortaFemoral = "10 Fr (Flow 400 - 700 ml/min)";
-  else if(bb <= 15)  aortaFemoral = "12 (Flow 700 - 1200 ml/min)<br>14 Fr (Flow 1200 - 1700 ml/min)";
-  else if(bb <= 31)  aortaFemoral = "14 Fr (Flow 1200 - 1700 ml/min)<br>15 Fr (Flow 1700 - 2000 ml/min)<br>17 Fr (Flow 2000 - 2500 ml/min)";
-  else if(bb <= 41)  aortaFemoral = "17 Fr (Flow 2000 - 2500 ml/min)<br>19 Fr (Flow 2500 - 3500 ml/min)";
-  else               aortaFemoral = "19 Fr (Flow 2500 - 3500 ml/min)<br>21 Fr (> 3500 ml/min)";
+let aortaFemoral = "-";
 
-  document.getElementById("kanulAortaFemoral").innerHTML = aortaFemoral;
+if(bb < 5){
+
+  aortaFemoral = "8 Fr (Flow 0 - 400 ml/min)";
+
+}
+else if(bb <= 9){
+
+  aortaFemoral = "10 Fr (Flow 400 - 700 ml/min)";
+
+}
+else if(bb <= 15){
+
+  aortaFemoral = "12 (Flow 700 - 1200 ml/min)"+ "<br>" + 
+                  "14 Fr (Flow 1200 - 1700 ml/min)";
+
+}
+// else if(bb <= 21){
+
+//   aortaFemoral = "12 (Flow 700 - 1200 ml/min)"+ "<br>" + 
+//                   "14 Fr (Flow 1200 - 1700 ml/min)";
+
+// }
+else if(bb <= 31){
+
+  aortaFemoral = "14 Fr (Flow 1200 - 1700 ml/min)"+ "<br>" + 
+                  "15 Fr (Flow 1700 - 2000 ml/min)"+ "<br>" + 
+                  "17 Fr (Flow 2000 - 2500 ml/min)";
+
+}
+else if(bb <= 41){
+
+  aortaFemoral = "17 Fr (Flow 2000 - 2500 ml/min)"+ "<br>" +
+                  "19 Fr (Flow 2500 - 3500 ml/min)";
+
+}
+else{
+
+  aortaFemoral = "19 Fr (Flow 2500 - 3500 ml/min)" + "<br>" +
+                  "21 Fr (> 3500 ml/min)"
+  
+}
+
+document.getElementById("kanulAortaFemoral").innerHTML =
+  aortaFemoral;
 
   document.getElementById("kanulVena").innerHTML =
     bb < 5 ? "12/16 Fr (Flow < 650 ml/min)" :
@@ -463,24 +745,44 @@ function hitungSemua(){
     bb < 41 ? "24/28 Fr (Flow 3000 - 3200 ml/min)" :
     "28/31 Fr (Flow > 3200 ml/min)";
 
-  document.getElementById("kanulVenaFemoral").innerHTML =
+    // ======================
+// Vena FEMORAL
+// ======================
+
+let venaFemoral = "-";
+ document.getElementById("kanulVenaFemoral").innerHTML =
     bb < 5 ? "20 Fr (Flow < 450 ml/min)" :
-    bb < 12 ? "22 Fr (Flow 550 - 900 ml/min)<br>24 Fr (Flow 700 - 900 ml/min)" :
-    bb < 21 ? "26 Fr (Flow 900 - 1100 ml/min)<br>28 Fr (Flow 1100 - 1300 ml/min)<br>30 Fr (Flow 1300 - 1500 ml/min)" :
-    bb < 26 ? "32 Fr (Flow 1500 - 2000 ml/min)<br>34 Fr (Flow 2000 - 2700 ml/min)" :
-    bb < 31 ? "34 Fr (Flow 2000 - 2700 ml/min)<br>36 Fr (Flow 2700 - 3500 ml/min)" :
+    bb < 12 ? "22 Fr (Flow 550 - 900 ml/min)"+ "<br>"+
+              " 24 Fr (Flow 700 - 900 ml/min) " :
+    bb < 21 ? "26 Fr (Flow 900 - 1100 ml/min)"+ "<br>"+
+              "28 Fr (Flow 1100 - 1300 ml/min)"+ "<br>"+
+              "30 Fr (Flow 1300 - 1500 ml/min)" :
+    bb < 26 ? "32 Fr (Flow 1500 - 2000 ml/min)"+ "<br>"+
+              "34 Fr (Flow 2000 - 2700 ml/min)" :
+    bb < 31 ? "34 Fr (Flow 2000 - 2700 ml/min)"+ "<br>"+
+              "36 Fr (Flow 2700 - 3500 ml/min)" :
     bb < 41 ? "36 Fr (Flow 2700 - 3500 ml/min)" :
               "38 Fr (Flow > 3500 ml/min)";
 
-  document.getElementById("kanulAntegrade").innerHTML = bb < 30 ? "Abocath 14 GA" : "ATC 12 GA";
-  document.getElementById("kanulRetrograde").innerHTML = bb < 15 ? "RC 10 Fr" : bb <= 35 ? "RC 13 Fr" : "RC 14 Fr";
-  document.getElementById("kanulLeftVent").innerHTML = bb < 15 ? "Left Vent Neonate 13 Fr" : bb <= 35 ? "16 Fr" : "20 Fr";
+
+
+  document.getElementById("kanulAntegrade").innerHTML =
+    bb < 30 ? "Abocath 14 GA" : "ATC 12 GA";
+
+  document.getElementById("kanulRetrograde").innerHTML =
+    bb < 15 ? "RC 10 Fr" :
+    bb <= 35 ? "RC 13 Fr" :
+    "RC 14 Fr";
+
+  document.getElementById("kanulLeftVent").innerHTML =
+    bb < 15 ? "Left Vent Neonate 13 Fr" :
+    bb <= 35 ? "16 Fr" :
+    "20 Fr";
 
   let oksigenator = "";
   let customPack = "";
   let tubingSize = "";
   let estimasiPriming = "";
-  let flowMaksimal = "";
 
   let mitral = "-";
   let tricuspid = "-";
@@ -488,137 +790,451 @@ function hitungSemua(){
   let pulmonary = "-";
   let halfSize = "-";
 
-  if(bb >= 2 && bb < 10){
+  let flowMaksimal = "";
+
+if(bb >= 2 && bb < 10){
     oksigenator = "Baby Rx/Fx / Pixie Neo (BB < 15 kg)";
     customPack = "Neonate";
     tubingSize = "Arteri 1/4, Vena 1/4, Pump Boot 1/4";
     estimasiPriming = "400 - 500 ml";
-    flowMaksimal = "Baby RX/FX : 1.5 L/min\nPixie Neo : 2.0 L/min";
-  } else if(bb < 21){
+
+    flowMaksimal =
+      "Baby RX/FX : 1.5 L/min\n" +
+      "Pixie Neo : 2.0 L/min";
+}
+else if(bb < 21){
     oksigenator = "Pixie Infant / Capiox Fx 15 RW 30 / Thrilly Euroset";
     customPack = "Infant";
     tubingSize = "Arteri 1/4, Vena 3/8, Pump Boot 3/8";
     estimasiPriming = "600 - 800 ml";
-    flowMaksimal = "Pixie Infant : 3.0 L/min\nCapiox FX15 RW30 : 3.0 L/min\nThrilly Euroset : 3.5 L/min";
-  } else if(bb < 41){
+
+    flowMaksimal =
+      "Pixie Infant : 3.0 L/min\n" +
+      "Capiox FX15 RW30 : 3.0 L/min\n" +
+      "Thrilly Euroset : 3.5 L/min";
+}
+else if(bb < 41){
     oksigenator = "Capiox Fx 15 RW 30 / Thrilly Euroset (BB < 35 kg)";
     customPack = "Pediatric";
     tubingSize = "Arteri 3/8, Vena 3/8, Pump Boot 3/8";
     estimasiPriming = "800 - 1000 ml";
-    flowMaksimal = "Capiox FX15 RW30 : 3.0 L/min\nThrilly Euroset : 3.5 L/min";
-  } else {
+
+    flowMaksimal =
+      "Capiox FX15 RW30 : 3.0 L/min\n" +
+      "Thrilly Euroset : 3.5 L/min";
+}
+else{
     oksigenator = "Capiox Fx 15 RW 40 / Capiox Fx 25 / Fusion / Inspire 6F / Horizon / Affinity NT";
     customPack = "Adult";
     tubingSize = "Arteri 3/8, Vena 1/2, Pump Boot 1/2";
     estimasiPriming = "1 - 1.5 L";
-    flowMaksimal = "Capiox FX15 RW40 : 4.0 L/min\nCapiox FX25 : 7.0 L/min\nFusion : 7.0 L/min\nInspire 6F : 7.0 L/min\nHorizon : 7.0 L/min\nAffinity NT : 7.0 L/min";
-  }
+
+    flowMaksimal =
+      "Capiox FX15 RW40 : 4.0 L/min\n" +
+      "Capiox FX25 : 7.0 L/min\n" +
+      "Fusion : 7.0 L/min\n" +
+      "Inspire 6F : 7.0 L/min\n" +
+      "Horizon : 7.0 L/min\n" +
+      "Affinity NT : 7.0 L/min";
+}
 
   document.getElementById("oksigenator").innerHTML = oksigenator;
-  document.getElementById("customPack").innerHTML = customPack;
-  document.getElementById("tubingSize").innerHTML = tubingSize;
-  document.getElementById("estimasiPriming").innerHTML = estimasiPriming;
-  document.getElementById("flowMaksimal").innerHTML = flowMaksimal.replace(/\n/g,"<br>");
+document.getElementById("customPack").innerHTML = customPack;
+document.getElementById("tubingSize").innerHTML = tubingSize;
+document.getElementById("estimasiPriming").innerHTML = estimasiPriming;
 
-  // MEAN NORMAL VALVE RING
-  if(bsa <= 0.25){      mitral = "11.2 mm"; tricuspid = "13.4 mm"; aortic = "7.2 mm";  pulmonary = "8.4 mm"; }
-  else if(bsa <= 0.30){ mitral = "12.6 mm"; tricuspid = "14.9 mm"; aortic = "8.1 mm";  pulmonary = "9.3 mm"; }
-  else if(bsa <= 0.35){ mitral = "13.6 mm"; tricuspid = "16.2 mm"; aortic = "8.9 mm";  pulmonary = "10.1 mm"; }
-  else if(bsa <= 0.40){ mitral = "14.4 mm"; tricuspid = "17.3 mm"; aortic = "9.5 mm";  pulmonary = "10.7 mm"; }
-  else if(bsa <= 0.45){ mitral = "15.2 mm"; tricuspid = "18.2 mm"; aortic = "10.1 mm"; pulmonary = "11.3 mm"; }
-  else if(bsa <= 0.50){ mitral = "15.8 mm"; tricuspid = "19.2 mm"; aortic = "10.7 mm"; pulmonary = "11.9 mm"; }
-  else if(bsa <= 0.60){ mitral = "16.9 mm"; tricuspid = "20.7 mm"; aortic = "11.5 mm"; pulmonary = "12.8 mm"; }
-  else if(bsa <= 0.70){ mitral = "17.9 mm"; tricuspid = "21.9 mm"; aortic = "12.3 mm"; pulmonary = "13.5 mm"; }
-  else if(bsa <= 0.80){ mitral = "18.8 mm"; tricuspid = "23.0 mm"; aortic = "13.0 mm"; pulmonary = "14.2 mm"; }
-  else if(bsa <= 0.90){ mitral = "19.7 mm"; tricuspid = "24.0 mm"; aortic = "13.4 mm"; pulmonary = "14.8 mm"; }
-  else if(bsa <= 1.0){  mitral = "20.2 mm"; tricuspid = "24.9 mm"; aortic = "14.0 mm"; pulmonary = "15.3 mm"; }
-  else if(bsa <= 1.2){  mitral = "21.4 mm"; tricuspid = "26.2 mm"; aortic = "14.8 mm"; pulmonary = "16.2 mm"; }
-  else if(bsa <= 1.4){  mitral = "22.3 mm"; tricuspid = "27.7 mm"; aortic = "15.5 mm"; pulmonary = "17.0 mm"; }
-  else if(bsa <= 1.6){  mitral = "23.1 mm"; tricuspid = "28.9 mm"; aortic = "16.1 mm"; pulmonary = "17.6 mm"; }
-  else if(bsa <= 1.8){  mitral = "23.8 mm"; tricuspid = "29.1 mm"; aortic = "16.5 mm"; pulmonary = "18.2 mm"; }
-  else {                mitral = "24.2 mm"; tricuspid = "30.0 mm"; aortic = "17.2 mm"; pulmonary = "18.0 mm"; }
+document.getElementById("flowMaksimal").innerHTML =
+  flowMaksimal.replace(/\n/g,"<br>");
 
-  // HALF SIZE PULMONARY
-  if(bb <= 3)        halfSize = "4";
-  else if(bb <= 4)   halfSize = "5";
-  else if(bb <= 5)   halfSize = "5.5";
-  else if(bb <= 6)   halfSize = "6";
-  else if(bb <= 8)   halfSize = "6.5";
-  else if(bb <= 9)   halfSize = "7";
-  else if(bb <= 10)  halfSize = "7.5";
-  else if(bb <= 12)  halfSize = "8.5";
-  else if(bb <= 14)  halfSize = "9";
-  else if(bb <= 16)  halfSize = "9.5";
-  else if(bb <= 18)  halfSize = "10";
-  else if(bb <= 20)  halfSize = "11";
-  else if(bb <= 25)  halfSize = "12";
-  else if(bb <= 30)  halfSize = "13";
-  else               halfSize = "14";
+// =========================
+// MEAN NORMAL VALVE RING
+// =========================
 
-  document.getElementById("mitral").innerHTML = mitral;
-  document.getElementById("tricuspid").innerHTML = tricuspid;
-  document.getElementById("aortic").innerHTML = aortic;
-  document.getElementById("pulmonary").innerHTML = pulmonary;
-  document.getElementById("halfSize").innerHTML = halfSize;
+if(bsa <= 0.25){
 
-  let tranex = 50 * bb;
+  mitral = "11.2 mm";
+  tricuspid = "13.4 mm";
+  aortic = "7.2 mm";
+  pulmonary = "8.4 mm";
+
+}
+else if(bsa <= 0.30){
+
+  mitral = "12.6 mm";
+  tricuspid = "14.9 mm";
+  aortic = "8.1 mm";
+  pulmonary = "9.3 mm";
+
+}
+else if(bsa <= 0.35){
+
+  mitral = "13.6 mm";
+  tricuspid = "16.2 mm";
+  aortic = "8.9 mm";
+  pulmonary = "10.1 mm";
+
+}
+else if(bsa <= 0.40){
+
+  mitral = "14.4 mm";
+  tricuspid = "17.3 mm";
+  aortic = "9.5 mm";
+  pulmonary = "10.7 mm";
+
+}
+else if(bsa <= 0.45){
+
+  mitral = "15.2 mm";
+  tricuspid = "18.2 mm";
+  aortic = "10.1 mm";
+  pulmonary = "11.3 mm";
+
+}
+else if(bsa <= 0.50){
+
+  mitral = "15.8 mm";
+  tricuspid = "19.2 mm";
+  aortic = "10.7 mm";
+  pulmonary = "11.9 mm";
+
+}
+else if(bsa <= 0.60){
+
+  mitral = "16.9 mm";
+  tricuspid = "20.7 mm";
+  aortic = "11.5 mm";
+  pulmonary = "12.8 mm";
+
+}
+else if(bsa <= 0.70){
+
+  mitral = "17.9 mm";
+  tricuspid = "21.9 mm";
+  aortic = "12.3 mm";
+  pulmonary = "13.5 mm";
+
+}
+else if(bsa <= 0.80){
+
+  mitral = "18.8 mm";
+  tricuspid = "23.0 mm";
+  aortic = "13.0 mm";
+  pulmonary = "14.2 mm";
+
+}
+else if(bsa <= 0.90){
+
+  mitral = "19.7 mm";
+  tricuspid = "24.0 mm";
+  aortic = "13.4 mm";
+  pulmonary = "14.8 mm";
+
+}
+else if(bsa <= 1.0){
+
+  mitral = "20.2 mm";
+  tricuspid = "24.9 mm";
+  aortic = "14.0 mm";
+  pulmonary = "15.3 mm";
+
+}
+else if(bsa <= 1.2){
+
+  mitral = "21.4 mm";
+  tricuspid = "26.2 mm";
+  aortic = "14.8 mm";
+  pulmonary = "16.2 mm";
+
+}
+else if(bsa <= 1.4){
+
+  mitral = "22.3 mm";
+  tricuspid = "27.7 mm";
+  aortic = "15.5 mm";
+  pulmonary = "17.0 mm";
+
+}
+else if(bsa <= 1.6){
+
+  mitral = "23.1 mm";
+  tricuspid = "28.9 mm";
+  aortic = "16.1 mm";
+  pulmonary = "17.6 mm";
+
+}
+else if(bsa <= 1.8){
+
+  mitral = "23.8 mm";
+  tricuspid = "29.1 mm";
+  aortic = "16.5 mm";
+  pulmonary = "18.2 mm";
+
+}
+else{
+
+  mitral = "24.2 mm";
+  tricuspid = "30.0 mm";
+  aortic = "17.2 mm";
+  pulmonary = "18.0 mm";
+
+}
+
+// =========================
+// HALF SIZE PULMONARY
+// =========================
+
+if(bb <= 3){
+
+  halfSize = "4";
+
+}
+else if(bb <= 4){
+
+  halfSize = "5";
+
+}
+else if(bb <= 5){
+
+  halfSize = "5.5";
+
+}
+else if(bb <= 6){
+
+  halfSize = "6";
+
+}
+else if(bb <= 8){
+
+  halfSize = "6.5";
+
+}
+else if(bb <= 9){
+
+  halfSize = "7";
+
+}
+else if(bb <= 10){
+
+  halfSize = "7.5";
+
+}
+else if(bb <= 12){
+
+  halfSize = "8.5";
+
+}
+else if(bb <= 14){
+
+  halfSize = "9";
+
+}
+else if(bb <= 16){
+
+  halfSize = "9.5";
+
+}
+else if(bb <= 18){
+
+  halfSize = "10";
+
+}
+else if(bb <= 20){
+
+  halfSize = "11";
+
+}
+else if(bb <= 25){
+
+  halfSize = "12";
+
+}
+else if(bb <= 30){
+
+  halfSize = "13";
+
+}
+else{
+
+  halfSize = "14";
+
+}
+
+document.getElementById("mitral").innerHTML = mitral;
+document.getElementById("tricuspid").innerHTML = tricuspid;
+document.getElementById("aortic").innerHTML = aortic;
+document.getElementById("pulmonary").innerHTML = pulmonary;
+document.getElementById("halfSize").innerHTML = halfSize;
+
+
+let tranex = 50 * bb;
   let methylLow = 20 * bb;
   let methylHigh = 30 * bb;
 
-  let konsentrasiTranex = 100;
-  let konsentrasiMethyl = 62.5;
+// Konsentrasi obat
+// Asam tranexamat contoh umum: 500 mg / 5 mL = 100 mg/mL
+let konsentrasiTranex = 100;
 
-  let tranexCc = tranex / konsentrasiTranex;
-  let methylLowCc = methylLow / konsentrasiMethyl;
-  let methylHighCc = methylHigh / konsentrasiMethyl;
+// Methylprednisolon contoh: 125 mg / 2 mL = 62.5 mg/mL
+// Sesuaikan dengan sediaan di tempat kamu
+let konsentrasiMethyl = 62.5;
 
-  document.getElementById("tranex").innerHTML = tranex.toFixed(0) + " mg / " + tranexCc.toFixed(1) + " cc";
-  document.getElementById("methyl").innerHTML = methylLow.toFixed(0) + " - " + methylHigh.toFixed(0) + " mg / " + methylLowCc.toFixed(1) + " - " + methylHighCc.toFixed(1) + " cc";
+let tranexCc = tranex / konsentrasiTranex;
+let methylLowCc = methylLow / konsentrasiMethyl;
+let methylHighCc = methylHigh / konsentrasiMethyl;
+
+document.getElementById("tranex").innerHTML =
+  tranex.toFixed(0) + " mg / " +
+  tranexCc.toFixed(1) + " cc";
+
+document.getElementById("methyl").innerHTML =
+  methylLow.toFixed(0) + " - " +
+  methylHigh.toFixed(0) + " mg / " +
+  methylLowCc.toFixed(1) + " - " +
+  methylHighCc.toFixed(1) + " cc";
 
   hitungPriming();
   hitungHbPrediksi();
   hitungKardioplegia();
+
 }
 
 function hitungHbPrediksi(){
-  let ebv = parseFloat(document.getElementById("ebvAuto").value);
-  let priming = parseFloat(document.getElementById("priming").value);
-  let hbAwal = parseFloat(document.getElementById("hbAwal").value);
-  let bb = parseFloat(document.getElementById("bb").value);
-  let kategori = document.getElementById("kategori").value;
 
-  if(isNaN(ebv) || isNaN(priming) || isNaN(hbAwal) || isNaN(bb)){
+  let ebv = parseFloat(
+    document.getElementById("ebvAuto").value
+  );
+
+  let priming = parseFloat(
+    document.getElementById("priming").value
+  );
+
+  let hbAwal = parseFloat(
+    document.getElementById("hbAwal").value
+  );
+
+  let bb = parseFloat(
+    document.getElementById("bb").value
+  );
+
+  let kategori =
+    document.getElementById("kategori").value;
+
+  if(
+    isNaN(ebv) ||
+    isNaN(priming) ||
+    isNaN(hbAwal) ||
+    isNaN(bb)
+  ){
     return;
   }
 
-  let hbPrediksi = (ebv * hbAwal) / (ebv + priming);
-  document.getElementById("hasilHbPrediksi").innerHTML = "Prediksi Hb : " + hbPrediksi.toFixed(1) + " g/dL";
+  // =========================
+  // HITUNG HB PREDIKSI
+  // =========================
+
+  let hbPrediksi =
+    (ebv * hbAwal) / (ebv + priming);
+
+  document.getElementById("hasilHbPrediksi").innerHTML =
+    "Prediksi Hb : " +
+    hbPrediksi.toFixed(1) +
+    " g/dL";
+
+  // =========================
+  // TARGET BERDASARKAN KATEGORI
+  // =========================
 
   let targetLow = 0;
   let targetHigh = 0;
 
   if(kategori == "Dewasa"){
-    targetLow = 8; targetHigh = 9;
-  } else {
-    targetLow = 9; targetHigh = 10;
+
+    targetLow = 8;
+    targetHigh = 9;
+
+  }
+  else{
+
+    targetLow = 9;
+    targetHigh = 10;
+
   }
 
-  document.getElementById("targetHbInfo").innerHTML = "Target Hb : " + targetLow + " - " + targetHigh + " g/dL";
+  document.getElementById("targetHbInfo").innerHTML =
+    "Target Hb : " +
+    targetLow + " - " +
+    targetHigh + " g/dL";
+
+  // =========================
+  // REKOMENDASI
+  // =========================
 
   let rekomendasi = "-";
+
+  // =========================
+  // HB RENDAH
+  // =========================
+
   if(hbPrediksi < targetLow){
-    let kebutuhanLow = (targetLow - hbPrediksi) * 5 * bb;
-    let kebutuhanHigh = (targetHigh - hbPrediksi) * 5 * bb;
-    rekomendasi = "Penambahan PRC : " + kebutuhanLow.toFixed(0) + " - " + kebutuhanHigh.toFixed(0) + " mL";
-  } else if(hbPrediksi > targetHigh){
-    let penguranganLow = (hbPrediksi - targetHigh) * 5 * bb;
-    let penguranganHigh = (hbPrediksi - targetLow) * 5 * bb;
-    rekomendasi = "Hemodilusi / Phlebotomi : " + penguranganLow.toFixed(0) + " - " + penguranganHigh.toFixed(0) + " mL";
-  } else {
-    rekomendasi = "Hb dalam target ideal";
+
+    let kebutuhanLow =
+      (targetLow - hbPrediksi) *
+      5 *
+      bb;
+
+    let kebutuhanHigh =
+      (targetHigh - hbPrediksi) *
+      5 *
+      bb;
+
+    rekomendasi =
+      "Penambahan PRC : " +
+      kebutuhanLow.toFixed(0) +
+      " - " +
+      kebutuhanHigh.toFixed(0) +
+      " mL";
+
   }
 
-  document.getElementById("rekomendasiHb").innerHTML = "Rekomendasi : " + rekomendasi;
+  // =========================
+  // HB TINGGI
+  // =========================
+
+  else if(hbPrediksi > targetHigh){
+
+    let penguranganLow =
+      (hbPrediksi - targetHigh) *
+      5 *
+      bb;
+
+    let penguranganHigh =
+      (hbPrediksi - targetLow) *
+      5 *
+      bb;
+
+    rekomendasi =
+      "Hemodilusi / Phlebotomi : " +
+      penguranganLow.toFixed(0) +
+      " - " +
+      penguranganHigh.toFixed(0) +
+      " mL";
+
+  }
+
+  // =========================
+  // DALAM TARGET
+  // =========================
+
+  else{
+
+    rekomendasi =
+      "Hb dalam target ideal";
+
+  }
+
+  document.getElementById("rekomendasiHb").innerHTML =
+    "Rekomendasi : " + rekomendasi;
+
 }
 
 function hitungPriming(){
@@ -634,37 +1250,42 @@ function hitungPriming(){
   let primingTable = "";
 
   if(jenisPriming == "Clear Priming"){
-    document.getElementById("prcInputGroup").style.display = "none";
+  document.getElementById("prcInputGroup").style.display = "none";
 
-    if(bb < 10){
-      primingTable = `
-        <tr><td><b>Jenis</b></td><td>Clear Priming &lt;10 kg</td></tr>
-        <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
-        <tr><td><b>Koloid</b></td><td>Gelofusin / Albumin</td></tr>
-        <tr><td><b>Bicnat</b></td><td>5 - 10 meq</td></tr>
-        <tr><td><b>Manitol</b></td><td>${manitol} ml</td></tr>
-        <tr><td><b>Heparin</b></td><td>3500 - 4000 IU / ${heparinKeCc(3500)} - ${heparinKeCc(4000)} cc</td></tr>
-      `;
-    } else if(bb <= 20){
-      primingTable = `
-        <tr><td><b>Jenis</b></td><td>Clear Priming 10 - 20 kg</td></tr>
-        <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
-        <tr><td><b>Koloid</b></td><td>Gelofusin / Albumin</td></tr>
-        <tr><td><b>Bicnat</b></td><td>20 meq</td></tr>
-        <tr><td><b>Manitol</b></td><td>${manitol} ml</td></tr>
-        <tr><td><b>Heparin</b></td><td>4000 - 5000 IU / ${heparinKeCc(4000)} - ${heparinKeCc(5000)} cc</td></tr>
-      `;
-    } else {
-      primingTable = `
-        <tr><td><b>Jenis</b></td><td>Clear Priming &gt;20 kg</td></tr>
-        <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
-        <tr><td><b>Koloid</b></td><td>Gelofusin / Albumin</td></tr>
-        <tr><td><b>Bicnat</b></td><td>30 meq</td></tr>
-        <tr><td><b>Manitol</b></td><td>${manitol} ml</td></tr>
-        <tr><td><b>Heparin</b></td><td>5000 - 10000 IU / ${heparinKeCc(5000)} - ${heparinKeCc(10000)} cc</td></tr>
-      `;
-    }
-  } else {
+  if(bb < 10){
+    primingTable = `
+      <tr><td><b>Jenis</b></td><td>Clear Priming &lt;10 kg</td></tr>
+      <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
+      <tr><td><b>Koloid</b></td><td>Gelofusin / Albumin</td></tr>
+      <tr><td><b>Bicnat</b></td><td>5 - 10 meq</td></tr>
+      <tr><td><b>Manitol</b></td><td>${manitol} ml</td></tr>
+      <tr><td><b>Heparin</b></td><td>3500 - 4000 IU / ${heparinKeCc(3500)} - ${heparinKeCc(4000)} cc</td></tr>
+    `;
+  }
+
+  else if(bb <= 20){
+    primingTable = `
+      <tr><td><b>Jenis</b></td><td>Clear Priming 10 - 20 kg</td></tr>
+      <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
+      <tr><td><b>Koloid</b></td><td>Gelofusin / Albumin</td></tr>
+      <tr><td><b>Bicnat</b></td><td>20 meq</td></tr>
+      <tr><td><b>Manitol</b></td><td>${manitol} ml</td></tr>
+      <tr><td><b>Heparin</b></td><td>4000 - 5000 IU / ${heparinKeCc(4000)} - ${heparinKeCc(5000)} cc</td></tr>
+    `;
+  }
+
+  else{
+    primingTable = `
+      <tr><td><b>Jenis</b></td><td>Clear Priming &gt;20 kg</td></tr>
+      <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
+      <tr><td><b>Koloid</b></td><td>Gelofusin / Albumin</td></tr>
+      <tr><td><b>Bicnat</b></td><td>30 meq</td></tr>
+      <tr><td><b>Manitol</b></td><td>${manitol} ml</td></tr>
+      <tr><td><b>Heparin</b></td><td>5000 - 10000 IU / ${heparinKeCc(5000)} - ${heparinKeCc(10000)} cc</td></tr>
+    `;
+  }
+}
+  else{
     document.getElementById("prcInputGroup").style.display = "block";
 
     if(bb < 10){
@@ -678,7 +1299,8 @@ function hitungPriming(){
         <tr><td><b>PRC</b></td><td>${isNaN(prc) ? 0 : prc} ml</td></tr>
         <tr><td><b>Kalsium</b></td><td>${isNaN(prc) ? 0 : prc} mg</td></tr>
       `;
-    } else if(bb <= 20){
+    }
+    else if(bb <= 20){
       primingTable = `
         <tr><td><b>Jenis</b></td><td>Blood Priming 10-20 kg</td></tr>
         <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
@@ -689,7 +1311,8 @@ function hitungPriming(){
         <tr><td><b>PRC</b></td><td>${isNaN(prc) ? 0 : prc} ml</td></tr>
         <tr><td><b>Kalsium</b></td><td>${isNaN(prc) ? 0 : prc} mg</td></tr>
       `;
-    } else {
+    }
+    else{
       primingTable = `
         <tr><td><b>Jenis</b></td><td>Blood Priming &gt;20 kg</td></tr>
         <tr><td><b>Kristaloid</b></td><td>Ringer Asetat / RL / RF</td></tr>
@@ -702,10 +1325,10 @@ function hitungPriming(){
       `;
     }
   }
-  document.getElementById("primingTable").innerHTML = primingTable;
-}
 
-function hitungKardioplegia(){
+  document.getElementById("primingTable").innerHTML = primingTable;
+  }
+  function hitungKardioplegia(){
   let tb = parseFloat(document.getElementById("tb").value);
   let bb = parseFloat(document.getElementById("bb").value);
   let kategori = document.getElementById("kategori").value;
@@ -718,55 +1341,277 @@ function hitungKardioplegia(){
   let dosisInduksi = "-";
   let dosisMaintenance = "-";
 
-  if(jenisKardioplegia == "Clear Cardioplegia" || jenisKardioplegia == "Blood Cardioplegia" || jenisKardioplegia == "Del Nido"){
-    dosisInduksi = (20 * bb).toFixed(0) + " - " + (30 * bb).toFixed(0) + " mL";
-    dosisMaintenance = (10 * bb).toFixed(0) + " - " + (20 * bb).toFixed(0) + " mL";
-  } else if(jenisKardioplegia == "HTK-Custadiol"){
-    let induksiLow = 30 * bb;
-    let induksiHigh = 50 * bb;
-    let maintenanceLow = induksiLow * 0.30;
-    let maintenanceHigh = induksiHigh * 0.50;
+  if(jenisKardioplegia == "Clear Cardioplegia"){
+    dosisInduksi =
+      (20 * bb).toFixed(0) + " - " +
+      (30 * bb).toFixed(0) + " mL";
 
-    dosisInduksi = induksiLow.toFixed(0) + " - " + induksiHigh.toFixed(0) + " mL";
-    dosisMaintenance = maintenanceLow.toFixed(0) + " - " + maintenanceHigh.toFixed(0) + " mL";
+    dosisMaintenance =
+      (10 * bb).toFixed(0) + " - " +
+      (20 * bb).toFixed(0) + " mL";
   }
 
-  document.getElementById("dosisInduksiKardioplegia").innerHTML = dosisInduksi;
-  document.getElementById("dosisMaintenanceKardioplegia").innerHTML = dosisMaintenance;
+  else if(jenisKardioplegia == "Blood Cardioplegia"){
+    dosisInduksi =
+      (20 * bb).toFixed(0) + " - " +
+      (30 * bb).toFixed(0) + " mL";
+
+    dosisMaintenance =
+      (10 * bb).toFixed(0) + " - " +
+      (20 * bb).toFixed(0) + " mL";
+  }
+
+ else if(jenisKardioplegia == "HTK-Custadiol"){
+
+  // Dosis induksi
+  let induksiLow = 30 * bb;
+  let induksiHigh = 50 * bb;
+
+  // Maintenance = 30 - 50% dari dosis induksi
+  let maintenanceLow = induksiLow * 0.30;
+  let maintenanceHigh = induksiHigh * 0.50;
+
+  dosisInduksi =
+    induksiLow.toFixed(0) + " - " +
+    induksiHigh.toFixed(0) + " mL";
+
+  dosisMaintenance =
+    maintenanceLow.toFixed(0) + " - " +
+    maintenanceHigh.toFixed(0) + " mL";
+}
+
+  else if(jenisKardioplegia == "Del Nido"){
+    dosisInduksi =
+      (20 * bb).toFixed(0) + " - " +
+      (30 * bb).toFixed(0) + " mL";
+
+    dosisMaintenance =
+      (10 * bb).toFixed(0) + " - " +
+      (20 * bb).toFixed(0) + " mL";
+  }
+
+  document.getElementById("dosisInduksiKardioplegia").innerHTML =
+    dosisInduksi;
+
+  document.getElementById("dosisMaintenanceKardioplegia").innerHTML =
+    dosisMaintenance;
 
   let flowCPG = "-";
-  if(kategori == "Dewasa"){
-    flowCPG = "250 - 350 cc/menit";
-  } else {
-    let bsa = 0.007184 * Math.pow(tb, 0.725) * Math.pow(bb, 0.425);
-    let flowIndex32 = bsa * 3.2;
-    let flowLow = flowIndex32 * 5 / 100;
-    let flowHigh = flowIndex32 * 8 / 100;
-    flowCPG = flowLow.toFixed(2) + " - " + flowHigh.toFixed(2) + " L/menit";
-  }
-  document.getElementById("flowCPG").innerHTML = flowCPG;
+
+if(kategori == "Dewasa"){
+  flowCPG = "250 - 350 cc/menit";
 }
+else{
+  let bsa = 0.007184 * Math.pow(tb, 0.725) * Math.pow(bb, 0.425);
+  let flowIndex32 = bsa * 3.2;
+
+  let flowLow = flowIndex32 * 5 / 100;
+  let flowHigh = flowIndex32 * 8 / 100;
+
+  flowCPG =
+    flowLow.toFixed(2) + " - " +
+    flowHigh.toFixed(2) + " L/menit";
+}
+
+document.getElementById("flowCPG").innerHTML =
+  flowCPG;
+
+}
+// Konsentrasi Priming
+// Heparin 1 cc = 5000 IU
 
 function heparinKeCc(iu){
   return (iu / 5000).toFixed(1);
 }
-
-// =========================================================================
-// D. PENGECEKAN SESI PENGGUNA SAAT HALAMAN DILOAD (Auto-Login Fix)
-// =========================================================================
+// =========================
+// AUTO LOGIN
+// =========================
 
 window.addEventListener("load", function(){
-  // Mengambil kunci sesi gembok login dari lokal komputer browser
-  let userAktif = localStorage.getItem("loginUser");
-  
-  if (userAktif) {
-    // Jika gembok terdeteksi ada, langsung bypass bersihkan layar ke modul kalkulator utama
-    bukaAplikasiUtama();
-  } else {
-    // Jika tidak ada user, pastikan hanya form login yang muncul di awal
-    document.getElementById("loginCard").style.display = "block";
-    document.getElementById("headerApp").style.display = "none";
-    document.getElementById("mainApp").style.display = "none";
-    document.getElementById("databaseCard").style.display = "none";
+  let user = localStorage.getItem("loginUser");
+  if(user){
+    document.getElementById("loginCard").style.display = "none";
+    document.getElementById("mainApp").style.display = "grid";
+    document.getElementById("headerApp").style.display = "block";
+    document.getElementById("databaseCard").style.display = "block";
+    renderTable();
   }
 });
+
+// =========================
+// REGISTER
+// =========================
+
+function registerUser(){
+
+  let username =
+    document.getElementById("username").value;
+
+  let password =
+    document.getElementById("password").value;
+
+  if(username == "" || password == ""){
+    alert("Username dan password wajib diisi");
+    return;
+  }
+
+fetch(
+SCRIPT_URL,
+{
+  method:"POST",
+
+  body:JSON.stringify({
+    mode:"register",
+    username:username,
+    password:password
+  })
+})
+
+.then(res=>res.text())
+
+.then(res=>{
+
+  alert("Register berhasil");
+
+});
+
+}
+
+// =========================
+// LUPA SANDI
+// =========================
+
+function lupaSandi(){
+  let usernameInput = document.getElementById("username").value.trim();
+  if(usernameInput == "") usernameInput = prompt("Masukkan username yang terdaftar:");
+  if(!usernameInput) return;
+
+  fetch(SCRIPT_URL + "?login=1")
+  .then(res => res.json())
+  .then(data => {
+    if(data.length > 0 && (data[0][1] === "username" || data[0][1] === "Username")) {
+      data.shift();
+    }
+
+    let ditemukan = data.find(x => {
+      if (Array.isArray(x)) {
+        return x[1] == usernameInput;
+      }
+      return x.username == usernameInput;
+    });
+
+    if(!ditemukan){
+      alert("Username tidak ditemukan di sistem.");
+      return;
+    }
+
+    let uName = Array.isArray(ditemukan) ? ditemukan[1] : ditemukan.username;
+    let pWord = Array.isArray(ditemukan) ? ditemukan[2] : ditemukan.password;
+
+    document.getElementById("username").value = uName;
+    document.getElementById("password").value = pWord;
+
+    alert("Username: " + uName + "\nPassword Anda adalah: " + pWord);
+  })
+  .catch(() => {
+    alert("Gagal memproses data lupa sandi. Periksa koneksi Anda.");
+  });
+}
+
+// =========================
+// LOGIN
+// =========================
+function loginUser(){
+  let btn = document.getElementById("loginBtn");
+  if (!btn) return;
+
+  // Animasi loading tombol
+  btn.innerHTML = 'Sedang Login...';
+  btn.disabled = true;
+
+  let usernameInput = document.getElementById("username").value.trim();
+  let passwordInput = document.getElementById("password").value.trim();
+
+  if(usernameInput == "" || passwordInput == ""){
+    alert("Username dan password wajib diisi!");
+    resetTombolLogin(btn);
+    return;
+  }
+
+  // Mengambil data dari Sheet2 via doGet dengan parameter ?login=1
+  fetch(SCRIPT_URL + "?login=1")
+  .then(res => res.json())
+  .then(data => {
+    console.log("Data mentah dari Sheet2:", data);
+
+    if (!data || data.length === 0) {
+      alert("Database pengguna kosong. Silakan register terlebih dahulu.");
+      resetTombolLogin(btn);
+      return;
+    }
+
+    let loginSukses = false;
+
+    // LAKUKAN LOOPING MULAI DARI INDEKS 1 (Melewati baris indeks 0 yang berisi Header)
+    // Cara ini aman karena data user Anda di baris ke-2 (indeks 1) TIDAK AKAN TERPOTONG
+    for (let i = 1; i < data.length; i++) {
+      let row = data[i];
+      
+      if (Array.isArray(row)) {
+        // row[1] adalah kolom username, row[2] adalah kolom password
+        if (row[1] == usernameInput && row[2] == passwordInput) {
+          loginSukses = true;
+          break;
+        }
+      }
+    }
+
+    if(loginSukses){
+      btn.innerHTML = '✓ Login Berhasil';
+      localStorage.setItem("loginUser", usernameInput);
+
+      setTimeout(() => {
+      document.getElementById("loginCard").style.display = "none";
+      document.getElementById("headerApp").style.display = "block"; // Menampilkan header sekaligus tombol logout di dalamnya
+      document.getElementById("mainApp").style.display = "grid";
+      document.getElementById("databaseCard").style.display = "block";
+        
+        // Panggil fungsi muat data pasien setelah login sukses
+        renderTable();
+      }, 600);
+    } else {
+      alert("Username atau password salah!");
+      resetTombolLogin(btn);
+    }
+  })
+  .catch((err) => {
+    console.error("Error Login:", err);
+    alert("Koneksi gagal atau SCRIPT_URL salah.");
+    resetTombolLogin(btn);
+  });
+}
+
+function resetTombolLogin(btn) {
+  btn.innerHTML = "Login";
+  btn.disabled = false;
+}
+
+// =========================
+// LOGOUT
+// =========================
+
+function logoutUser(){function logoutUser() {
+  localStorage.removeItem("loginUser");
+
+  // Sembunyikan semua modul aplikasi utama
+  document.getElementById("loginCard").style.display = "block";
+  document.getElementById("headerApp").style.display = "none"; 
+  document.getElementById("mainApp").style.display = "none";
+  document.getElementById("databaseCard").style.display = "none";
+
+  // Bersihkan form input login
+  if(document.getElementById("username")) document.getElementById("username").value = "";
+  if(document.getElementById("password")) document.getElementById("password").value = "";
+  
+  alert("Anda telah berhasil logout.");
+}
