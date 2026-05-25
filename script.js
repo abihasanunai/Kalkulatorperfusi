@@ -1571,128 +1571,57 @@ function lupaSandi(){
 
 }
 
-btn.innerHTML =
-'✓ Login Berhasil';
-
-setTimeout(()=>{
-   // kode tampilkan aplikasi
-},600);
 // =========================
 // LOGIN
 // =========================
-
 function loginUser(){
 
-let btn =
-  document.getElementById("loginBtn");
+  let btn = document.getElementById("loginBtn");
 
-btn.classList.add("login-loading");
+  if (!btn) return; // Pengaman jika element tombol tidak ditemukan di HTML
 
-btn.innerHTML =
-  '<span class="loading-spinner"></span> Sedang Login...';
+  btn.classList.add("login-loading");
+  btn.innerHTML = '<span class="loading-spinner"></span> Sedang Login...';
+  btn.disabled = true;
 
-btn.disabled = true;
+  let username = document.getElementById("username").value;
+  let password = document.getElementById("password").value;
 
-  let username =
-    document.getElementById("username").value;
+  // Lakukan fetch data login ke APPS SCRIPT
+  fetch(SCRIPT_URL + "?login=1")
+  .then(res => res.json())
+  .then(data => {
 
-  let password =
-    document.getElementById("password").value;
+    let ditemukan = data.find(x => x.username == username && x.password == password);
 
-fetch(
-SCRIPT_URL + "?login=1"
-)
+    if(ditemukan){
+      // JIKA LOGIN BERHASIL, eksekusi kode ini di dalam sini
+      btn.innerHTML = '✓ Login Berhasil';
+      localStorage.setItem("loginUser", username);
 
-.then(res=>res.json())
+      setTimeout(()=>{
+        document.getElementById("loginCard").style.display = "none";
+        document.getElementById("mainApp").style.display = "grid";
+        document.getElementById("headerApp").style.display = "block";
+        document.getElementById("databaseCard").style.display = "block";
+        document.getElementById("logoutBtn").style.display = "block";
+        
+        renderTable(); // Muat data tabel setelah login
+      }, 600);
 
-.then(data=>{
-
-  let ditemukan = data.find(
-    x =>
-    x.username == username &&
-    x.password == password
-  );
-
-  if(ditemukan){
-
-  localStorage.setItem(
-    "loginUser",
-    username
-  );
-
-  // animasi login card hilang
-  let loginCard =
-    document.getElementById("loginCard");
-
-  loginCard.style.transition =
-    "all 0.5s ease";
-
-  loginCard.style.opacity =
-    "0";
-
-  loginCard.style.transform =
-    "scale(0.9) translateY(20px)";
-
-  setTimeout(function(){
-
-  // hapus class show login
-  loginCard.classList.remove("show-login");
-
-  // sembunyikan login
-  loginCard.style.display =
-    "none";
-
-    // tampilkan aplikasi
-    document.getElementById("mainApp").style.display =
-      "grid";
-
-    document.getElementById("headerApp").style.display =
-      "block";
-
-    document.getElementById("databaseCard").style.display =
-      "block";
-
-    document.getElementById("logoutBtn").style.display =
-      "block";
-
-    // animasi muncul aplikasi
-    document.getElementById("mainApp").style.opacity =
-      "0";
-
-    document.getElementById("mainApp").style.transform =
-      "translateY(20px)";
-
-    setTimeout(function(){
-
-      document.getElementById("mainApp").style.transition =
-        "all 0.5s ease";
-
-      document.getElementById("mainApp").style.opacity =
-        "1";
-
-      document.getElementById("mainApp").style.transform =
-        "translateY(0px)";
-
-    },50);
-
-    renderTable();
-
-  },500);
-
-}
-  else{
+    } else {
+      alert("Username atau password salah!");
+      btn.classList.remove("login-loading");
+      btn.innerHTML = "Login";
+      btn.disabled = false;
+    }
+  })
+  .catch(()=>{
+    alert("Koneksi gagal");
     btn.classList.remove("login-loading");
-
     btn.innerHTML = "Login";
-
     btn.disabled = false;
-
-    alert("Username atau password salah");
-
-  }
-
-});
-
+  });
 }
 
 // =========================
