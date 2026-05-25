@@ -1428,40 +1428,14 @@ function heparinKeCc(iu){
 // =========================
 
 window.addEventListener("load", function(){
-
-  let user =
-    localStorage.getItem("loginUser");
-
+  let user = localStorage.getItem("loginUser");
   if(user){
-
-    document.getElementById("loginCard")
-    .classList.remove("show-login");
-
-// sembunyikan login
-    document.getElementById("loginCard").style.display =
-    "none";
-
-    // tampilkan aplikasi
-    document.getElementById("mainApp").style.display =
-      "grid";
-
-    // tampilkan header
-    document.getElementById("headerApp").style.display =
-      "block";
-
-    // tampilkan database
-    document.getElementById("databaseCard").style.display =
-      "block";
-
-    // tampilkan tombol logout
-    document.getElementById("logoutBtn").style.display =
-      "block";
-
-    // load data database
+    document.getElementById("loginCard").style.display = "none";
+    document.getElementById("mainApp").style.display = "grid";
+    document.getElementById("headerApp").style.display = "block";
+    document.getElementById("databaseCard").style.display = "block";
     renderTable();
-
   }
-
 });
 
 // =========================
@@ -1551,7 +1525,7 @@ function loginUser(){
   let btn = document.getElementById("loginBtn");
   if (!btn) return;
 
-  btn.classList.add("login-loading");
+  // Animasi loading tombol
   btn.innerHTML = 'Sedang Login...';
   btn.disabled = true;
 
@@ -1560,9 +1534,7 @@ function loginUser(){
 
   if(usernameInput == "" || passwordInput == ""){
     alert("Username dan password wajib diisi!");
-    btn.classList.remove("login-loading");
-    btn.innerHTML = "Login";
-    btn.disabled = false;
+    resetTombolLogin(btn);
     return;
   }
 
@@ -1570,24 +1542,31 @@ function loginUser(){
   fetch(SCRIPT_URL + "?login=1")
   .then(res => res.json())
   .then(data => {
-    console.log("Data User dari Sheet2:", data);
+    console.log("Data mentah dari Sheet2:", data);
 
-    // PENGAMAN: Jika baris pertama adalah header (Timestamp / username), buang dari pencarian
-    if(data.length > 0 && (data[0][1] === "username" || data[0][1] === "Username")) {
-      data.shift();
+    if (!data || data.length === 0) {
+      alert("Database pengguna kosong. Silakan register terlebih dahulu.");
+      resetTombolLogin(btn);
+      return;
     }
 
-    // Proses pencarian user yang cocok
-    let ditemukan = data.find(x => {
-      // Jika data berupa Array Matriks [Timestamp, Username, Password]
-      if (Array.isArray(x)) {
-        return x[1] == usernameInput && x[2] == passwordInput;
-      } 
-      // Jika data berupa Objek Key-Value
-      return x.username == usernameInput && x.password == passwordInput;
-    });
+    let loginSukses = false;
 
-    if(ditemukan){
+    // LAKUKAN LOOPING MULAI DARI INDEKS 1 (Melewati baris indeks 0 yang berisi Header)
+    // Cara ini aman karena data user Anda di baris ke-2 (indeks 1) TIDAK AKAN TERPOTONG
+    for (let i = 1; i < data.length; i++) {
+      let row = data[i];
+      
+      if (Array.isArray(row)) {
+        // row[1] adalah kolom username, row[2] adalah kolom password
+        if (row[1] == usernameInput && row[2] == passwordInput) {
+          loginSukses = true;
+          break;
+        }
+      }
+    }
+
+    if(loginSukses){
       btn.innerHTML = '✓ Login Berhasil';
       localStorage.setItem("loginUser", usernameInput);
 
@@ -1596,25 +1575,25 @@ function loginUser(){
         document.getElementById("mainApp").style.display = "grid";
         document.getElementById("headerApp").style.display = "block";
         document.getElementById("databaseCard").style.display = "block";
-        document.getElementById("logoutBtn").style.display = "block";
         
-        // Ambil data pasien setelah login sukses
+        // Panggil fungsi muat data pasien setelah login sukses
         renderTable();
       }, 600);
     } else {
-      alert("Username atau password salah / tidak ditemukan!");
-      btn.classList.remove("login-loading");
-      btn.innerHTML = "Login";
-      btn.disabled = false;
+      alert("Username atau password salah!");
+      resetTombolLogin(btn);
     }
   })
   .catch((err) => {
     console.error("Error Login:", err);
-    alert("Koneksi gagal atau database eksternal bermasalah.");
-    btn.classList.remove("login-loading");
-    btn.innerHTML = "Login";
-    btn.disabled = false;
+    alert("Koneksi gagal atau SCRIPT_URL salah.");
+    resetTombolLogin(btn);
   });
+}
+
+function resetTombolLogin(btn) {
+  btn.innerHTML = "Login";
+  btn.disabled = false;
 }
 
 // =========================
