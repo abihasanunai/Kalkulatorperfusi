@@ -374,9 +374,11 @@ tbody += `
     <td>${item.tb || "-"}</td>
 
     <td>${
-      (item.bsa || "-")
-      .replace("BSA : ","")
-      }</td>
+    (item.bsa || "-")
+    .replace("BSA : ", "")
+    .replace("(Dubois Formula)", "")
+    .trim()
+    }</td>
 
       <td>${
       (item.ebv || "-")
