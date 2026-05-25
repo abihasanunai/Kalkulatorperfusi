@@ -1,7 +1,7 @@
 let editIndex = -1;
 let editRow = null;
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSAkIaNJxwx1lsid2q9PZkQ1uHRBrNpd16dp3L5OgG6FXYWWKXBEZC01A5b6T9DOWw/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxLbMqJ7YlPUZuUrITm8eTSmMvU3g0zWkRv9iQ9lpXK3ZZIJBLGNeRptqlDnMayH1C/exec";
 
 function ambilDataForm(){
 
