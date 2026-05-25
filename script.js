@@ -308,120 +308,107 @@ function formatTanggal(tanggal){
 }
 
 function renderTable(){
+  fetch(SCRIPT_URL)
+  .then(res => res.json())
+  .then(database => {
+    
+    console.log("Data dari Sheets:", database); // Untuk memantau data di inspect console
 
-fetch(SCRIPT_URL)
-.then(res => res.json())
-.then(database => {
-
-console.log(database);
-
-  let keyword =
-    document.getElementById("cariData")
-    .value
-    .toLowerCase();
-
-  let tbody = "";
-
-database
-.sort((a,b)=>{
-
-  let tanggalA = new Date(a.tanggal || 0);
-  let tanggalB = new Date(b.tanggal || 0);
-
-  return tanggalB - tanggalA;
-
-})
-
-  database.forEach((item,index)=>{
-
-    let gabung = (
-      (item.nama || "") +
-      (item.mr || "") +
-      (item.diagnosa || "") +
-      (item.tindakan || "")
-    ).toLowerCase();
-
-    if(!gabung.includes(keyword)){
+    // PENGAMAN 1: Jika database kosong atau hanya berisi baris header saja
+    if (!database || database.length <= 1) {
+      document.getElementById("databaseBody").innerHTML = `<tr><td colspan="15" style="text-align:center;">Belum ada data pasien di database.</td></tr>`;
       return;
     }
 
-// Logika pendukung: Memastikan jika data tipenya tanggal/ISO string tidak masuk ke BB atau Hb
-let tampilanBB = item.bb || "-";
-if (tampilanBB !== "-" && !isNaN(tampilanBB)) {
-  tampilanBB = `${tampilanBB} KG`;
-}
+    // PENGAMAN 2: Potong baris pertama (Header) secara paksa demi keamanan data
+    database.shift(); 
 
-let tampilanHbAwal = item.hbAwal || "-";
-if (tampilanHbAwal !== "-" && !isNaN(tampilanHbAwal)) {
-  tampilanHbAwal = `${tampilanHbAwal} g/dL`;
-}
+    let keyword = document.getElementById("cariData").value.toLowerCase();
+    let tbody = "";
 
-tbody += `
-    <tr>
+    // Sorting berdasarkan tanggal terbaru (Kolom B / indeks 1)
+    database.sort((a, b) => {
+      let tanggalA = new Date(a[1] || 0);
+      let tanggalB = new Date(b[1] || 0);
+      return tanggalB - tanggalA;
+    });
 
-    <td>${index + 1}</td>
+    database.forEach((row, index) => {
+      // Pastikan struktur row[...] di bawah ini sesuai dengan urutan Kolom A sampai R di Google Sheets Anda
+      let item = {
+        row: index + 2,          // Menjaga penomoran baris asli Google Sheets untuk fitur UPDATE
+        tanggalInput: row[0],    // Kolom A
+        tanggal: row[1],         // Kolom B
+        kategori: row[2],        // Kolom C
+        nama: row[3],            // Kolom D
+        mr: row[4],              // Kolom E
+        diagnosa: row[5],        // Kolom F
+        tindakan: row[6],        // Kolom G
+        usia: row[7],            // Kolom H
+        tb: row[8],              // Kolom I
+        bb: row[9],              // Kolom J
+        bsa: row[10],            // Kolom K
+        ebv: row[11],            // Kolom L
+        priming: row[12],        // Kolom M
+        hbAwal: row[13],         // Kolom N
+        hbPrediksi: row[14],     // Kolom O
+        jenisPriming: row[15],   // Kolom P
+        estimasiPriming: row[16],// Kolom Q
+        jenisKardioplegia: row[17] // Kolom R
+      };
 
-   <td>${formatTanggal(item.tanggal)}</td>
+      // Filter Pencarian Pasien
+      let gabung = ((item.nama || "") + (item.mr || "") + (item.diagnosa || "") + (item.tindakan || "")).toLowerCase();
+      if(!gabung.includes(keyword)){
+        return;
+      }
 
-    <td>${item.nama || "-"}</td>
+      // Format Tampilan Berat Badan
+      let tampilanBB = item.bb || "-";
+      if (tampilanBB !== "-" && !isNaN(tampilanBB)) {
+        tampilanBB = `${tampilanBB} KG`;
+      }
 
-    <td>${item.mr || "-"}</td>
+      // Format Tampilan Hb Awal
+      let tampilanHbAwal = item.hbAwal || "-";
+      if (tampilanHbAwal !== "-" && !isNaN(tampilanHbAwal)) {
+        tampilanHbAwal = `${tampilanHbAwal} g/dL`;
+      }
 
-    <td>${item.usia || "-"}</td>
+      // Format Tampilan BSA Bersih
+      let tampilanBSA = (item.bsa || "-").toString().replace("BSA : ", "").replace("(Dubois Formula)", "").trim();
 
-    <td>${tampilanBB}</td>
+      tbody += `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${formatTanggal(item.tanggal)}</td>
+          <td>${item.nama || "-"}</td>
+          <td>${item.mr || "-"}</td>
+          <td>${item.usia || "-"}</td>
+          <td>${tampilanBB}</td>
+          <td>${item.tb || "-"}</td>
+          <td>${tampilanBSA}</td>
+          <td>${(item.ebv || "-").toString().replace("EBV : ","")}</td>
+          <td>${item.priming || "-"}</td>
+          <td>${tampilanHbAwal}</td>
+          <td>${(item.hbPrediksi || "-").toString().replace("Prediksi Hb : ","")}</td>
+          <td>${item.jenisPriming || "-"}</td>
+          <td>${item.jenisKardioplegia || "-"}</td>
+          <td>
+            <div class="action-group">
+              <button class="action-btn btn-edit" onclick='editData(${JSON.stringify(item)})'>Edit</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
 
-    <td>${item.tb || "-"}</td>
-
-    <td>${
-    (item.bsa || "-")
-    .replace("BSA : ", "")
-    .replace("(Dubois Formula)", "")
-    .trim()
-    }</td>
-
-      <td>${
-      (item.ebv || "-")
-      .replace("EBV : ","")
-      }</td>
-
-    <td>${item.priming || "-"}</td>
-
-    <td>${tampilanHbAwal}</td>
-
-    <td>${
-      (item.hbPrediksi || "-")
-      .replace("Prediksi Hb : ","")
-      }</td>
-
-    <td>${item.jenisPriming || "-"}</td>
-
-    <td>${item.jenisKardioplegia || "-"}</td>
-
-    <td>
-
-    <div class="action-group">
-
-    <button
-    class="action-btn btn-edit"
-    onclick='editData(${JSON.stringify(item)})'>
-    Edit
-    </button>
-
-    </div>
-
-    </td>
-
-</tr>
-`;
-
+    document.getElementById("databaseBody").innerHTML = tbody;
+  })
+  .catch(error => {
+    console.error("Gagal memuat database:", error);
+    document.getElementById("databaseBody").innerHTML = `<tr><td colspan="15" style="text-align:center; color:red;">Gagal memuat data dari server. Cek Inspect Console.</td></tr>`;
   });
-
-  document.getElementById("databaseBody").innerHTML =
-    tbody;
-
-});
-
 }
 
 function editData(data){
