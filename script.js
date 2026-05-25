@@ -345,6 +345,17 @@ database
       return;
     }
 
+// Logika pendukung: Memastikan jika data tipenya tanggal/ISO string tidak masuk ke BB atau Hb
+let tampilanBB = item.bb || "-";
+if (tampilanBB !== "-" && !isNaN(tampilanBB)) {
+  tampilanBB = `${tampilanBB} KG`;
+}
+
+let tampilanHbAwal = item.hbAwal || "-";
+if (tampilanHbAwal !== "-" && !isNaN(tampilanHbAwal)) {
+  tampilanHbAwal = `${tampilanHbAwal} g/dL`;
+}
+
 tbody += `
     <tr>
 
@@ -358,7 +369,7 @@ tbody += `
 
     <td>${item.usia || "-"}</td>
 
-    <td>${item.bb || "-"}</td>
+    <td>${tampilanBB}</td>
 
     <td>${item.tb || "-"}</td>
 
@@ -374,7 +385,7 @@ tbody += `
 
     <td>${item.priming || "-"}</td>
 
-    <td>${item.hbAwal || "-"}</td>
+    <td>${tampilanHbAwal}</td>
 
     <td>${
       (item.hbPrediksi || "-")
