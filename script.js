@@ -1508,109 +1508,109 @@ SCRIPT_URL,
 // =========================
 
 function lupaSandi(){
-
-  let username =
-    document.getElementById("username").value.trim();
-
-  if(username == ""){
-    username = prompt("Masukkan username yang terdaftar:");
-  }
-
-  if(!username){
-    return;
-  }
+  let usernameInput = document.getElementById("username").value.trim();
+  if(usernameInput == "") usernameInput = prompt("Masukkan username yang terdaftar:");
+  if(!usernameInput) return;
 
   fetch(SCRIPT_URL + "?login=1")
+  .then(res => res.json())
+  .then(data => {
+    if(data.length > 0 && (data[0][1] === "username" || data[0][1] === "Username")) {
+      data.shift();
+    }
 
-  .then(res=>res.json())
-
-  .then(data=>{
-
-    let ditemukan = data.find(
-      x => x.username == username
-    );
+    let ditemukan = data.find(x => {
+      if (Array.isArray(x)) {
+        return x[1] == usernameInput;
+      }
+      return x.username == usernameInput;
+    });
 
     if(!ditemukan){
-      alert("Username tidak ditemukan");
+      alert("Username tidak ditemukan di sistem.");
       return;
     }
 
-    document.getElementById("username").value =
-      ditemukan.username;
+    let uName = Array.isArray(ditemukan) ? ditemukan[1] : ditemukan.username;
+    let pWord = Array.isArray(ditemukan) ? ditemukan[2] : ditemukan.password;
 
-    document.getElementById("password").value =
-      ditemukan.password;
+    document.getElementById("username").value = uName;
+    document.getElementById("password").value = pWord;
 
-    alert(
-      "Password untuk username " +
-      ditemukan.username +
-      " adalah: " +
-      ditemukan.password
-    );
-
+    alert("Username: " + uName + "\nPassword Anda adalah: " + pWord);
   })
-
-  .catch(()=>{
-
-  btn.classList.remove("login-loading");
-
-  btn.innerHTML = "Login";
-
-  btn.disabled = false;
-
-  alert("Koneksi gagal");
-
-});
-
+  .catch(() => {
+    alert("Gagal memproses data lupa sandi. Periksa koneksi Anda.");
+  });
 }
 
 // =========================
 // LOGIN
 // =========================
 function loginUser(){
-
   let btn = document.getElementById("loginBtn");
-
-  if (!btn) return; // Pengaman jika element tombol tidak ditemukan di HTML
+  if (!btn) return;
 
   btn.classList.add("login-loading");
-  btn.innerHTML = '<span class="loading-spinner"></span> Sedang Login...';
+  btn.innerHTML = 'Sedang Login...';
   btn.disabled = true;
 
-  let username = document.getElementById("username").value;
-  let password = document.getElementById("password").value;
+  let usernameInput = document.getElementById("username").value.trim();
+  let passwordInput = document.getElementById("password").value.trim();
 
-  // Lakukan fetch data login ke APPS SCRIPT
+  if(usernameInput == "" || passwordInput == ""){
+    alert("Username dan password wajib diisi!");
+    btn.classList.remove("login-loading");
+    btn.innerHTML = "Login";
+    btn.disabled = false;
+    return;
+  }
+
+  // Mengambil data dari Sheet2 via doGet dengan parameter ?login=1
   fetch(SCRIPT_URL + "?login=1")
   .then(res => res.json())
   .then(data => {
+    console.log("Data User dari Sheet2:", data);
 
-    let ditemukan = data.find(x => x.username == username && x.password == password);
+    // PENGAMAN: Jika baris pertama adalah header (Timestamp / username), buang dari pencarian
+    if(data.length > 0 && (data[0][1] === "username" || data[0][1] === "Username")) {
+      data.shift();
+    }
+
+    // Proses pencarian user yang cocok
+    let ditemukan = data.find(x => {
+      // Jika data berupa Array Matriks [Timestamp, Username, Password]
+      if (Array.isArray(x)) {
+        return x[1] == usernameInput && x[2] == passwordInput;
+      } 
+      // Jika data berupa Objek Key-Value
+      return x.username == usernameInput && x.password == passwordInput;
+    });
 
     if(ditemukan){
-      // JIKA LOGIN BERHASIL, eksekusi kode ini di dalam sini
       btn.innerHTML = '✓ Login Berhasil';
-      localStorage.setItem("loginUser", username);
+      localStorage.setItem("loginUser", usernameInput);
 
-      setTimeout(()=>{
+      setTimeout(() => {
         document.getElementById("loginCard").style.display = "none";
         document.getElementById("mainApp").style.display = "grid";
         document.getElementById("headerApp").style.display = "block";
         document.getElementById("databaseCard").style.display = "block";
         document.getElementById("logoutBtn").style.display = "block";
         
-        renderTable(); // Muat data tabel setelah login
+        // Ambil data pasien setelah login sukses
+        renderTable();
       }, 600);
-
     } else {
-      alert("Username atau password salah!");
+      alert("Username atau password salah / tidak ditemukan!");
       btn.classList.remove("login-loading");
       btn.innerHTML = "Login";
       btn.disabled = false;
     }
   })
-  .catch(()=>{
-    alert("Koneksi gagal");
+  .catch((err) => {
+    console.error("Error Login:", err);
+    alert("Koneksi gagal atau database eksternal bermasalah.");
     btn.classList.remove("login-loading");
     btn.innerHTML = "Login";
     btn.disabled = false;
