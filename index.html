@@ -396,33 +396,44 @@
       onkeyup="renderTable()">
   </div>
 
-  <div class="table-wrapper">
-    <table class="database-table">
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Tanggal</th>
-          <th>Nama</th>
-          <th>MR</th>
-          <th>Usia</th>
-          <th>BB</th>
-          <th>TB</th>
-          <th>BSA</th>
-          <th>EBV</th>
-          <th>Volume Priming</th>
-          <th>Hb Awal</th>
-          <th>Prediksi Hb</th>
-          <th>Strategi Priming</th>
-          <th>Kardioplegia</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
+  <div class="table-wrapper database-scroll">
+  <table class="database-table">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Tanggal</th>
+        <th>Nama</th>
+        <th>Tindakan</th>
+        <th>Usia</th>
+        <th>BB</th>
+        <th>TB</th>
+        <th>BSA</th>
+        <th>EBV</th>
+        <th>Volume Priming</th>
+        <th>Hb Awal</th>
+        <th>Prediksi Hb</th>
+        <th>Strategi Priming</th>
+        <th>Kardioplegia</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
 
-      <tbody id="databaseBody"></tbody>
-    </table>
-  </div>
+    <tbody id="databaseBody"></tbody>
+  </table>
+</div>
 </div>
 
 <script src="script.js"></script>
+
+<!-- Notifikasi simpan dan update -->
+<div id="toastNotif" class="toast-notif">
+  <div class="toast-icon">✓</div>
+  <div class="toast-text">
+    <div id="toastTitle">Berhasil</div>
+    <small id="toastMessage">Data berhasil disimpan</small>
+  </div>
+</div>
+
+
 </body>
 </html>
