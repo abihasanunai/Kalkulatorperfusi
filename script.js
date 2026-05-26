@@ -1,7 +1,7 @@
 let editIndex = -1;
 let editRow = null;
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwbG6Zx5PnkS_EwSZ0Qo882bRJdiIQhCTdj6-WHVzwZe7uNQZ9WABfqZsrYmJsJ_8on/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5O33bSplz38Fnoy9iiGi2kb3fTHS1wlXd6tqkPoolL-k9mGsUJxe0Y09tIQiYrjhc/exec";
 
 function ambilDataForm(){
 
@@ -41,10 +41,19 @@ function ambilDataForm(){
       document.getElementById("bb").value,
 
     bsa:
-      document.getElementById("hasilBSA").innerText,
+      document.getElementById("hasilBSA")
+      .innerText
+      .replace(/\(Dubois Formula\)/g,"")
+      .replace("BSA :","")
+      .replace("m²","")
+      .trim(),
 
     ebv:
-      document.getElementById("hasilEBV").innerText,
+      document.getElementById("hasilEBV")
+      .innerText
+      .replace("EBV :","")
+      .replace("mL","")
+      .trim(),
 
     faktorEbv:
       document.getElementById("hasilFaktor").innerText,
@@ -185,20 +194,20 @@ function isiForm(data){
   data.usia || "";
 
   document.getElementById("tb").value =
-    data.tb || "";
+  bersihkanAngka(data.tb);
 
   document.getElementById("bb").value =
-    data.bb || "";
+  bersihkanAngka(data.bb);
 
   // =====================
   // HB
   // =====================
 
   document.getElementById("priming").value =
-    data.priming || "";
+  bersihkanAngka(data.priming);
 
   document.getElementById("hbAwal").value =
-    data.hbAwal || "";
+  bersihkanAngka(data.hbAwal);
 
   // =====================
   // STRATEGI PRIMING
@@ -259,11 +268,12 @@ function simpanData(){
   .then(res=>res.text())
   .then(res=>{
 
-    alert(
-      editRow
-      ? "Data berhasil diupdate"
-      : "Data berhasil disimpan"
-    );
+   showToast(
+  "Berhasil",
+  editRow
+  ? "Data berhasil diupdate"
+  : "Data berhasil disimpan"
+  );
 
     editRow = null;
 
@@ -305,6 +315,57 @@ function formatTanggal(tanggal){
   });
 
 }
+function bersihkanAngka(value){
+
+  if(value == null || value == ""){
+    return "";
+  }
+
+  // jika format ISO date
+  if(
+    typeof value === "string" &&
+    value.includes("T")
+  ){
+    return "";
+  }
+
+  return value;
+
+}
+
+function formatNumberField(value){
+
+  if(value == null || value == ""){
+    return "";
+  }
+
+  // =========================
+  // JIKA DATE OBJECT
+  // =========================
+
+  if(value instanceof Date){
+
+    return "";
+
+  }
+
+  // =========================
+  // JIKA STRING ISO DATE
+  // =========================
+
+  if(
+    typeof value === "string" &&
+    value.includes("T")
+  ){
+
+    return "";
+
+  }
+
+  return value;
+
+}
+
 function doGet() {
   const ss = SpreadsheetApp.openById("1K6mD8ikdoFUTK9qCimcx00UoWWyG0jknut6k-Z1dKvA");
   const sheet = ss.getSheetByName("Sheet1");
@@ -345,15 +406,17 @@ console.log(database);
 
   let tbody = "";
 
-database
-.sort((a,b)=>{
+database.sort((a,b)=>{
 
-  let tanggalA = new Date(a.tanggal || 0);
-  let tanggalB = new Date(b.tanggal || 0);
+  let tanggalA =
+    new Date(a.tanggal || "2000-01-01").getTime();
+
+  let tanggalB =
+    new Date(b.tanggal || "2000-01-01").getTime();
 
   return tanggalB - tanggalA;
 
-})
+});
 
   database.forEach((item,index)=>{
 
@@ -377,7 +440,7 @@ tbody += `
 
     <td>${item.nama || "-"}</td>
 
-    <td>${item.mr || "-"}</td>
+    <td>${item.tindakan || "-"}</td>
 
     <td>${item.usia || "-"}</td>
 
@@ -385,15 +448,9 @@ tbody += `
 
     <td>${item.tb || "-"}</td>
 
-    <td>${
-      (item.bsa || "-")
-      .replace("BSA : ","")
-      }</td>
+    <td>${item.bsa || "-"}</td>
 
-      <td>${
-      (item.ebv || "-")
-      .replace("EBV : ","")
-      }</td>
+    <td>${item.ebv || "-"}</td>
 
     <td>${item.priming || "-"}</td>
 
@@ -1799,5 +1856,27 @@ loginCard.style.transition =
     },50);
 
   },500);
+
+}
+
+// Notifikasi Simpan dan Update
+function showToast(title,message){
+
+  let toast =
+    document.getElementById("toastNotif");
+
+  document.getElementById("toastTitle").innerText =
+    title;
+
+  document.getElementById("toastMessage").innerText =
+    message;
+
+  toast.classList.add("show");
+
+  setTimeout(()=>{
+
+    toast.classList.remove("show");
+
+  },3000);
 
 }
