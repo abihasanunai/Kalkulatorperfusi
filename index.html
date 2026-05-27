@@ -391,10 +391,37 @@
 
   <div class="title">Database Pasien</div>
 
-  <div class="form-group">
-    <input type="text" id="cariData" placeholder="Cari nama / MR pasien..."
-      onkeyup="renderTable()">
-  </div>
+ <div class="form-group">
+  <input
+    type="text"
+    id="cariData"
+    placeholder="Cari nama / MR pasien..."
+    onkeyup="renderTable()">
+</div>
+
+<!-- FILTER DATABASE -->
+
+<div class="db-filter-wrap">
+
+  <button
+    id="btnSemua"
+    class="db-filter-btn db-filter-active"
+    onclick="setFilter('semua')">
+
+    Semua Pasien
+
+  </button>
+
+  <button
+    id="btnSaya"
+    class="db-filter-btn"
+    onclick="setFilter('saya')">
+
+    Pasien Saya
+
+  </button>
+
+</div>
 
   <div class="table-wrapper database-scroll">
   <table class="database-table">

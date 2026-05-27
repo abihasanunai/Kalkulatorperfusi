@@ -1305,3 +1305,86 @@ SCROLL KHUSUS DATABASE
   top: 0;
   z-index: 5;
 }
+
+/* =========================
+DATABASE FILTER
+========================= */
+
+.db-filter-wrap{
+
+  display:flex;
+  gap:10px;
+
+  margin-bottom:14px;
+
+  flex-wrap:wrap;
+
+}
+
+.db-filter-btn{
+
+  border:none;
+
+  padding:10px 16px;
+
+  border-radius:12px;
+
+  background:#e2e8f0;
+
+  color:#1e293b;
+
+  font-size:13px;
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:0.25s;
+
+}
+
+.db-filter-btn:hover{
+
+  transform:translateY(-2px);
+
+}
+
+.db-filter-active{
+
+  background:#2563eb;
+
+  color:white;
+
+  box-shadow:
+    0 4px 12px rgba(37,99,235,0.25);
+
+}
+
+/* PEDIATRIK */
+
+body.pediatrik-theme
+.db-filter-active{
+
+  background:#ec4899;
+
+  box-shadow:
+    0 4px 12px rgba(236,72,153,0.25);
+
+}
+
+/* MOBILE */
+
+@media screen and (max-width:768px){
+
+  .db-filter-btn{
+
+    flex:1;
+
+    text-align:center;
+
+    padding:11px 10px;
+
+    font-size:12px;
+
+  }
+
+}

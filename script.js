@@ -1,7 +1,9 @@
 let editIndex = -1;
 let editRow = null;
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5O33bSplz38Fnoy9iiGi2kb3fTHS1wlXd6tqkPoolL-k9mGsUJxe0Y09tIQiYrjhc/exec";
+let modeFilter = "semua";
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzVFC-GPbE6clqhhGKKcmuyw1LZlG7dfbn7A0XwBjtQ3MLaoZ9Eh1Qu0fhbUFAgaAGr/exec";
 
 function ambilDataForm(){
 
@@ -366,127 +368,129 @@ function formatNumberField(value){
 
 }
 
-function doGet() {
-  const ss = SpreadsheetApp.openById("1K6mD8ikdoFUTK9qCimcx00UoWWyG0jknut6k-Z1dKvA");
-  const sheet = ss.getSheetByName("Sheet1");
 
-  const values = sheet.getDataRange().getValues();
-  const header = values[0];
+function setFilter(mode){
 
-  let data = [];
+  modeFilter = mode;
 
-  for (let i = 1; i < values.length; i++) {
-    let row = values[i];
-    let obj = {};
+  // tombol aktif
+  if(mode == "semua"){
 
-    header.forEach((key, index) => {
-      obj[key] = row[index];
-    });
+    document.getElementById("btnSemua").style.background =
+      "#2563eb";
 
-    data.push(obj);
+    document.getElementById("btnSemua").style.color =
+      "white";
+
+    document.getElementById("btnSaya").style.background =
+      "#e5e7eb";
+
+    document.getElementById("btnSaya").style.color =
+      "#111827";
+
+  }
+  else{
+
+    document.getElementById("btnSaya").style.background =
+      "#2563eb";
+
+    document.getElementById("btnSaya").style.color =
+      "white";
+
+    document.getElementById("btnSemua").style.background =
+      "#e5e7eb";
+
+    document.getElementById("btnSemua").style.color =
+      "#111827";
+
   }
 
-  return ContentService
-    .createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON);
+  renderTable();
+
 }
 
 function renderTable(){
 
 fetch(SCRIPT_URL)
-.then(res => res.json())
-.then(database => {
 
-console.log(database);
+.then(res => res.text())
+.then(text => {
 
-  let keyword =
-    document.getElementById("cariData")
-    .value
-    .toLowerCase();
+  let database;
 
-  let tbody = "";
+  try {
+    database = JSON.parse(text);
+  } catch(e){
+    console.log("JSON ERROR:", text);
+    return;
+  }
 
-database.sort((a,b)=>{
+  console.log("DATA MASUK:", database);
 
-  let tanggalA =
-    new Date(a.tanggal || "2000-01-01").getTime();
+  if(!Array.isArray(database)){
+    console.log("Bukan array:", database);
+    return;
+  }
 
-  let tanggalB =
-    new Date(b.tanggal || "2000-01-01").getTime();
+  let userLogin = localStorage.getItem("loginUser");
 
-  return tanggalB - tanggalA;
+  let filteredData = database;
 
-});
+if(modeFilter === "saya"){
+  filteredData = database.filter(item =>
+    item["Disimpan Oleh"] === userLogin 
+  );
+}
 
-  database.forEach((item,index)=>{
-
-    let gabung = (
-      (item.nama || "") +
-      (item.mr || "") +
-      (item.diagnosa || "") +
-      (item.tindakan || "")
-    ).toLowerCase();
-
-    if(!gabung.includes(keyword)){
-      return;
-    }
-
-tbody += `
-    <tr>
-
-    <td>${index + 1}</td>
-
-   <td>${formatTanggal(item.tanggal)}</td>
-
-    <td>${item.nama || "-"}</td>
-
-    <td>${item.tindakan || "-"}</td>
-
-    <td>${item.usia || "-"}</td>
-
-    <td>${item.bb || "-"}</td>
-
-    <td>${item.tb || "-"}</td>
-
-    <td>${item.bsa || "-"}</td>
-
-    <td>${item.ebv || "-"}</td>
-
-    <td>${item.priming || "-"}</td>
-
-    <td>${item.hbAwal || "-"}</td>
-
-    <td>${
-      (item.hbPrediksi || "-")
-      .replace("Prediksi Hb : ","")
-      }</td>
-
-    <td>${item.jenisPriming || "-"}</td>
-
-    <td>${item.jenisKardioplegia || "-"}</td>
-
-    <td>
-
-    <div class="action-group">
-
-    <button
-    class="action-btn btn-edit"
-    onclick='editData(${JSON.stringify(item)})'>
-    Edit
-    </button>
-
-    </div>
-
-    </td>
-
-</tr>
-`;
-
+  filteredData.sort((a,b)=>{
+    return new Date(b.tanggal) - new Date(a.tanggal);
   });
 
-  document.getElementById("databaseBody").innerHTML =
-    tbody;
+  let tbody = "";
+  let nomor = 1;
 
+  filteredData.forEach((item)=>{
+
+    tbody += `
+    <tr>
+      <td>${nomor++}</td>
+      <td>${formatTanggal(item.tanggal)}</td>
+      <td>${item.nama || "-"}</td>
+      <td>${item.tindakan || "-"}</td>
+      <td>${item.usia || "-"}</td>
+      <td>${item.bb || "-"}</td>
+      <td>${item.tb || "-"}</td>
+      <td>${item.bsa || "-"}</td>
+      <td>${item.ebv || "-"}</td>
+      <td>${item.priming || "-"}</td>
+      <td>${item.hbAwal || "-"}</td>
+      <td>${item.hbPrediksi || "-"}</td>
+      <td>${item.jenisPriming || "-"}</td>
+      <td>${item.jenisKardioplegia || "-"}</td>
+      <td>
+        <button class="action-btn btn-edit"
+        onclick='editData(${JSON.stringify(item)})'>
+        Edit
+        </button>
+      </td>
+    </tr>
+    `;
+  });
+
+  if(filteredData.length == 0){
+    tbody = `
+    <tr>
+      <td colspan="15">Belum ada data pasien</td>
+    </tr>
+    `;
+  }
+
+  document.getElementById("databaseBody").innerHTML = tbody;
+
+})
+
+.catch(error => {
+  console.log("ERROR FETCH:", error);
 });
 
 }
