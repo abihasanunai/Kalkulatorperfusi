@@ -1963,6 +1963,90 @@ SAVE LOADING
   }
 }
 
+/* =================================
+   FLOATING MENU - MOBILE ONLY
+================================= */
+
+@media screen and (max-width: 600px) {
+
+  /* Posisi tombol menu tetap di kanan bawah */
+  .header-menu-wrapper {
+    position: fixed !important;
+
+    top: auto !important;
+    right: 18px !important;
+    bottom: 20px !important;
+    left: auto !important;
+
+    width: auto !important;
+    height: auto !important;
+
+    z-index: 9999999 !important;
+
+    display: block !important;
+    pointer-events: auto !important;
+  }
+
+  .menu-dropdown {
+    position: relative !important;
+    display: inline-block;
+  }
+
+  /* Tombol floating menu */
+  .menu-drop-btn {
+    min-width: 58px;
+    min-height: 48px;
+
+    padding: 12px 18px !important;
+
+    border-radius: 30px !important;
+
+    background: linear-gradient(
+      135deg,
+      #1d4ed8,
+      #0f172a
+    ) !important;
+
+    color: white !important;
+
+    font-size: 13px !important;
+    font-weight: 700;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,0.3);
+
+    position: relative;
+    z-index: 10000000;
+  }
+
+  /* Dropdown muncul di atas tombol */
+  .menu-content {
+    position: absolute !important;
+
+    top: auto !important;
+    bottom: calc(100% + 12px) !important;
+
+    right: 0 !important;
+    left: auto !important;
+
+    min-width: 200px !important;
+    width: max-content;
+
+    border-radius: 12px !important;
+
+    background: white !important;
+
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+
+    z-index: 10000001 !important;
+  }
+
+  .menu-content a {
+    padding: 14px 16px !important;
+    font-size: 13px !important;
+  }
+
+}
+  
 </style>
 </head>
 
