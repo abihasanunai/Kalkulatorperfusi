@@ -103,45 +103,203 @@ SHOW PASSWORD
 }
 
 /* =========================
-LOGOUT BUTTON
+   LOGOUT & HEADER MENU
 ========================= */
 
-.header{
-  position:relative;
+.header {
+  position: relative !important;
+  overflow: visible !important;
+  isolation: auto !important;
 }
 
-.logout-btn{
-  position:absolute;
-  top:14px;
-  right:16px;
-  border:none;
-  background:rgba(255,255,255,0.18);
-  color:white;
-  padding:8px 14px;
-  border-radius:10px;
-  font-size:12px;
-  font-weight:700;
-  cursor:pointer;
-  backdrop-filter:blur(6px);
-  transition:0.2s;
-  z-index:999;
+/* =========================
+   LOGOUT BUTTON
+========================= */
+
+.logout-btn {
+  position: absolute !important;
+  top: 14px;
+  right: 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: rgba(255, 255, 255, 0.18);
+  color: white;
+
+  padding: 8px 14px;
+  border-radius: 10px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+  pointer-events: auto;
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  transition: 0.2s;
+  z-index: 100002;
 }
 
-.logout-btn:hover{
-  background:rgba(255,255,255,0.28);
-  transform:scale(1.03);
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: scale(1.03);
 }
 
-@media screen and (max-width:768px){
+/* =========================
+   HEADER MENU WRAPPER
+========================= */
 
-  .logout-btn{
-    top:10px;
-    right:10px;
-    padding:6px 10px;
-    font-size:11px;
+.header-menu-wrapper {
+  position: absolute !important;
+  top: 14px;
+  right: 110px;
+
+  display: block;
+  width: auto;
+  height: auto;
+
+  z-index: 100000;
+  pointer-events: auto;
+}
+
+.menu-dropdown {
+  position: relative;
+  display: inline-block;
+  pointer-events: auto;
+}
+
+/* =========================
+   TOMBOL MENU
+========================= */
+
+.menu-drop-btn {
+  position: relative;
+
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  border: none;
+  background: rgba(255, 255, 255, 0.18);
+  color: white;
+
+  padding: 8px 14px;
+  border-radius: 10px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+  pointer-events: auto !important;
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  transition: 0.2s;
+
+  z-index: 100001;
+}
+
+.menu-drop-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.menu-drop-btn:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 3px;
+}
+
+/* =========================
+   DROPDOWN CONTENT
+========================= */
+
+.menu-content {
+  display: none;
+
+  position: absolute !important;
+  top: calc(100% + 6px);
+  right: 0;
+
+  min-width: 190px;
+  width: max-content;
+
+  background-color: white;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+  border-radius: 12px;
+  overflow: hidden;
+
+  border: 1px solid #e2e8f0;
+
+  z-index: 100003;
+  pointer-events: auto;
+}
+
+.menu-content.show {
+  display: block !important;
+}
+
+/* =========================
+   ITEM MENU
+========================= */
+
+.menu-content a {
+  display: block;
+
+  color: #1e293b;
+
+  padding: 12px 14px;
+
+  text-decoration: none;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+  pointer-events: auto;
+
+  transition: 0.15s;
+}
+
+.menu-content a:hover {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+/* =========================
+   RESPONSIVE MOBILE
+========================= */
+
+@media screen and (max-width: 600px) {
+
+  .header-menu-wrapper {
+    top: 12px;
+    right: 90px;
+  }
+
+  .logout-btn {
+    top: 12px;
+    right: 10px;
+    padding: 7px 10px;
+  }
+
+  .menu-drop-btn {
+    padding: 7px 10px;
+  }
+
+  .menu-content {
+    min-width: 175px;
   }
 
 }
+
 /* Tombol aksi */
 
 .action-group{
@@ -1520,6 +1678,291 @@ SAVE LOADING
   margin-right:8px;
 }
 
+/* =========================
+   POPUP HITUNG DO2 INDEX CSS
+========================= */
+
+/* =========================
+   DO2 REFERENCE
+========================= */
+
+.do2-reference {
+  margin-top: 15px;
+  padding: 12px;
+
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.do2-reference-title {
+  font-size: 12px;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+.do2-reference-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3px 8px;
+  align-items: center;
+
+  padding: 8px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.do2-reference-row span {
+  font-size: 10px;
+  color: #475569;
+}
+
+.do2-reference-row strong {
+  font-size: 13px;
+  color: #047857;
+}
+
+.do2-reference-row small {
+  grid-column: 1 / -1;
+  font-size: 9px;
+  color: #64748b;
+}
+
+.do2-reference-row.do2-warning strong {
+  color: #dc2626;
+}
+
+.do2-reference-note {
+  font-size: 10px;
+  line-height: 1.5;
+  color: #64748b;
+  margin: 10px 0 0;
+}
+
+/* =========================
+   RESET BUTTON
+========================= */
+
+.do2-reset-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 11px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+
+  background: #f1f5f9;
+  color: #334155;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.do2-reset-btn:hover {
+  background: #e2e8f0;
+}
+
+.do2-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: rgba(15, 23, 42, 0.65);
+
+  z-index: 9999999;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.do2-modal.show {
+  display: flex;
+}
+
+.do2-modal-content {
+  width: 100%;
+  max-width: 430px;
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  background: white;
+  border-radius: 16px;
+
+  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+
+  animation: do2Popup 0.2s ease;
+}
+
+@keyframes do2Popup {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.do2-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 16px 20px;
+
+  background: linear-gradient(
+    120deg,
+    #1d4ed8,
+    #0f172a
+  );
+
+  color: white;
+}
+
+.do2-modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.do2-close {
+  border: none;
+  background: transparent;
+  color: white;
+
+  font-size: 28px;
+  cursor: pointer;
+
+  line-height: 1;
+}
+
+.do2-modal-body {
+  padding: 20px;
+}
+
+.do2-modal-body h3 {
+  margin: 0 0 15px;
+  font-size: 14px;
+  color: #334155;
+}
+
+.do2-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.do2-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.do2-field label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.do2-field input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 11px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+
+  font-size: 14px;
+  outline: none;
+}
+
+.do2-field input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.12);
+}
+
+.do2-result {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+}
+
+.do2-result-item,
+.do2-result-main {
+  padding: 14px 10px;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.do2-result-item {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.do2-result-main {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.do2-result span {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.do2-result strong {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.do2-result small {
+  font-size: 10px;
+}
+
+.do2-formula {
+  margin-top: 16px;
+  padding: 12px;
+
+  background: #f8fafc;
+  border-radius: 8px;
+
+  font-size: 11px;
+  color: #475569;
+}
+
+.do2-formula p {
+  margin: 6px 0 0;
+}
+
+@media (max-width: 400px) {
+  .do2-modal-content {
+    max-width: 100%;
+  }
+
+  .do2-modal-body {
+    padding: 15px;
+  }
+
+  .do2-grid {
+    gap: 10px;
+  }
+}
+
 </style>
 </head>
 
@@ -1613,8 +2056,41 @@ SAVE LOADING
 </div>
 
 <!-- HEADER -->
-
 <div class="header" id="headerApp" style="display:none;">
+
+  <div class="header-menu-wrapper">
+    <div class="menu-dropdown">
+
+      <button
+        type="button"
+        id="menuDropBtn"
+        class="menu-drop-btn"
+        onclick="toggleHeaderMenu(event)"
+        aria-expanded="false">
+        Menu ▾
+      </button>
+
+      <div id="headerDropdownMenu" class="menu-content">
+
+        <a href="javascript:void(0)"
+           onclick="pilihMenu('Perfusion Record')">
+          Perfusion Record
+        </a>
+
+        <a href="javascript:void(0)"
+          onclick="bukaDo2Modal()">
+          Hitung DO2
+        </a>
+
+        <a href="javascript:void(0)"
+           onclick="pilihMenu('Protokol Emergensi')">
+          Protokol Emergensi
+        </a>
+
+      </div>
+
+    </div>
+  </div>
 
   <button
     class="logout-btn"
@@ -1981,6 +2457,133 @@ SAVE LOADING
     <div id="toastTitle">Berhasil</div>
     <small id="toastMessage">Data berhasil disimpan</small>
   </div>
+</div>
+
+<!-- POPUP HITUNG DO2 INDEX -->
+<div id="do2Modal" class="do2-modal">
+
+  <div class="do2-modal-content">
+
+    <div class="do2-modal-header">
+      <h2>Hitung DO₂ Index</h2>
+
+      <button type="button"
+        class="do2-close"
+        onclick="tutupDo2Modal()">
+        &times;
+      </button>
+    </div>
+
+    <div class="do2-modal-body">
+
+      <h3>Input Parameter</h3>
+
+      <div class="do2-grid">
+
+        <div class="do2-field">
+          <label>Cardiac Index (L/min/m²)</label>
+          <input type="number"
+            id="do2CI"
+            placeholder="Contoh: 2.5"
+            min="0"
+            step="0.01"
+            oninput="hitungDO2Index()">
+        </div>
+
+        <div class="do2-field">
+          <label>Hemoglobin (g/dL)</label>
+          <input type="number"
+            id="do2Hb"
+            placeholder="Contoh: 10"
+            min="0"
+            step="0.1"
+            oninput="hitungDO2Index()">
+        </div>
+
+        <div class="do2-field">
+          <label>SaO₂ (%)</label>
+          <input type="number"
+            id="do2SaO2"
+            placeholder="Contoh: 98"
+            min="0"
+            max="100"
+            step="0.1"
+            oninput="hitungDO2Index()">
+        </div>
+
+        <div class="do2-field">
+          <label>PaO₂ (mmHg)</label>
+          <input type="number"
+            id="do2PaO2"
+            placeholder="Contoh: 150"
+            min="0"
+            step="0.1"
+            oninput="hitungDO2Index()">
+        </div>
+
+      </div>
+
+      <div class="do2-result">
+
+        <div class="do2-result-item">
+          <span>CaO₂</span>
+          <strong id="hasilCaO2">-</strong>
+          <small>mL/dL</small>
+        </div>
+
+        <div class="do2-result-main">
+          <span>DO₂ Index</span>
+          <strong id="hasilDO2">-</strong>
+          <small>mL/min/m²</small>
+        </div>
+
+      </div>
+
+       <!-- TOMBOL RESET Do2-->
+      <button type="button"
+        class="do2-reset-btn"
+        onclick="resetDO2Index()">
+        ↻ Reset Semua Input
+      </button>
+
+    <!-- KETERANGAN RENTANG DO2 -->
+      <div class="do2-reference">
+
+        <div class="do2-reference-title">
+          <strong>Interpretasi DO₂ Index</strong>
+        </div>
+
+        <div class="do2-reference-row">
+          <span>Dewasa</span>
+          <strong>280 - 350</strong>
+          <small>mL/min/m²</small>
+        </div>
+
+        <div class="do2-reference-row">
+          <span>Pediatrik</span>
+          <strong>340 - 400</strong>
+          <small>mL/min/m²</small>
+        </div>
+
+        <div class="do2-reference-row do2-warning">
+          <span>Di bawah ambang kritis CPB</span>
+          <strong>&lt;280</strong>
+          <small>mL/min/m²</small>
+        </div>
+
+      </div>
+
+     
+      <div class="do2-formula">
+        <strong>Rumus:</strong>
+        <p>CaO₂ = (Hb × 1,34 × SaO₂) + (0,003 × PaO₂)</p>
+        <p>DO₂i = CI × CaO₂ × 10</p>
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
 <script>
@@ -4058,6 +4661,230 @@ function tampilkanToast(title, message) {
     toast.classList.remove("show");
   }, 3000);
 }
+
+// =====================================
+// HEADER DROPDOWN - EVENT HANDLER
+// =====================================
+
+(function () {
+
+  function initHeaderDropdown() {
+
+    const button = document.getElementById("menuDropBtn");
+    const menu = document.getElementById("headerDropdownMenu");
+    const wrapper = document.querySelector(".menu-dropdown");
+
+    if (!button || !menu || !wrapper) {
+      console.error("Elemen dropdown tidak ditemukan.");
+      return;
+    }
+
+    // BUKA / TUTUP MENU
+    button.addEventListener("click", function (event) {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const terbuka = menu.classList.contains("show");
+
+      menu.classList.toggle("show", !terbuka);
+
+      button.setAttribute(
+        "aria-expanded",
+        String(!terbuka)
+      );
+
+    });
+
+    // KLIK ITEM MENU
+    menu.addEventListener("click", function (event) {
+
+      const item = event.target.closest("a[data-menu]");
+
+      if (!item) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const namaMenu = item.getAttribute("data-menu");
+
+      menu.classList.remove("show");
+      button.setAttribute("aria-expanded", "false");
+
+      if (namaMenu === "Perfusion Record") {
+        Swal.fire("Perfusion Record", "Menu dipilih.", "info");
+      }
+
+      else if (namaMenu === "Hitung DO2") {
+        Swal.fire("Hitung DO2", "Menu dipilih.", "info");
+      }
+
+      else if (namaMenu === "Protokol Emergensi") {
+        Swal.fire("Protokol Emergensi", "Menu dipilih.", "info");
+      }
+
+    });
+
+    // KLIK DI LUAR MENU
+    document.addEventListener("click", function (event) {
+
+      if (!wrapper.contains(event.target)) {
+
+        menu.classList.remove("show");
+        button.setAttribute("aria-expanded", "false");
+
+      }
+
+    });
+
+    // TOMBOL ESC
+    document.addEventListener("keydown", function (event) {
+
+      if (event.key === "Escape") {
+
+        menu.classList.remove("show");
+        button.setAttribute("aria-expanded", "false");
+
+      }
+
+    });
+
+    console.log("Header dropdown berhasil diinisialisasi.");
+
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHeaderDropdown);
+  } else {
+    initHeaderDropdown();
+  }
+
+})();
+
+// ===============================
+// HITUNG DO2 INDEX
+// ===============================
+
+window.bukaDo2Modal = function() {
+
+  const modal = document.getElementById("do2Modal");
+
+  if (!modal) {
+    console.error("Popup DO2 tidak ditemukan");
+    return;
+  }
+
+  modal.classList.add("show");
+
+};
+
+window.tutupDo2Modal = function() {
+
+  const modal = document.getElementById("do2Modal");
+
+  if (modal) {
+    modal.classList.remove("show");
+  }
+
+};
+
+// HITUNG OTOMATIS
+window.hitungDO2Index = function() {
+
+  const ci = parseFloat(
+    document.getElementById("do2CI").value
+  );
+
+  const hb = parseFloat(
+    document.getElementById("do2Hb").value
+  );
+
+  const sao2 = parseFloat(
+    document.getElementById("do2SaO2").value
+  );
+
+  const pao2 = parseFloat(
+    document.getElementById("do2PaO2").value
+  );
+
+  const hasilCaO2 = document.getElementById("hasilCaO2");
+  const hasilDO2 = document.getElementById("hasilDO2");
+
+  // Validasi input
+  if (
+    !Number.isFinite(ci) ||
+    !Number.isFinite(hb) ||
+    !Number.isFinite(sao2) ||
+    !Number.isFinite(pao2) ||
+    ci <= 0 ||
+    hb <= 0 ||
+    sao2 < 0 ||
+    sao2 > 100 ||
+    pao2 < 0
+  ) {
+
+    hasilCaO2.textContent = "-";
+    hasilDO2.textContent = "-";
+
+    return;
+  }
+
+  // Konversi saturasi persen ke desimal
+  const SaO2 = sao2 / 100;
+
+  // Rumus arterial oxygen content
+  const CaO2 =
+    (hb * 1.34 * SaO2) +
+    (0.003 * pao2);
+
+  // Rumus oxygen delivery index
+  const DO2i = ci * CaO2 * 10;
+
+  // Tampilkan hasil
+  hasilCaO2.textContent = CaO2.toFixed(2);
+  hasilDO2.textContent = DO2i.toFixed(1);
+
+};
+
+// Tutup jika klik area luar popup
+document.addEventListener("click", function(event) {
+
+  const modal = document.getElementById("do2Modal");
+
+  if (modal && event.target === modal) {
+    tutupDo2Modal();
+  }
+
+});
+
+// Tutup dengan tombol Escape
+document.addEventListener("keydown", function(event) {
+
+  if (event.key === "Escape") {
+    tutupDo2Modal();
+  }
+
+});
+
+// ===============================
+// RESET HITUNG DO2 INDEX
+// ===============================
+
+window.resetDO2Index = function() {
+
+  // Kosongkan seluruh input
+  document.getElementById("do2CI").value = "";
+  document.getElementById("do2Hb").value = "";
+  document.getElementById("do2SaO2").value = "";
+  document.getElementById("do2PaO2").value = "";
+
+  // Reset hasil perhitungan
+  document.getElementById("hasilCaO2").textContent = "-";
+  document.getElementById("hasilDO2").textContent = "-";
+
+  console.log("Seluruh input DO2 berhasil direset.");
+
+};
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
