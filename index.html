@@ -2046,7 +2046,7 @@ SAVE LOADING
   }
 
 }
-  
+
 </style>
 </head>
 
@@ -2295,6 +2295,7 @@ SAVE LOADING
           <tr><td><b>Vena (SVC/IVC)</b></td><td id="kanulVena">-</td></tr> 
           <tr><td><b>Single Canula (Two Stage)</b></td><td id="SingleCanula">-</td></tr>
           <tr><td><b>Left Vent</b></td><td id="kanulLeftVent">-</td></tr>
+          <tr><td><b>Sump Sucker</b></td><td id="kanulSumpSucker">-</td></tr>
           <tr><td><b>CPG Antegrade</b></td><td id="kanulAntegrade">-</td></tr>
           <tr><td><b>CPG Retrograde</b></td><td id="kanulRetrograde">-</td></tr>
         </tbody>
@@ -2620,6 +2621,51 @@ SAVE LOADING
           <strong id="hasilDO2">-</strong>
           <small>mL/min/m²</small>
         </div>
+   
+        
+      </div>
+      <!-- INPUT PARAMETER VO2 -->
+      <h3>Input Parameter VO₂</h3>
+
+      <div class="do2-grid">
+
+        <div class="do2-field">
+          <label>SvO₂ (%)</label>
+          <input type="number"
+            id="do2SvO2"
+            placeholder="Contoh: 70"
+            min="0"
+            max="100"
+            step="0.1"
+            oninput="hitungDO2Index()">
+        </div>
+
+        <div class="do2-field">
+          <label>PvO₂ (mmHg)</label>
+          <input type="number"
+            id="do2PvO2"
+            placeholder="Contoh: 40"
+            min="0"
+            step="0.1"
+            oninput="hitungDO2Index()">
+        </div>
+
+      </div>
+
+      <!-- HASIL PERHITUNGAN VO2 -->
+      <div class="do2-result">
+
+        <div class="do2-result-item">
+          <span>CvO₂</span>
+          <strong id="hasilCvO2">-</strong>
+          <small>mL/dL</small>
+        </div>
+
+        <div class="do2-result-main">
+          <span>VO₂ Index</span>
+          <strong id="hasilVO2">-</strong>
+          <small>mL/min/m²</small>
+        </div>
 
       </div>
 
@@ -2630,6 +2676,8 @@ SAVE LOADING
         ↻ Reset Semua Input
       </button>
 
+
+      
     <!-- KETERANGAN RENTANG DO2 -->
       <div class="do2-reference">
 
@@ -2756,6 +2804,9 @@ function ambilDataForm(){
 
     kanulLeftVent:
       document.getElementById("kanulLeftVent").innerText,
+
+    kanulSumpSucker:
+      document.getElementById("kanulSumpSucker").innerText,
 
     kanulAntegrade:
       document.getElementById("kanulAntegrade").innerText,
@@ -3568,6 +3619,12 @@ let SingleCanula = "-";
     bb < 15 ? "Left Vent Neonate 13 Fr" :
     bb <= 35 ? "16 Fr" :
     "20 Fr";
+
+  document.getElementById("kanulSumpSucker").innerHTML =
+    bb < 15 ? "10 - 12 Fr" :
+    bb <= 35 ? "12 - 16 Fr" :
+    "18 - 22 Fr";
+
 
   let oksigenator = "";
   let customPack = "";
@@ -4697,9 +4754,11 @@ function resetForm() {
   document.getElementById("kanulAorta").innerText = "-";
   document.getElementById("kanulVena").innerText = "-";
   document.getElementById("kanulLeftVent").innerText = "-";
+  document.getElementById("kanulSumpSucker").innerText = "-";
   document.getElementById("kanulAntegrade").innerText = "-";
   document.getElementById("kanulRetrograde").innerText = "-";
   document.getElementById("kanulAortaFemoral").innerText = "-";
+  document.getElementById("kanulVenaFemoral").innerText = "-";
   document.getElementById("SingleCanula").innerText = "-";
   
   document.getElementById("oksigenator").innerText = "-";
@@ -4872,74 +4931,108 @@ window.tutupDo2Modal = function() {
 
 };
 
-// HITUNG OTOMATIS
+// ===============================
+// HITUNG DO2 DAN VO2 INDEX
+// ===============================
+
 window.hitungDO2Index = function() {
 
-  const ci = parseFloat(
-    document.getElementById("do2CI").value
-  );
+  // INPUT ARTERI
+  const ci = parseFloat(document.getElementById("do2CI").value);
+  const hb = parseFloat(document.getElementById("do2Hb").value);
+  const sao2 = parseFloat(document.getElementById("do2SaO2").value);
+  const pao2 = parseFloat(document.getElementById("do2PaO2").value);
 
-  const hb = parseFloat(
-    document.getElementById("do2Hb").value
-  );
+  // INPUT VENA
+  const svo2 = parseFloat(document.getElementById("do2SvO2").value);
+  const pvo2 = parseFloat(document.getElementById("do2PvO2").value);
 
-  const sao2 = parseFloat(
-    document.getElementById("do2SaO2").value
-  );
-
-  const pao2 = parseFloat(
-    document.getElementById("do2PaO2").value
-  );
-
+  // OUTPUT
   const hasilCaO2 = document.getElementById("hasilCaO2");
   const hasilDO2 = document.getElementById("hasilDO2");
+  const hasilCvO2 = document.getElementById("hasilCvO2");
+  const hasilVO2 = document.getElementById("hasilVO2");
 
-  // Validasi input
-  if (
-    !Number.isFinite(ci) ||
-    !Number.isFinite(hb) ||
-    !Number.isFinite(sao2) ||
-    !Number.isFinite(pao2) ||
-    ci <= 0 ||
-    hb <= 0 ||
-    sao2 < 0 ||
-    sao2 > 100 ||
-    pao2 < 0
-  ) {
+  // VALIDASI INPUT ARTERI
+  const arterialValid =
+    Number.isFinite(ci) &&
+    Number.isFinite(hb) &&
+    Number.isFinite(sao2) &&
+    Number.isFinite(pao2) &&
+    ci > 0 &&
+    hb > 0 &&
+    sao2 >= 0 &&
+    sao2 <= 100 &&
+    pao2 >= 0;
+
+  // Jika input arteri belum lengkap
+  if (!arterialValid) {
 
     hasilCaO2.textContent = "-";
     hasilDO2.textContent = "-";
+    hasilCvO2.textContent = "-";
+    hasilVO2.textContent = "-";
 
     return;
   }
 
-  // Konversi saturasi persen ke desimal
+  // ===============================
+  // PERHITUNGAN CaO2
+  // ===============================
+
   const SaO2 = sao2 / 100;
 
-  // Rumus arterial oxygen content
   const CaO2 =
     (hb * 1.34 * SaO2) +
     (0.003 * pao2);
 
-  // Rumus oxygen delivery index
+  // ===============================
+  // PERHITUNGAN DO2 INDEX
+  // ===============================
+
   const DO2i = ci * CaO2 * 10;
 
-  // Tampilkan hasil
   hasilCaO2.textContent = CaO2.toFixed(2);
   hasilDO2.textContent = DO2i.toFixed(1);
 
-};
 
-// Tutup jika klik area luar popup
-document.addEventListener("click", function(event) {
+  // ===============================
+  // PERHITUNGAN CvO2 DAN VO2
+  // ===============================
 
-  const modal = document.getElementById("do2Modal");
+  const venousValid =
+    Number.isFinite(svo2) &&
+    Number.isFinite(pvo2) &&
+    svo2 >= 0 &&
+    svo2 <= 100 &&
+    pvo2 >= 0;
 
-  if (modal && event.target === modal) {
-    tutupDo2Modal();
+  // Jika SvO2 atau PvO2 belum diisi
+  if (!venousValid) {
+
+    hasilCvO2.textContent = "-";
+    hasilVO2.textContent = "-";
+
+    return;
   }
 
-});
+  // Konversi SvO2 ke desimal
+  const SvO2 = svo2 / 100;
+
+  // Venous Oxygen Content
+  const CvO2 =
+    (hb * 1.34 * SvO2) +
+    (0.003 * pvo2);
+
+  // Oxygen Consumption Index
+  const VO2i =
+    ci * (CaO2 - CvO2) * 10;
+
+  // Tampilkan hasil
+  hasilCvO2.textContent = CvO2.toFixed(2);
+  hasilVO2.textContent = VO2i.toFixed(1);
+
+};
 
 // Tutup dengan tombol Escape
 document.addEventListener("keydown", function(event) {
@@ -4961,10 +5054,14 @@ window.resetDO2Index = function() {
   document.getElementById("do2Hb").value = "";
   document.getElementById("do2SaO2").value = "";
   document.getElementById("do2PaO2").value = "";
+  document.getElementById("do2SvO2").value = "";
+  document.getElementById("do2PvO2").value = "";
 
   // Reset hasil perhitungan
   document.getElementById("hasilCaO2").textContent = "-";
   document.getElementById("hasilDO2").textContent = "-";
+  document.getElementById("hasilCvO2").textContent = "-";
+  document.getElementById("hasilVO2").textContent = "-";
 
   console.log("Seluruh input DO2 berhasil direset.");
 
