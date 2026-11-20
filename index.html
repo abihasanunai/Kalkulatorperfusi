@@ -4210,32 +4210,63 @@ function hitungPriming(){
 
  else if(jenisKardioplegia == "HTK-Custadiol"){
 
-  // Dosis induksi
-  let induksiLow = 30 * bb;
-  let induksiHigh = 50 * bb;
+  // Dosis induksi 30-50 mL/kg
+  // Maksimal 2000 mL
 
-  // Maintenance = 30 - 50% dari dosis induksi
+  let induksiLow = Math.min(30 * bb, 2000);
+  let induksiHigh = Math.min(50 * bb, 2000);
+
+  // Maintenance = 30-50% dari dosis induksi
   let maintenanceLow = induksiLow * 0.30;
   let maintenanceHigh = induksiHigh * 0.50;
 
-  dosisInduksi =
-    induksiLow.toFixed(0) + " - " +
-    induksiHigh.toFixed(0) + " mL";
+  let labelLow = induksiLow >= 2000
+    ? " mL (Dosis Maksimal)"
+    : " mL";
+
+  let labelMaksimal = (induksiHigh >= 2000)
+  ? " (Dosis Maksimal)"
+  : "";
+
+dosisInduksi = (induksiLow === induksiHigh)
+  ? induksiHigh.toFixed(0) + " mL" + labelMaksimal
+  : induksiLow.toFixed(0) + " - " + induksiHigh.toFixed(0) + " mL" + labelMaksimal;
 
   dosisMaintenance =
     maintenanceLow.toFixed(0) + " - " +
     maintenanceHigh.toFixed(0) + " mL";
 }
 
-  else if(jenisKardioplegia == "Del Nido"){
-    dosisInduksi =
-      (20 * bb).toFixed(0) + " - " +
-      (30 * bb).toFixed(0) + " mL";
+else if(jenisKardioplegia == "Del Nido"){
 
-    dosisMaintenance =
-      (10 * bb).toFixed(0) + " - " +
-      (20 * bb).toFixed(0) + " mL";
-  }
+  // Dosis induksi 20-30 mL/kg
+  // Maksimal 1000 mL
+
+  let induksiLow = Math.min(20 * bb, 1000);
+  let induksiHigh = Math.min(30 * bb, 1000);
+
+  // Maintenance 10-20 mL/kg
+  // Maksimal 500 mL
+
+  let maintenanceLow = Math.min(10 * bb, 500);
+  let maintenanceHigh = Math.min(20 * bb, 500);
+
+  let labelMaintenance = (maintenanceHigh >= 500)
+  ? " (Dosis Maksimal)"
+  : "";
+
+ let labelMaksimal = (induksiHigh >= 1000)
+  ? " (Dosis Maksimal)"
+  : "";
+
+dosisInduksi = (induksiLow === induksiHigh)
+  ? induksiHigh.toFixed(0) + " mL" + labelMaksimal
+  : induksiLow.toFixed(0) + " - " + induksiHigh.toFixed(0) + " mL" + labelMaksimal;
+
+dosisMaintenance = (maintenanceLow === maintenanceHigh)
+  ? maintenanceHigh.toFixed(0) + " mL" + labelMaintenance
+  : maintenanceLow.toFixed(0) + " - " + maintenanceHigh.toFixed(0) + " mL" + labelMaintenance;
+}
 
   document.getElementById("dosisInduksiKardioplegia").innerHTML =
     dosisInduksi;
