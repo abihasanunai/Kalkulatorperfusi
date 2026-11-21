@@ -3546,13 +3546,48 @@ document.getElementById("flowReductionTable").innerHTML =
 </tr>
 `;
 
-  document.getElementById("kanulAorta").innerHTML =
-    bb < 5 ? "10 Fr (Flow < 500 ml/min)" :
-    bb <= 9 ? "12 Fr (Flow 500 - 800 ml/min)" :
-    bb <= 15 ? "14 Fr (Flow 800 - 1150 ml/min)" :
-    bb <= 31 ? "18 Fr (Flow 1700 - 2500 ml/min)" :
-    bb <= 41 ? "22 Fr (Flow 2500 - 3300 ml/min)" :
+// ======================
+// KANUL AORTA DLP DAN EOPA
+// ======================
+
+// REKOMENDASI DLP
+let dlpAorta =
+    bb < 5 ? "DLP 10 Fr (Flow < 500 ml/min)" :
+    bb <= 9 ? "DLP 12 Fr (Flow 500 - 800 ml/min)" :
+    bb <= 15 ? "DLP 14 Fr (Flow 800 - 1150 ml/min)" :
+    bb <= 31 ? "DLP 18 Fr (Flow 1700 - 2500 ml/min)" :
+    bb <= 41 ? "DLP 22 Fr (Flow 2500 - 3300 ml/min)" :
     "DLP 24 Fr (Flow > 3300 ml/min)";
+
+
+// REKOMENDASI EOPA
+let eopaAorta = "";
+
+if(bb <= 31){
+
+    eopaAorta =
+        "EOPA 18 Fr";
+
+}
+else if(bb <= 41){
+
+    eopaAorta =
+        "EOPA 20 Fr (4250 - 5000 ml/min)<br>" + 
+        "EOPA 22 Fr (> 5000 ml/min)";
+
+}
+else{
+
+    eopaAorta =
+        "EOPA 22/24 Fr (> 5000 ml/min)";
+
+}
+
+
+// TAMPILKAN HASIL
+document.getElementById("kanulAorta").innerHTML =
+    dlpAorta + "<br>" +
+    eopaAorta;
 // ======================
 // AORTA FEMORAL
 // ======================
