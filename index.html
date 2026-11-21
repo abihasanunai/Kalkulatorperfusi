@@ -2047,6 +2047,50 @@ SAVE LOADING
 
 }
 
+/* ================================
+   RUNNING TEXT - RESPONSIVE
+================================ */
+
+.running-text {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  text-align: left;
+}
+
+.running-text span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: runningRicco 12s linear infinite;
+  will-change: transform;
+}
+
+@keyframes runningRicco {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* KHUSUS TAMPILAN HP */
+@media screen and (max-width: 600px) {
+
+  .running-text {
+    width: 100%;
+    font-size: 12px;
+  }
+
+  .running-text span {
+    animation-duration: 10s;
+  }
+
+}
+
 </style>
 </head>
 
@@ -2062,8 +2106,8 @@ SAVE LOADING
     Kalkulator Perfusionist
   </div>
 
-  <div class="login-subtitle">
-    Trainee Perfusionist 2026
+  <div class="login-subtitle running-text">
+  <span>By Ricco Arika Sandy</span>
   </div>
 
   <div class="form-group">
@@ -2185,7 +2229,9 @@ SAVE LOADING
   </button>
 
   <h1>Kalkulator Perfusionist</h1>
-  <p>Traine Perfusionist 2026</p>
+  <p class="running-text">
+  <span>By Ricco Arika Sandy</span>
+  </p>
 
 </div>
 
@@ -3506,7 +3552,7 @@ document.getElementById("flowReductionTable").innerHTML =
     bb <= 15 ? "14 Fr (Flow 800 - 1150 ml/min)" :
     bb <= 31 ? "18 Fr (Flow 1700 - 2500 ml/min)" :
     bb <= 41 ? "22 Fr (Flow 2500 - 3300 ml/min)" :
-    "24 Fr (Flow > 3300 ml/min)";
+    "DLP 24 Fr (Flow > 3300 ml/min)";
 // ======================
 // AORTA FEMORAL
 // ======================
