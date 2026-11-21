@@ -2091,6 +2091,142 @@ SAVE LOADING
 
 }
 
+/* ==========================
+   ICON INFORMASI KANUL
+========================== */
+
+.kanul-info-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:5px 0;
+  flex-wrap:wrap;
+}
+
+.kanul-info-btn{
+  width:20px;
+  height:20px;
+  min-width:20px;
+  border-radius:50%;
+  border:1.5px solid;
+  background:white;
+  font-size:13px;
+  font-weight:600;
+  font-style:italic;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  padding:0;
+}
+
+.dlp-info{
+  color:#2563eb;
+  border-color:#2563eb;
+}
+
+.eopa-info{
+  color:#dc2626;
+  border-color:#dc2626;
+}
+
+.kanul-info-btn:active{
+  transform:scale(0.9);
+}
+
+/* ==========================
+   POPUP INFORMASI KANUL
+========================== */
+
+.kanul-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,0.75);
+  z-index:99999999;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+}
+
+.kanul-modal.show{
+  display:flex;
+}
+
+.kanul-modal-content{
+  background:white;
+  width:100%;
+  max-width:650px;
+  max-height:90vh;
+  overflow-y:auto;
+  border-radius:18px;
+  padding:16px;
+  position:relative;
+  box-shadow:0 15px 40px rgba(0,0,0,0.3);
+}
+
+.kanul-modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+
+.kanul-modal-title{
+  font-size:18px;
+  font-weight:600;
+  color:#1e293b;
+}
+
+.kanul-modal-close{
+  border:none;
+  background:#fee2e2;
+  color:#dc2626;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  font-size:23px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.kanul-modal-image{
+  width:100%;
+  height:auto;
+  max-height:70vh;
+  object-fit:contain;
+  display:block;
+  border-radius:10px;
+}
+
+/* Tampilan HP */
+
+@media(max-width:600px){
+
+  .kanul-modal{
+    padding:10px;
+  }
+
+  .kanul-modal-content{
+    width:100%;
+    max-width:100%;
+    max-height:88vh;
+    padding:12px;
+    border-radius:14px;
+  }
+
+  .kanul-modal-title{
+    font-size:16px;
+  }
+
+  .kanul-modal-image{
+    max-height:72vh;
+  }
+
+}
+
 </style>
 </head>
 
@@ -3586,8 +3722,30 @@ else{
 
 // TAMPILKAN HASIL
 document.getElementById("kanulAorta").innerHTML =
-    dlpAorta + "<br>" +
-    eopaAorta;
+
+    '<div class="kanul-info-row">' +
+
+      '<span style="color:#2563eb;">' +
+        dlpAorta +
+      '</span>' +
+
+      '<button type="button" class="kanul-info-btn dlp-info" ' +
+        'onclick="bukaInfoKanul(\'dlp\')" ' +
+        'title="Informasi kanul DLP">i</button>' +
+
+    '</div>' +
+
+    '<div class="kanul-info-row">' +
+
+      '<span style="color:#dc2626;">' +
+        eopaAorta +
+      '</span>' +
+
+      '<button type="button" class="kanul-info-btn eopa-info" ' +
+        'onclick="bukaInfoKanul(\'eopa\')" ' +
+        'title="Informasi kanul EOPA">i</button>' +
+
+    '</div>';
 // ======================
 // AORTA FEMORAL
 // ======================
@@ -5179,7 +5337,81 @@ window.resetDO2Index = function() {
 
 };
 
+// ==========================
+// POPUP INFORMASI KANUL
+// ==========================
+
+function bukaInfoKanul(jenis){
+
+  let modal = document.getElementById("kanulInfoModal");
+  let title = document.getElementById("kanulInfoTitle");
+  let image = document.getElementById("kanulInfoImage");
+
+  if(jenis === "dlp"){
+
+    title.innerText = "Informasi Kanul DLP";
+
+    image.src =
+      "https://drive.google.com/thumbnail?id=1GFjPKdH0bOhr3WdFYyzYytf_R4XTA79X&sz=w1200";
+
+  }
+
+  else if(jenis === "eopa"){
+
+    title.innerText = "Informasi Kanul EOPA";
+
+    image.src =
+      "https://drive.google.com/thumbnail?id=1KD3DrpqgLItboZh8ol-EGY97WRnhqWDH&sz=w1200";
+
+  }
+
+  modal.classList.add("show");
+
+}
+
+function tutupInfoKanul(){
+
+  let modal = document.getElementById("kanulInfoModal");
+
+  modal.classList.remove("show");
+
+  document.getElementById("kanulInfoImage").src = "";
+
+}
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- POPUP INFORMASI KANUL -->
+
+<div id="kanulInfoModal" class="kanul-modal">
+
+  <div class="kanul-modal-content">
+
+    <div class="kanul-modal-header">
+
+      <div id="kanulInfoTitle" class="kanul-modal-title">
+        Informasi Kanul
+      </div>
+
+      <button
+        type="button"
+        class="kanul-modal-close"
+        onclick="tutupInfoKanul()">
+        &times;
+      </button>
+
+    </div>
+
+    <img
+      id="kanulInfoImage"
+      class="kanul-modal-image"
+      src=""
+      alt="Informasi kanul">
+
+  </div>
+
+</div>
+
 </body>
 </html>
