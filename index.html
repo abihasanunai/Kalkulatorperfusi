@@ -2130,6 +2130,15 @@ SAVE LOADING
   border-color:#dc2626;
 }
 
+.vena-info{
+  color:#0f766e;
+  border-color:#0f766e;
+}
+
+.single-info{ /* ini untuk two stage kanul  */
+  color:#7c3aed;
+  border-color:#7c3aed;
+}
 .kanul-info-btn:active{
   transform:scale(0.9);
 }
@@ -3797,7 +3806,7 @@ else{
 document.getElementById("kanulAortaFemoral").innerHTML =
   aortaFemoral;
 
-  document.getElementById("kanulVena").innerHTML =
+let rekomendasiKanulVena =
     bb < 5 ? "12/16 Fr (Flow < 650 ml/min)" :
     bb < 12 ? "14/18 Fr (Flow 650 - 1000 ml/min)" :
     bb < 21 ? "16/20 Fr (Flow 1000 - 1400 ml/min)" :
@@ -3805,6 +3814,18 @@ document.getElementById("kanulAortaFemoral").innerHTML =
     bb < 31 ? "20/24 Fr (Flow 2000 - 2250 ml/min)" :
     bb < 41 ? "24/28 Fr (Flow 3000 - 3200 ml/min)" :
     "28/31 Fr (Flow > 3200 ml/min)";
+
+document.getElementById("kanulVena").innerHTML =
+
+    '<div class="kanul-info-row">' +
+
+      '<span>' + rekomendasiKanulVena + '</span>' +
+
+      '<button type="button" class="kanul-info-btn vena-info" ' +
+        'onclick="bukaInfoKanul(\'vena\')" ' +
+        'title="Informasi kanul Vena">i</button>' +
+
+    '</div>';
 
     // ======================
 // Vena FEMORAL
@@ -3827,23 +3848,33 @@ let kanulVenaFemoral = "-";
     "29 Fr (Flow > 4500 ml/min)" ;          
 
 // ======================
+// KANUL VENA TWO STAGE
 
-//Kanul Vena Two Stage
-let SingleCanula = "-";
- document.getElementById("SingleCanula").innerHTML =
+let rekomendasiSingleCanula =
     bb < 5 ? "20 Fr (Flow < 450 ml/min)" :
-    bb < 12 ? "22 Fr (Flow 550 - 900 ml/min)"+ "<br>"+
-              " 24 Fr (Flow 700 - 900 ml/min) " :
-    bb < 21 ? "26 Fr (Flow 900 - 1100 ml/min)"+ "<br>"+
-              "28 Fr (Flow 1100 - 1300 ml/min)"+ "<br>"+
+    bb < 12 ? "22 Fr (Flow 550 - 900 ml/min)" + "<br>" +
+              "24 Fr (Flow 700 - 900 ml/min)" :
+    bb < 21 ? "26 Fr (Flow 900 - 1100 ml/min)" + "<br>" +
+              "28 Fr (Flow 1100 - 1300 ml/min)" + "<br>" +
               "30 Fr (Flow 1300 - 1500 ml/min)" :
-    bb < 26 ? "32 Fr (Flow 1500 - 2000 ml/min)"+ "<br>"+
+    bb < 26 ? "32 Fr (Flow 1500 - 2000 ml/min)" + "<br>" +
               "34 Fr (Flow 2000 - 2700 ml/min)" :
-    bb < 31 ? "34 Fr (Flow 2000 - 2700 ml/min)"+ "<br>"+
+    bb < 31 ? "34 Fr (Flow 2000 - 2700 ml/min)" + "<br>" +
               "36 Fr (Flow 2700 - 3500 ml/min)" :
     bb < 41 ? "36 Fr (Flow 2700 - 3500 ml/min)" :
               "38 Fr (Flow > 3500 ml/min)";
 
+document.getElementById("SingleCanula").innerHTML =
+
+    '<div class="kanul-info-row">' +
+
+      '<span>' + rekomendasiSingleCanula + '</span>' +
+
+      '<button type="button" class="kanul-info-btn single-info" ' +
+        'onclick="bukaInfoKanul(\'single\')" ' +
+        'title="Informasi Single Canula">i</button>' +
+
+    '</div>';
 
 
   document.getElementById("kanulAntegrade").innerHTML =
@@ -5362,9 +5393,26 @@ function bukaInfoKanul(jenis){
 
     image.src =
       "https://drive.google.com/thumbnail?id=1KD3DrpqgLItboZh8ol-EGY97WRnhqWDH&sz=w1200";
-
+     
   }
 
+  else if(jenis === "vena"){
+
+  title.innerText = "Informasi Kanul Vena (SVC/IVC)";
+
+  image.src =
+    "https://drive.google.com/thumbnail?id=1nhIrfLeYzxv9Zv-Ro38ypHKaJiseJKh0&sz=w1200";
+
+}
+
+else if(jenis === "single"){ // Info Single Canula (Two Stage)
+
+  title.innerText = "Informasi Single Canula (Two Stage)";
+
+  image.src =
+    "https://drive.google.com/thumbnail?id=198DjkpZm_gE-EhKxVWpLUORua1csY-F5&sz=w1200";
+
+}
   modal.classList.add("show");
 
 }
