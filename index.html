@@ -2241,6 +2241,307 @@ SAVE LOADING
 
 }
 
+/* ==============================
+   POPUP INFORMASI UPDATE
+============================== */
+
+.update-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999999;
+
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(5px);
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.update-modal.show {
+  display: flex;
+  animation: updateFade 0.3s ease;
+}
+
+.update-modal-content {
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  background: #ffffff;
+  border-radius: 22px;
+
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+
+  animation: updateSlide 0.35s ease;
+}
+
+.update-modal-header {
+  position: relative;
+  padding: 25px 22px 22px;
+
+  text-align: center;
+  color: white;
+
+  background: linear-gradient(
+    135deg,
+    #0f172a,
+    #1d4ed8,
+    #dc2626
+  );
+}
+
+.update-icon {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+  background: rgba(255,255,255,0.18);
+
+  font-size: 29px;
+}
+
+.update-modal-header h2 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.update-modal-header p {
+  margin: 7px 0 0;
+  font-size: 11px;
+  color: rgba(255,255,255,0.85);
+}
+
+.update-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+
+  width: 32px;
+  height: 32px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.18);
+  color: white;
+
+  font-size: 24px;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.update-modal-body {
+  padding: 22px;
+}
+
+.update-label {
+  margin-bottom: 15px;
+
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.update-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  padding: 13px;
+  margin-bottom: 11px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 13px;
+
+  background: #f8fafc;
+}
+
+.update-item-icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+  background: #eff6ff;
+
+  font-size: 18px;
+}
+
+.update-item-text {
+  color: #1e293b;
+  font-size: 12px;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+.update-footer {
+  padding: 0 22px 22px;
+}
+
+.update-ok-btn {
+  width: 100%;
+  padding: 13px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: linear-gradient(
+    120deg,
+    #1d4ed8,
+    #0f172a
+  );
+
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(29,78,216,0.2);
+}
+
+.update-ok-btn:active {
+  transform: scale(0.98);
+}
+
+@keyframes updateFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes updateSlide {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* TAMPILAN HP */
+@media screen and (max-width: 600px) {
+  .update-modal {
+    padding: 14px;
+  }
+
+  .update-modal-content {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 19px;
+  }
+
+  .update-modal-header {
+    padding: 23px 18px 20px;
+  }
+
+  .update-modal-header h2 {
+    font-size: 19px;
+  }
+
+  .update-modal-body {
+    padding: 17px;
+  }
+
+  .update-item {
+    padding: 11px;
+    gap: 10px;
+  }
+
+  .update-item-text {
+    font-size: 11px;
+  }
+
+  .update-footer {
+    padding: 0 17px 18px;
+  }
+}
+
+/* TEMA ELEGAN - INFORMASI UPDATE */
+
+.update-modal {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+.update-modal-content {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+}
+
+.update-modal-header {
+  background: linear-gradient(
+    135deg,
+    #243b53 0%,
+    #334e68 65%,
+    #8f4651 100%
+  );
+}
+
+.update-icon {
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.update-modal-header h2 {
+  color: #ffffff;
+}
+
+.update-modal-header p {
+  color: #d9e2ec;
+}
+
+.update-close {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.update-label {
+  color: #627d98;
+}
+
+.update-item {
+  background: #f7f9fc;
+  border: 1px solid #e5eaf0;
+}
+
+.update-item-icon {
+  background: #eaf0f6;
+  color: #334e68;
+}
+
+.update-item-text {
+  color: #334155;
+}
+
+.update-ok-btn {
+  background: linear-gradient(120deg, #334e68, #243b53);
+  box-shadow: 0 4px 12px rgba(36, 59, 83, 0.16);
+}
+
+.update-ok-btn:hover {
+  background: linear-gradient(120deg, #486581, #334e68);
+}
+
 </style>
 </head>
 
@@ -2740,6 +3041,90 @@ SAVE LOADING
     <div id="toastTitle">Berhasil</div>
     <small id="toastMessage">Data berhasil disimpan</small>
   </div>
+</div>
+
+<!-- POPUP INFORMASI UPDATE --> Perbaharui detail info update
+
+<div id="updateModal" class="update-modal">
+
+  <div class="update-modal-content">
+
+    <div class="update-modal-header">
+
+      <button
+        type="button"
+        class="update-close"
+        onclick="tutupUpdateModal()">
+        &times;
+      </button>
+
+      <div class="update-icon">
+        🚀
+      </div>
+
+      <h2>Informasi Update</h2>
+
+      <p>Kalkulator Perfusionist 2026</p>
+
+    </div>
+
+    <div class="update-modal-body">
+
+      <div class="update-label">
+        What's New
+      </div>
+
+      <div class="update-item">
+
+        <div class="update-item-icon">
+          📚
+        </div>
+
+        <div class="update-item-text">
+          Tambahan informasi katalog kanul dan protokol emergensi pada menu.
+        </div>
+
+      </div>
+
+      <div class="update-item">
+
+        <div class="update-item-icon">
+          🫀
+        </div>
+
+        <div class="update-item-text">
+          Tambahan informasi pada jenis kanul dan pressure drop.
+        </div>
+
+      </div>
+
+      <div class="update-item">
+
+        <div class="update-item-icon">
+          🩺
+        </div>
+
+        <div class="update-item-text">
+          Tambahan informasi gambar oxygenator, klik pada tombol info.
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="update-footer">
+
+      <button
+        type="button"
+        class="update-ok-btn"
+        onclick="tutupUpdateModal()">
+        Mengerti, Terima Kasih
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
 
 <!-- POPUP HITUNG DO2 INDEX -->
@@ -4627,6 +5012,10 @@ window.addEventListener("load", function(){
 
     // load data database
     renderTable();
+    //tampilan informasi update
+    setTimeout(function(){
+      tampilkanUpdateModal();
+    }, 700);
 
   }
 
@@ -4822,6 +5211,9 @@ function loginUser(){
         }, 50);
 
         renderTable();
+        setTimeout(function(){ //Informasi update muncul setelah 700ms
+        tampilkanUpdateModal();
+        }, 700);
       }, 500);
     }
     else{
@@ -5471,6 +5863,50 @@ function tutupInfoKanul(){
   document.getElementById("kanulInfoImage").src = "";
 
 }
+
+// ==============================
+// POPUP INFORMASI UPDATE
+// ==============================
+
+function tampilkanUpdateModal(){
+
+  const modal = document.getElementById("updateModal");
+
+  if(modal){
+    modal.classList.add("show");
+  }
+
+}
+
+function tutupUpdateModal(){
+
+  const modal = document.getElementById("updateModal");
+
+  if(modal){
+    modal.classList.remove("show");
+  }
+
+}
+
+// Tutup jika klik area luar popup
+document.addEventListener("click", function(event){
+
+  const modal = document.getElementById("updateModal");
+
+  if(event.target === modal){
+    tutupUpdateModal();
+  }
+
+});
+
+// Tutup dengan tombol Escape
+document.addEventListener("keydown", function(event){
+
+  if(event.key === "Escape"){
+    tutupUpdateModal();
+  }
+
+});
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
