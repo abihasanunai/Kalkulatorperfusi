@@ -2120,6 +2120,11 @@ SAVE LOADING
   padding:0;
 }
 
+.oxygenator-info {
+  color: #0891b2;
+  border-color: #0891b2;
+}
+
 .dlp-info{
   color:#2563eb;
   border-color:#2563eb;
@@ -2356,10 +2361,11 @@ SAVE LOADING
           Hitung DO2
         </a>
 
-        <a href="javascript:void(0)"
-           onclick="pilihMenu('Protokol Emergensi')">
-          Protokol Emergensi
-        </a>
+        <a href="https://drive.google.com/file/d/19_VPvmTTFcrXdox4_3cjrsSC-w2n4nDM/view?usp=sharing"
+        target="_blank"
+        rel="noopener noreferrer">
+        Protokol Emergensi
+      </a>
 
       </div>
 
@@ -3909,9 +3915,11 @@ document.getElementById("SingleCanula").innerHTML =
   let halfSize = "-";
 
   let flowMaksimal = "";
+  let jenisInfoOksigenator = "";
 
 if(bb >= 2 && bb < 10){
     oksigenator = "Baby Rx/Fx / Pixie Neo (BB < 15 kg)";
+    jenisInfoOksigenator = "oxyBaby";
     customPack = "Neonate";
     tubingSize = "Arteri 1/4, Vena 1/4, Pump Boot 1/4";
     estimasiPriming = "400 - 500 ml";
@@ -3922,6 +3930,7 @@ if(bb >= 2 && bb < 10){
 }
 else if(bb < 21){
     oksigenator = "Pixie Infant / Capiox Fx 15 RW 30 / Thrilly Euroset";
+    jenisInfoOksigenator = "oxyInfant";
     customPack = "Infant";
     tubingSize = "Arteri 1/4, Vena 3/8, Pump Boot 3/8";
     estimasiPriming = "600 - 800 ml";
@@ -3933,6 +3942,7 @@ else if(bb < 21){
 }
 else if(bb < 41){
     oksigenator = "Capiox Fx 15 RW 30 / Thrilly Euroset (BB < 35 kg)";
+    jenisInfoOksigenator = "oxyPediatric";
     customPack = "Pediatric";
     tubingSize = "Arteri 3/8, Vena 3/8, Pump Boot 3/8";
     estimasiPriming = "800 - 1000 ml";
@@ -3943,6 +3953,7 @@ else if(bb < 41){
 }
 else{
     oksigenator = "Capiox Fx 15 RW 40 / Capiox Fx 25 / Fusion / Inspire 6F / Horizon / Affinity NT";
+    jenisInfoOksigenator = "oxyAdult";
     customPack = "Adult";
     tubingSize = "Arteri 3/8, Vena 1/2, Pump Boot 1/2";
     estimasiPriming = "1 - 1.5 L";
@@ -3956,7 +3967,15 @@ else{
       "Affinity NT : 7.0 L/min";
 }
 
-  document.getElementById("oksigenator").innerHTML = oksigenator;
+document.getElementById("oksigenator").innerHTML =
+  '<div class="kanul-info-row">' +
+    '<span>' + oksigenator + '</span>' +
+    (jenisInfoOksigenator ?
+      '<button type="button" class="kanul-info-btn oxygenator-info" ' +
+      'onclick="bukaInfoKanul(\'' + jenisInfoOksigenator + '\')" ' +
+      'title="Informasi Oxygenator">i</button>'
+      : '') +
+  '</div>';
 document.getElementById("customPack").innerHTML = customPack;
 document.getElementById("tubingSize").innerHTML = tubingSize;
 document.getElementById("estimasiPriming").innerHTML = estimasiPriming;
@@ -5414,6 +5433,31 @@ else if(jenis === "single"){ // Info Single Canula (Two Stage)
     "https://drive.google.com/thumbnail?id=198DjkpZm_gE-EhKxVWpLUORua1csY-F5&sz=w1200";
 
 }
+
+// OXYGENATOR BABY RX/FX / PIXIE NEO
+else if(jenis === "oxyBaby"){
+  title.innerText = "Informasi Oxygenator Baby Rx/Fx / Pixie Neo";
+  image.src = "https://drive.google.com/thumbnail?id=1Z2pXruiqm3kWC2gweQvbPAnqtRt6bl0V&sz=w1200";
+}
+
+// OXYGENATOR PIXIE INFANT / CAPIOX FX15 RW30 / THRILLY EUROSET
+else if(jenis === "oxyInfant"){
+  title.innerText = "Informasi Oxygenator Pixie Infant / Capiox FX15 RW30 / Thrilly Euroset";
+  image.src = "https://drive.google.com/thumbnail?id=1Zcxn5g_1sriGjI4hUBMWnxjcmYdI-F0m&sz=w1200";
+}
+
+// OXYGENATOR CAPIOX FX15 RW30 / THRILLY EUROSET BB < 35 KG
+else if(jenis === "oxyPediatric"){
+  title.innerText = "Informasi Oxygenator Capiox FX15 RW30 / Thrilly Euroset";
+  image.src = "https://drive.google.com/thumbnail?id=1NQxnLhtXqRZ9cf1VANHuOMYQrr1Klegg&sz=w1200";
+}
+
+// OXYGENATOR DEWASA
+else if(jenis === "oxyAdult"){
+  title.innerText = "Informasi Oxygenator Adult";
+  image.src = "https://drive.google.com/thumbnail?id=1JBcRC8BMZfrrRUOfNyvmw5T44S508sOR&sz=w1200";
+}
+
   modal.classList.add("show");
 
 }
