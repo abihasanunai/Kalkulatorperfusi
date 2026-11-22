@@ -2687,6 +2687,106 @@ SAVE LOADING
   }
 }
 
+/* POPUP KOREKSI FORMULA */
+
+.formula-info-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999999;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.formula-info-modal.show {
+  display: flex;
+}
+
+.formula-info-content {
+  width: 100%;
+  max-width: 900px;
+  height: 85vh;
+  max-height: 850px;
+  background: #fff;
+  border-radius: 17px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.25);
+  animation: formulaInfoSlide 0.25s ease;
+}
+
+.formula-info-header {
+  min-height: 55px;
+  padding: 12px 17px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  background: linear-gradient(120deg, #243b53, #334e68 75%, #8f4651);
+}
+
+.formula-info-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.formula-info-close {
+  width: 31px;
+  height: 31px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 21px;
+  cursor: pointer;
+}
+
+.formula-info-frame {
+  width: 100%;
+  flex: 1;
+  border: none;
+  background: #f5f7fa;
+}
+
+@keyframes formulaInfoSlide {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .formula-info-modal {
+    padding: 8px;
+  }
+
+  .formula-info-content {
+    width: 100%;
+    height: 90vh;
+    max-height: 90vh;
+    border-radius: 13px;
+  }
+
+  .formula-info-header {
+    min-height: 49px;
+    padding: 10px 13px;
+  }
+
+  .formula-info-title {
+    font-size: 13px;
+  }
+}
+
 </style>
 </head>
 
@@ -2795,6 +2895,11 @@ SAVE LOADING
       </button>
 
       <div id="headerDropdownMenu" class="menu-content">
+
+      <a href="javascript:void(0)"
+        onclick="bukaKoreksiFormula()">
+        Formula Koreksi 
+      </a>
 
         <a href="https://drive.google.com/file/d/1irGWBIKPi88fkaSXEJisi2UyYEftWNyv/view?usp=sharing"
           target="_blank"
@@ -3229,16 +3334,15 @@ SAVE LOADING
     <div class="update-modal-body">
 
       <div class="update-label">
-        What's New
+        Apa Yang Baru?
       </div>
 
       <div class="update-item">
-
         <div class="update-item-icon">
           📚
         </div>
         <div class="update-item-text">
-          Tambahan informasi katalog kanul dan protokol emergensi pada menu.
+          Tambahan informasi Formula Koreksi, katalog kanul dan protokol emergensi pada menu.
         </div>
       </div>
 
@@ -6093,6 +6197,34 @@ document.addEventListener("keydown", function(event) {
   }
 });
 
+// =================================
+// POPUP KOREKSI FORMULA
+// =================================
+
+window.bukaKoreksiFormula = function() {
+
+  const modal = document.getElementById(
+    "koreksiFormulaModal"
+  );
+
+  if (modal) {
+    modal.classList.add("show");
+  }
+
+};
+
+window.tutupKoreksiFormula = function(event) {
+
+  const modal = document.getElementById(
+    "koreksiFormulaModal"
+  );
+
+  if (modal) {
+    modal.classList.remove("show");
+  }
+
+};
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -6155,6 +6287,39 @@ document.addEventListener("keydown", function(event) {
 
     <iframe class="cpg-info-frame"
       src="https://drive.google.com/file/d/1jXfe2jXf9gkEKYxxjAxqDP5smYCH8vHG/preview"
+      allow="autoplay"
+      loading="lazy">
+    </iframe>
+
+  </div>
+</div>
+
+<!-- POPUP KOREKSI FORMULA -->
+
+<div id="koreksiFormulaModal"
+     class="formula-info-modal"
+     onclick="tutupKoreksiFormula(event)">
+
+  <div class="formula-info-content"
+       onclick="event.stopPropagation()">
+
+    <div class="formula-info-header">
+
+      <div class="formula-info-title">
+        Koreksi Formula
+      </div>
+
+      <button type="button"
+              class="formula-info-close"
+              onclick="tutupKoreksiFormula()">
+        &times;
+      </button>
+
+    </div>
+
+    <iframe
+      class="formula-info-frame"
+      src="https://drive.google.com/file/d/1-WUVSzZn0j_-NzPDkSFekRSC2HZj_7nX/preview"
       allow="autoplay"
       loading="lazy">
     </iframe>
