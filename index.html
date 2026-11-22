@@ -2787,6 +2787,46 @@ SAVE LOADING
   }
 }
 
+/* INFO BUTTON MEAN NORMAL VALVE RING */
+
+.valve-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.valve-info-btn {
+  width: 27px;
+  height: 27px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255,255,255,0.65);
+  border-radius: 50%;
+  background: transparent;
+  color: #ffffff;
+
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  transition: 0.2s ease;
+}
+
+.valve-info-btn:hover {
+  background: rgba(255,255,255,0.18);
+  transform: scale(1.08);
+}
+
+.valve-info-btn:active {
+  transform: scale(0.94);
+}
+
 </style>
 </head>
 
@@ -3077,7 +3117,21 @@ SAVE LOADING
       </table>
     </div>
 
-    <div class="sub-title">Mean Normal Valve Ring</div>
+  <div class="sub-title valve-title-row">
+
+  <span>Mean Normal Valve Ring</span>
+
+  <button
+    type="button"
+    class="valve-info-btn"
+    onclick="bukaInfoValveRing()"
+    title="Informasi Mean Normal Valve Ring">
+
+    ⓘ
+
+  </button>
+
+</div>
     <div class="table-wrapper">
       <table>
         <tbody>
@@ -3322,7 +3376,7 @@ SAVE LOADING
       </button>
 
       <div class="update-icon">
-        🚀
+        🔄
       </div>
 
       <h2>Informasi Update</h2>
@@ -3334,7 +3388,7 @@ SAVE LOADING
     <div class="update-modal-body">
 
       <div class="update-label">
-        Apa Yang Baru?
+        Apa Saja Yang Baru?
       </div>
 
       <div class="update-item">
@@ -3360,7 +3414,7 @@ SAVE LOADING
           🩺
         </div>
         <div class="update-item-text">
-          Tambahan informasi gambar oxygenator, klik pada tombol info.
+          Tambahan informasi gambar oxygenator dan Valve ring, klik pada tombol info.
         </div>
       </div>
 
@@ -6225,6 +6279,30 @@ window.tutupKoreksiFormula = function(event) {
 
 };
 
+// =====================================
+// INFORMASI MEAN NORMAL VALVE RING
+// =====================================
+
+window.bukaInfoValveRing = function() {
+
+  const modal = document.getElementById("valveInfoModal");
+
+  if (modal) {
+    modal.classList.add("show");
+  }
+
+};
+
+window.tutupInfoValveRing = function(event) {
+
+  const modal = document.getElementById("valveInfoModal");
+
+  if (modal) {
+    modal.classList.remove("show");
+  }
+
+};
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -6320,6 +6398,42 @@ window.tutupKoreksiFormula = function(event) {
     <iframe
       class="formula-info-frame"
       src="https://drive.google.com/file/d/1-WUVSzZn0j_-NzPDkSFekRSC2HZj_7nX/preview"
+      allow="autoplay"
+      loading="lazy">
+    </iframe>
+
+  </div>
+</div>
+
+<!-- POPUP INFORMASI VALVE RING -->
+
+<div id="valveInfoModal"
+     class="cpg-info-modal"
+     onclick="tutupInfoValveRing(event)">
+
+  <div class="cpg-info-content"
+       onclick="event.stopPropagation()">
+
+    <div class="cpg-info-header">
+
+      <div class="cpg-info-title">
+        Informasi Mean Normal Valve Ring
+      </div>
+
+      <button
+        type="button"
+        class="cpg-info-close"
+        onclick="tutupInfoValveRing()">
+
+        &times;
+
+      </button>
+
+    </div>
+
+    <iframe
+      class="cpg-info-frame"
+      src="https://drive.google.com/file/d/1EgjsbVPWEQE4M8PkLUmj1fEg1KPm6G2s/preview"
       allow="autoplay"
       loading="lazy">
     </iframe>
