@@ -2827,6 +2827,31 @@ SAVE LOADING
   transform: scale(0.94);
 }
 
+/* SAMAKAN TINGGI JUDUL DENGAN OKSIGENATOR */
+.sub-title.valve-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  line-height: normal;
+}
+
+/* Ukuran tombol agar tidak menambah tinggi judul */
+.sub-title.valve-title-row .valve-info-btn {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
 </style>
 </head>
 
@@ -3091,7 +3116,14 @@ SAVE LOADING
       </table>
     </div>
     
-    <div class="sub-title">Kanul Femoral</div>
+<div class="sub-title valve-title-row">
+  <span>Kanul Femoral</span>
+  <button type="button" class="valve-info-btn"
+    onclick="bukaInfoKanulFemoral()"
+    title="Informasi Kanul Femoral">
+    ⓘ
+  </button>
+</div>
     <div class="table-wrapper"> 
       <table>
         <tbody>
@@ -3414,7 +3446,7 @@ SAVE LOADING
           🩺
         </div>
         <div class="update-item-text">
-          Tambahan informasi gambar oxygenator dan Valve ring, klik pada tombol info.
+          Tambahan informasi gambar oxygenator, gambar tabel kanul femoral  dan Valve ring, klik pada tombol info.
         </div>
       </div>
 
@@ -6303,6 +6335,26 @@ window.tutupInfoValveRing = function(event) {
 
 };
 
+// =====================================
+// INFORMASI KANUL FEMORAL
+// =====================================
+
+window.bukaInfoKanulFemoral = function() {
+  const modal = document.getElementById("kanulFemoralModal");
+
+  if (modal) {
+    modal.classList.add("show");
+  }
+};
+
+window.tutupInfoKanulFemoral = function() {
+  const modal = document.getElementById("kanulFemoralModal");
+
+  if (modal) {
+    modal.classList.remove("show");
+  }
+};
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -6434,6 +6486,32 @@ window.tutupInfoValveRing = function(event) {
     <iframe
       class="cpg-info-frame"
       src="https://drive.google.com/file/d/1EgjsbVPWEQE4M8PkLUmj1fEg1KPm6G2s/preview"
+      allow="autoplay"
+      loading="lazy">
+    </iframe>
+
+  </div>
+</div>
+
+<!-- POPUP INFORMASI KANUL FEMORAL -->
+<div id="kanulFemoralModal" class="cpg-info-modal"
+     onclick="tutupInfoKanulFemoral(event)">
+
+  <div class="cpg-info-content" onclick="event.stopPropagation()">
+
+    <div class="cpg-info-header">
+      <div class="cpg-info-title">
+        Informasi Kanul Femoral
+      </div>
+
+      <button type="button" class="cpg-info-close"
+        onclick="tutupInfoKanulFemoral()">
+        &times;
+      </button>
+    </div>
+
+    <iframe class="cpg-info-frame"
+      src="https://drive.google.com/file/d/14-4je3TvNVfLCdM8zHRxXiF-ukX6DHSj/preview"
       allow="autoplay"
       loading="lazy">
     </iframe>
